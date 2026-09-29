@@ -4,12 +4,12 @@
 
 - `agent-kernel/` is a Git submodule pinned to OpenCode v1.3.17 (517e6c9aa4c61dbc125e7654fc596f1d529f20d9). Never edit its tracked source.
 - `external-plugins/` is the first choice for behavior added through the public `@opencode-ai/plugin` API, SDK, skills and commands.
-- `agent-kernel-extension/` is reserved for extension code that cannot be implemented through those public interfaces. Its presence does not imply that the pinned kernel can load it.
+- `agent-kernel-extension/src/custom-hw/extension/` holds the fixed extension registry; business modules belong under `src/codeagent/`. The public plugin bridge loads that registry on this baseline.
 - `sdk/js-agentkernel/`, `codecov/`, `agents/` and `test/` are reserved for their named responsibilities.
 
 ## Hard boundary
 
-Do not edit original files under `agent-kernel/packages/`. Do not import the kernel's private modules from external plugins. If an idea requires an internal extension point, first prove that the pinned kernel exposes one; otherwise document the gap and stop that implementation path. Do not claim a copied file is activated unless an actual bootstrap path has been verified.
+Do not edit original files under `agent-kernel/packages/`. The merge script may only add or update files bearing its generated marker under `src/custom-hw/` and `src/codeagent/`. Do not import the kernel's private modules from external plugins. If an idea requires an internal extension point, first prove that the pinned kernel exposes one; otherwise document the gap and stop that implementation path. Do not claim a copied file is activated unless an actual bootstrap path has been verified.
 
 ## Workflow
 

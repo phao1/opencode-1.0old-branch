@@ -1,9 +1,17 @@
 {
   "name": "@codeagent/external-plugins",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "type": "module",
+  "exports": "./dist/index.js",
+  "files": ["dist"],
+  "scripts": {
+    "build": "bun build src/index.ts --target=bun --outdir dist --external @opencode-ai/plugin"
+  },
   "peerDependencies": {
+    "@opencode-ai/plugin": "1.3.17"
+  },
+  "devDependencies": {
     "@opencode-ai/plugin": "1.3.17"
   }
 }

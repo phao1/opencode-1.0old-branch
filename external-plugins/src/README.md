@@ -1,3 +1,3 @@
 # Plugin source
 
-Add the first public-API plugin here after its hook requirements and acceptance tests are defined. Do not add a no-op entry point merely to fill this directory.
+`index.ts` bridges the fixed global extension registry to the public OpenCode plugin loader. Keep plugin-specific integrations here; the registered capability-watch business logic lives in `agent-kernel-extension/src/codeagent/capability-watch/`.

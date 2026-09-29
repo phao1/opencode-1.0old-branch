@@ -25,4 +25,8 @@ The submodule URL intentionally refers to this same repository: the pinned commi
 
 ## Current state
 
-This commit establishes the workspace and a reviewable one-shot workflow. It does **not** yet implement the scheduled Claude Code/Codex release monitor, autonomous issue runner, internal extension bootstrap, or the existing CodeAgent subsystems listed in the proposed architecture. Those require separate implementation and verification.
+The registered `capability_watch` tool checks stable Claude Code and Codex GitHub releases. Its first call records the current versions as a baseline; later calls return new releases with source links and notes. The cursor is stored locally in `.codeagent/capability-watch.json` and is not committed. Use `/watch-capabilities` to ask OpenCode for an issue-oriented summary.
+
+Run `npm test` and `npm run typecheck` for the extension and monitoring code. From `external-plugins/`, `bun run build` produces a standalone plugin bundle in `dist/`. From `agent-kernel-extension/`, `bun run merge` copies CodeAgent-owned files into the submodule, `bun run serve` starts the development server with the workspace plugin configuration, and `bun run kernel:build` builds the kernel package. Install Bun and the kernel's dependencies for the latter two commands. The development server runs from the kernel package directory; attach a client with the workspace directory when editing the wrapper.
+
+This is not yet a scheduled watcher or an autonomous issue-to-PR runner. The existing CodeAgent subsystems in the proposed architecture have not been imported into this repository.

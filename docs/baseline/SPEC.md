@@ -1,4 +1,4 @@
-# CodeAgentPlugin baseline specification v0.1
+# CodeAgentPlugin baseline specification v0.2
 
 Updated: 2026-09-29
 
@@ -19,6 +19,12 @@ Track relevant Claude Code and Codex capability changes, turn confirmed changes 
 - A one-shot skill and command are discoverable when OpenCode runs in this workspace.
 - A kernel commit check rejects drift.
 
+## Current extension
+
+- `capability_watch` performs an on-demand incremental scan of stable Claude Code and Codex releases.
+- `custom-hw/extension/bundled-global-extensions.ts` registers the module and the public plugin bridge loads it.
+- The scan returns source URLs and notes; it does not create issues or make code changes.
+
 ## Later milestones
 
 - Release ingestion, version cursor and source deduplication.
@@ -26,4 +32,4 @@ Track relevant Claude Code and Codex capability changes, turn confirmed changes 
 - Durable issue state, isolated execution, review and PR handoff.
 - End-to-end verification with one real change on the pinned kernel.
 
-Change log: v0.1 establishes the baseline and explicitly separates the scaffold from future automation.
+Change log: v0.2 adds the first registered release-check tool while keeping scheduling and autonomous development as later milestones.
