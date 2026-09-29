@@ -1,0 +1,3 @@
+[submodule "agent-kernel"]
+	path = agent-kernel
+	url = https://github.com/phao1/opencode-1.0old-branch.git

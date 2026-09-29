@@ -1,6 +1,1 @@
-[install]
-exact = true
-
-[test]
-root = "./do-not-run-tests-from-root"
-
+# Workspace test settings will be added with the first executable package.
