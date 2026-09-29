@@ -6,3 +6,4 @@
 - Add an initial one-shot skill and baseline architecture documentation.
 - Register a capability-watch extension through the fixed custom-hw registry and public plugin bridge.
 - Add safe merge/serve/build commands, incremental release checks and focused tests.
+- Define the complete release-intelligence, issue-loop, one-shot and cross-session acceptance contract in baseline specification v0.3; document current gaps and delivery order.
