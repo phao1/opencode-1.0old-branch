@@ -6,9 +6,17 @@
     "allowImportingTsExtensions": true,
     "strict": true,
     "noEmit": true,
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "skipLibCheck": true
   },
-  "include": ["agent-kernel-extension/src/**/*.ts", "external-plugins/src/**/*.ts"],
-  "exclude": ["agent-kernel"]
+  "include": [
+    "agent-kernel-extension/src/**/*.ts",
+    "external-plugins/src/**/*.ts",
+    "scripts/one-shot.ts"
+  ],
+  "exclude": [
+    "agent-kernel"
+  ]
 }

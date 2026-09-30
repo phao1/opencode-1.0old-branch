@@ -7,3 +7,11 @@
 - Register a capability-watch extension through the fixed custom-hw registry and public plugin bridge.
 - Add safe merge/serve/build commands, incremental release checks and focused tests.
 - Define the complete release-intelligence, issue-loop, one-shot and cross-session acceptance contract in baseline specification v0.3; document current gaps and delivery order.
+
+## One-shot framework (2026-09-29)
+
+- Narrow Spec v0.4 to the reusable monitor-to-acceptance development framework.
+- Implement atomic local state, idempotent issue intake, isolated worktrees, persisted stages, independent reviews/evaluation, bounded repair, cancellation/recovery and human acceptance.
+- Add scheduled release evidence/analysis, file/command signals and trusted GitHub todo polling.
+- Register one-shot tools and project skills; add a Node CLI, configuration example, OpenCode HTTP adapter and generic command protocol.
+- Produce design/review/test/manual/PR/skill artifacts and optional idempotent draft PR publication.

@@ -10,10 +10,18 @@
   "scripts": {
     "check:kernel": "node scripts/check-kernel.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "node --test test/custom-hw/extension/*.test.mjs test/capability-watch/*.test.mjs"
+    "test": "node --test test/custom-hw/extension/*.test.mjs test/capability-watch/*.test.mjs test/one-shot/*.test.mjs",
+    "one-shot": "node scripts/one-shot.ts",
+    "smoke:kernel": "node scripts/smoke-one-shot.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.3",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "zod": "4.1.8"
+  },
+  "engines": {
+    "node": ">=24.0.0"
   }
 }

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "stateDir": ".codeagent/one-shot",
+  "baseRef": "dev",
+  "concurrency": 5,
+  "allowedPaths": ["external-plugins/", "agent-kernel-extension/", "test/", "docs/", ".opencode/", "agents/", "scripts/"],
+  "agents": {
+    "planner": { "kind": "opencode", "serverUrl": "http://127.0.0.1:4096" },
+    "builder": { "kind": "opencode", "serverUrl": "http://127.0.0.1:4096" },
+    "evaluator": { "kind": "opencode", "serverUrl": "http://127.0.0.1:4096" },
+    "review-a": { "kind": "opencode", "serverUrl": "http://127.0.0.1:4096" },
+    "review-b": { "kind": "opencode", "serverUrl": "http://127.0.0.1:4096" }
+  },
+  "roles": {
+    "planner": "planner", "builder": "builder", "evaluator": "evaluator",
+    "designReviewers": ["review-a", "review-b"], "codeReviewers": ["review-a", "review-b"]
+  },
+  "setup": [{ "id": "dependencies", "argv": ["bun", "install", "--frozen-lockfile", "--ignore-scripts"] }],
+  "checks": [
+    { "id": "typecheck", "argv": ["bun", "run", "typecheck"] },
+    { "id": "tests", "argv": ["bun", "run", "test"], "timeoutMs": 300000 }
+  ],
+  "limits": { "timeoutMs": 900000, "maxCalls": 60, "maxRepairs": 3, "maxDesignRevisions": 2, "maxOutputBytes": 2000000 },
+  "publish": { "enabled": false, "remote": "origin", "repository": "phao1/opencode-1.0old-branch", "baseBranch": "dev" },
+  "loops": [
+    { "id": "releases", "kind": "release", "daily": "07:10", "timezone": "Asia/Singapore", "enabled": true },
+    { "id": "feedback", "kind": "file", "file": ".codeagent/signals.json", "intervalSeconds": 60, "enabled": false },
+    { "id": "github-todo", "kind": "github", "repository": "phao1/opencode-1.0old-branch", "label": "todo", "trustedActors": ["phao1"], "intervalSeconds": 60, "enabled": false }
+  ]
+}

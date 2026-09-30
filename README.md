@@ -16,9 +16,9 @@ The submodule URL intentionally refers to this same repository: the pinned commi
 ## Structure
 
 - `agent-kernel/`: source baseline, Git submodule, read-only.
-- `agent-kernel-extension/`: reserved CodeAgent extension layer; internal wiring needs a separately verified kernel extension point.
+- `agent-kernel-extension/`: registered CodeAgent tools, durable one-shot runner and monitoring modules.
 - `external-plugins/`: public plugin and SDK integration code.
-- `.opencode/skills/one-shot/`: interactive one-shot workflow specification.
+- `.opencode/skills/one-shot/`: one-shot workflow entry using the durable runner.
 - `.opencode/command/one-shot.md`: command entry for that workflow.
 - `docs/baseline/`: target behavior and architecture decisions.
 - `sdk/js-agentkernel/`, `codecov/`, `test/`, `agents/`, `scripts/`: SDK, coverage support, tests, agent roles and scripts.
@@ -29,6 +29,16 @@ The registered `capability_watch` tool checks stable Claude Code and Codex GitHu
 
 Run `npm test` and `npm run typecheck` for the extension and monitoring code. From `external-plugins/`, `bun run build` produces a standalone plugin bundle in `dist/`. From `agent-kernel-extension/`, `bun run merge` copies CodeAgent-owned files into the submodule, `bun run serve` starts the development server with the workspace plugin configuration, and `bun run kernel:build` builds the kernel package. Install Bun and the kernel's dependencies for the latter two commands. The development server runs from the kernel package directory; attach a client with the workspace directory when editing the wrapper.
 
-This is not yet a scheduled watcher or an autonomous issue-to-PR runner. The existing CodeAgent subsystems in the proposed architecture have not been imported into this repository.
+## One-shot automation
 
-The full target, including release/code comparison, issue loops, durable one-shot execution, independent behavioral evaluation and secure named cross-session messaging, is specified in [the requirement matrix](docs/baseline/SPEC.md) and [the architecture](docs/baseline/DESIGN.md). The matrix distinguishes current functionality from pending acceptance gates.
+The framework now supports scheduled release/file/command/GitHub intake, deduplicated candidate issues, trusted todo execution, saved design, parallel design reviews, isolated Git worktrees, independent command-backed evaluation, bounded repairs and optional draft PR publication. Each stage persists its result; operator acceptance is explicit.
+
+Start with [one-shot.config.example.json](one-shot.config.example.json) and the [setup and adapter guide](docs/plugin-guide.md#one-shot-framework). Copy the example to one-shot.config.json, select available OpenCode models, set task-appropriate verification commands, then run:
+
+```bash
+npm run one-shot -- worker
+```
+
+Use /create-issue and /one-shot in OpenCode, or npm run one-shot -- help for CLI control. Runtime requires Node 24+, Git, an authenticated OpenCode server or a protocol-compatible command adapter, and task dependencies. Optional PR publication also requires authenticated git and gh. Example roles use the server's default model unless you configure distinct models.
+
+The [Spec v0.4](docs/baseline/SPEC.md) and [design](docs/baseline/DESIGN.md) define the framework scope. Cross-session messaging is a sample product feature from the source material and is outside this implementation. Tests use deterministic agent responses and real Git/command execution; they do not certify a real model's quality. Configure and exercise an actual provider before unattended production use.
