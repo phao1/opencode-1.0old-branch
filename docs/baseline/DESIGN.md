@@ -33,3 +33,9 @@ Release loop reads public releases, compares version refs, persists evidence and
 ## Evaluation and artifacts
 
 Independent stage invocations use prompt version and persisted role/model/session identifiers. Concrete check commands plus criterion-level evaluator evidence determine pass/fail. Failed findings re-enter builder and rerun verification. Artifacts include source reports, design, reviews, command stdout/stderr/exit status, evaluator outputs, test manual, PR body and reusable-skill proposal. Human rejection and evaluator feedback are stored as data for later prompt revision, not applied automatically as policy.
+
+## v0.5 additions: source evidence and test delivery
+
+`source.ts` maintains a per-repository bare cache under the durable state directory. It fetches a configured ref without checkout/install, compares immutable SHAs, and supplies bounded source files, diff and commit metadata to the independent analyst. `loops.ts` saves both raw evidence and analysis reports; issue evidence carries the report path. Cursor movement follows successful analysis and candidate persistence. Omitted files, binary files, missing history and ref rewrites remain explicit evidence gaps.
+
+`scripts/build-test-package.mjs` clones the fixed kernel into a disposable build checkout. The upstream script may generate native files there, but source under the workspace submodule is untouched. The CLI, bundled public plugin, separately bundled Node worker, skills and launchers form one portable package. Windows Actions runs checks, builds, then starts the actual exe and confirms one-shot tool registration before uploading a 30-day artifact. Release publication remains manual.

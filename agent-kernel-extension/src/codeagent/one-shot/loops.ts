@@ -7,6 +7,7 @@ import { execute } from "./process.ts"
 import { executeAgent, type AgentExecutor } from "./agents.ts"
 import { analysisSchema, issueInputSchema, type Config, type LoopState } from "./types.ts"
 import { createIssue, enqueue } from "./runner.ts"
+import { collectSource, sourceOptions } from "./source.ts"
 
 const sourceRepos = { claudeCode: "anthropics/claude-code", codex: "openai/codex" }
 const signalsSchema = z.object({ signals: z.array(issueInputSchema).max(100) })
@@ -29,8 +30,9 @@ async function report(store: Store, source: string, value: unknown) {
   const id = `report-${randomUUID()}`
   store.artifact(id, "REPORT.json", JSON.stringify(value, null, 2))
   await store.transact(db => { db.reports.push({ id, source, at: new Date().toISOString(), report: { artifact: path.join(store.directory, "artifacts", id, "REPORT.json") } }) })
+  return path.join(store.directory, "artifacts", id, "REPORT.json")
 }
-export async function tick(root: string, store: Store, config: Config, options: { now?: number; fetcher?: typeof fetch; executor?: AgentExecutor; force?: boolean; signal?: AbortSignal } = {}) {
+export async function tick(root: string, store: Store, config: Config, options: { now?: number; fetcher?: typeof fetch; executor?: AgentExecutor; force?: boolean; signal?: AbortSignal; sourceCollector?: typeof collectSource } = {}) {
   const release = await lock(path.join(store.directory, "loops.lock"), 0)
   const now = options.now ?? Date.now(), fetcher = options.fetcher ?? fetch, executor = options.executor ?? executeAgent
   const results: Array<{ id: string; ok: boolean; error?: string }> = []
@@ -57,6 +59,19 @@ export async function tick(root: string, store: Store, config: Config, options: 
           }
           if (Buffer.byteLength(raw) > config.limits.maxOutputBytes) throw new Error("Signal input too large")
           for (const item of signalsSchema.parse(JSON.parse(raw)).signals) await createIssue(store, { ...item, source: `loop:${loop.id}:${item.source}` })
+        } else if (loop.kind === "source") {
+          const key = `${loop.repository}@${loop.ref}`
+          const source = await (options.sourceCollector ?? collectSource)(sourceOptions(config, loop, store.directory, state.cursor?.[key], options.signal))
+          if (source) {
+            // Persist raw evidence even if analysis fails; cursor advances only after durable analysis/intake.
+            await report(store, key, { source })
+            const signal = options.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(config.limits.timeoutMs)]) : AbortSignal.timeout(config.limits.timeoutMs)
+            const value = await executor({ config, agentId: config.roles.analyst ?? config.roles.planner, role: "analyze", cwd: root, payload: { source, project: "Develop external plugins for pinned OpenCode. Explain changed features, exact source paths/commit evidence, architecture, edge cases, public plugin API compatibility and license constraints; distinguish observed implementation from inference. Produce candidates only, with stable feature sourceId; retain all omitted/unavailable evidence limitations." }, signal, onIdentity: async () => {} })
+            const analysis = analysisSchema.parse(value.result)
+            const analysisReport = await report(store, `${key}:${source.head}`, { source, analysis })
+            for (const candidate of analysis.candidates) await createIssue(store, { ...candidate, source: `https://github.com/${loop.repository}`, sourceId: candidate.sourceId ?? `${source.head}:${digest(candidate.title)}`, evidence: [...candidate.evidence, source.url, analysisReport] })
+            next.cursor = { ...state.cursor, [key]: source.head }
+          }
         } else if (loop.kind === "github") {
           if (!loop.repository || !loop.trustedActors.length) throw new Error("GitHub loop requires repository and trustedActors")
           let complete = false

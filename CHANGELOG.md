@@ -15,3 +15,8 @@
 - Add scheduled release evidence/analysis, file/command signals and trusted GitHub todo polling.
 - Register one-shot tools and project skills; add a Node CLI, configuration example, OpenCode HTTP adapter and generic command protocol.
 - Produce design/review/test/manual/PR/skill artifacts and optional idempotent draft PR publication.
+
+## Source evidence and portable test delivery
+
+- Add commit-based Codex/Pi/OpenCode source loops with bare Git caches, bounded implementation evidence, persistent analysis reports and success-only cursors.
+- Add portable native CLI/plugin/worker packaging and Windows CI smoke tests/30-day Actions artifacts; document manual installation and Release archival.

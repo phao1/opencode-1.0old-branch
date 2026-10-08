@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test test/custom-hw/extension/*.test.mjs test/capability-watch/*.test.mjs test/one-shot/*.test.mjs",
     "one-shot": "node scripts/one-shot.ts",
-    "smoke:kernel": "node scripts/smoke-one-shot.mjs"
+    "smoke:kernel": "node scripts/smoke-one-shot.mjs",
+    "package:test": "node scripts/build-test-package.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.3",

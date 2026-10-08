@@ -1,4 +1,4 @@
-# One-shot 自动化开发框架 Spec v0.4
+# One-shot 自动化开发框架 Spec v0.5
 
 更新：2026-09-29。本版取代 v0.3 的具体跨会话产品需求。
 
@@ -24,6 +24,14 @@
 | F10 | 输出 DESIGN、评审、命令日志、验收报告、测试手册、PR 正文、可复用 skill 建议。可配置通过 git/gh 提交分支和 draft PR，失败重试不重复建 PR；合入和最终验收由人决定。 |
 | F11 | 插件工具和 /one-shot、/create-issue 提供实际操作入口；独立 CLI/worker 执行持续任务。终端关闭后的持续执行由用户的服务管理器承载。 |
 | F12 | 时间/调用次数/重试/输出大小/并发有上限；token/cost 以适配器实际返回为准，未知不伪报。无凭据时保留 blocked 原因和可复查产物。 |
+| F13 | Codex、Pi、OpenCode 源码仓可独立于 Release 定时扫描。固定 ref，记录 base/head commit，保存 Git 缓存、diff、变更文件内容与永久链接；分析成功后才推进游标。文件/字节上限、遗漏、二进制、历史缺失必须明确记录。外部源码不执行、不自动授权开发。 |
+| F14 | PR/dev 的 GitHub Actions 在 Windows 构建 CLI exe 测试包，包括外置插件、命令/skill、独立 worker、配置示例、启动脚本与版本/校验清单。临时内核 checkout 承载原生构建生成文件，不改工作区内核。上传 Actions Artifact 供人工测试，不自动发布 Release。构建失败不得声称产物可下载。 |
+
+## 源码输入与测试交付
+
+源码来源：openai/codex（main）、earendil-works/pi（main）、anomalyco/opencode（dev）。上游 OpenCode 是观察对象，agent-kernel 仍固定原 baseline，源码发现不会自动升级内核。首次扫描分析 tip 与其父提交，后续分析上次成功 commit 到最新 tip 的差异。源码报告区分已证实实现、推断、与本项目公共插件 API 的适配障碍、许可证复用约束和验收建议。
+
+测试产物为 portable ZIP，CLI exe 与插件分发包一起使用。exe 不等于 Desktop 安装器，也不代表外置插件/Node worker 已被嵌入内核。Actions artifact 有保留期限，正式长期归档到 Release 需人工选择已验收提交。PR 提交触发构建；仅保存在本地、未推送的 one-shot 运行不会自动出 GitHub 产物。
 
 ## 非固定参数
 

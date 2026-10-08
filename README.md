@@ -41,4 +41,10 @@ npm run one-shot -- worker
 
 Use /create-issue and /one-shot in OpenCode, or npm run one-shot -- help for CLI control. Runtime requires Node 24+, Git, an authenticated OpenCode server or a protocol-compatible command adapter, and task dependencies. Optional PR publication also requires authenticated git and gh. Example roles use the server's default model unless you configure distinct models.
 
-The [Spec v0.4](docs/baseline/SPEC.md) and [design](docs/baseline/DESIGN.md) define the framework scope. Cross-session messaging is a sample product feature from the source material and is outside this implementation. Tests use deterministic agent responses and real Git/command execution; they do not certify a real model's quality. Configure and exercise an actual provider before unattended production use.
+The [Spec v0.5](docs/baseline/SPEC.md) and [design](docs/baseline/DESIGN.md) define the framework scope. Cross-session messaging is a sample product feature from the source material and is outside this implementation. Tests use deterministic agent responses and real Git/command execution; they do not certify a real model's quality. Configure and exercise an actual provider before unattended production use.
+
+## Source monitoring and Windows test packages
+
+The one-shot example configuration now also scans Codex, Pi and upstream OpenCode source commits. Evidence contains actual diff/file contents with bounded omissions, and analysis creates candidate issues without upgrading the pinned kernel. See `docs/plugin-guide.md`.
+
+Windows CLI portable packages (exe + external plugin + worker) are built by `.github/workflows/windows-test-package.yml` for dev/PR/manual runs and retained as Actions artifacts for 30 days after successful smoke verification. Download/setup instructions: `docs/test-package.md`. Local native build: `npm run package:test`. A standalone exe does not contain the external workflow plugin; keep the package together and use the launcher. Release archival is manual.

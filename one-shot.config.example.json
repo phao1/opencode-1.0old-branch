@@ -24,6 +24,9 @@
   "publish": { "enabled": false, "remote": "origin", "repository": "phao1/opencode-1.0old-branch", "baseBranch": "dev" },
   "loops": [
     { "id": "releases", "kind": "release", "daily": "07:10", "timezone": "Asia/Singapore", "enabled": true },
+    { "id": "codex-source", "kind": "source", "repository": "openai/codex", "ref": "main", "intervalSeconds": 3600, "enabled": true },
+    { "id": "pi-source", "kind": "source", "repository": "earendil-works/pi", "ref": "main", "intervalSeconds": 3600, "enabled": true },
+    { "id": "opencode-source", "kind": "source", "repository": "anomalyco/opencode", "ref": "dev", "intervalSeconds": 3600, "enabled": true },
     { "id": "feedback", "kind": "file", "file": ".codeagent/signals.json", "intervalSeconds": 60, "enabled": false },
     { "id": "github-todo", "kind": "github", "repository": "phao1/opencode-1.0old-branch", "label": "todo", "trustedActors": ["phao1"], "intervalSeconds": 60, "enabled": false }
   ]

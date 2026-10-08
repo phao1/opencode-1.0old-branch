@@ -17,10 +17,14 @@ const agentSchema = z.object({
   if (a.kind === "opencode" && !a.serverUrl) ctx.addIssue({ code: "custom", message: "opencode agent requires serverUrl" })
 })
 const loopSchema = z.object({
-  id, kind: z.enum(["release", "file", "command", "github"]), enabled: z.boolean().default(true),
+  id, kind: z.enum(["release", "source", "file", "command", "github"]), enabled: z.boolean().default(true),
   intervalSeconds: z.number().int().min(10).default(3600), daily: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).optional(), timezone: z.string().default("Asia/Singapore"),
   file: text.optional(), argv: argv.optional(), repository: z.string().regex(/^[\w.-]+\/[\w.-]+$/).optional(),
   label: text.default("todo"), trustedActors: z.array(text).default([]), maxPages: z.number().int().min(1).max(100).default(10), maxAnalyses: z.number().int().min(1).max(100).default(10),
+  ref: z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9_./-]{0,199}$/).default("main"),
+  maxSourceFiles: z.number().int().min(1).max(200).default(30),
+  maxSourceFileBytes: z.number().int().min(1024).max(1_000_000).default(32_000),
+  maxSourceBytes: z.number().int().min(1024).max(5_000_000).default(256_000),
 })
 export const configSchema = z.object({
   version: z.literal(1), stateDir: text.default(".codeagent/one-shot"), baseRef: text.default("HEAD"),
@@ -41,7 +45,7 @@ export const configSchema = z.object({
   if (new Set(c.checks.map(x => x.id)).size !== c.checks.length || new Set(c.loops.map(x => x.id)).size !== c.loops.length) ctx.addIssue({ code: "custom", message: "Check/loop IDs must be unique" })
   if (!c.checks.some(x => x.required)) ctx.addIssue({ code: "custom", message: "At least one required real check is required" })
   for (const loop of c.loops) {
-    if ((loop.kind === "file" && !loop.file) || (loop.kind === "command" && !loop.argv) || (loop.kind === "github" && (!loop.repository || !loop.trustedActors.length))) ctx.addIssue({ code: "custom", message: `Missing source configuration for ${loop.id}` })
+    if ((loop.kind === "file" && !loop.file) || (loop.kind === "command" && !loop.argv) || (loop.kind === "source" && !loop.repository) || (loop.kind === "github" && (!loop.repository || !loop.trustedActors.length))) ctx.addIssue({ code: "custom", message: `Missing source configuration for ${loop.id}` })
     try { new Intl.DateTimeFormat("en", { timeZone: loop.timezone }) } catch { ctx.addIssue({ code: "custom", message: `Invalid timezone ${loop.timezone}` }) }
   }
   for (const p of c.allowedPaths) if (p.startsWith("/") || p.includes("..") || p.includes("\\") || p === ".") ctx.addIssue({ code: "custom", message: "allowedPaths must be explicit repository-relative paths" })

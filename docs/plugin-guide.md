@@ -41,6 +41,8 @@ one-shot.config.json is trusted operator configuration. Generated code cannot al
 
 ### Monitoring and loops
 
+- source: fetch Git objects from a configured public GitHub repository/ref, without installing or executing its code. Example inputs cover openai/codex main, earendil-works/pi main and anomalyco/opencode dev. First scan compares the latest tip with its parent; later scans compare the last successfully analyzed SHA to the new tip, even if no release exists. Persist full Git cache and bounded diff/changed-file content, commit URLs, rewrite/omission notices and independent analysis. Candidate evidence includes the saved report path so planning can inspect original evidence. A source scan never upgrades the pinned kernel or grants todo. Defaults: 30 files, 32KB per file, 256KB content, 256KB patch; configure maxSourceFiles/maxSourceFileBytes/maxSourceBytes. A shallow fetch retains 200 commits per fetch; missing previous SHA blocks cursor advancement. No claim of exhaustive analysis for omitted content.
+
 - release: stable Claude Code/Codex releases, pagination, version cursor, changelog and GitHub compare evidence, independent analyst report and candidate issues. First scan analyzes the latest release. If an old cursor cannot be found within maxPages, it stays unchanged with an error. GitHub compare may lack closed-source implementation or complete patches; reports must retain this limitation.
 - file: read a JSON signals array produced by feedback/log tooling; source identity deduplicates repeated reads.
 - command: invoke configured argv without a shell; stdout must contain the same signals JSON. Use this to connect competitor analysis, nightly scans or benchmark scripts. The framework does not invent a bug-finder or benchmark workload.
@@ -67,3 +69,7 @@ publish.enabled=false produces a local PR package. With it enabled, authenticate
 State uses atomic local snapshots plus per-task/process locks, suitable for one host. Concurrent jobs have distinct persistent Git worktrees; no environment sharing is assumed. A worker crash preserves completed phases. Before retry, an interrupted OpenCode session is aborted; a still-running command child blocks automatic replay until stopped. Lost database files are not recoverable from model context: back up the state/artifact directory if needed. This is not a distributed scheduler.
 
 The bundled tests exercise a real Git workspace and a deterministic command adapter. They verify orchestration and failure handling, not the quality of an actual model's implementation. Real provider quality and platform-specific checks must be verified in your configured environment.
+
+### Test binary delivery
+
+See docs/test-package.md. `npm run package:test` builds the native CLI in a disposable pinned-kernel clone, bundles the external plugin and worker, and emits a portable directory with launchers and provenance/checksums. GitHub Actions builds Windows x64 on dev pushes/PRs/manual runs and uploads the smoke-verified package as a 30-day artifact. It does not publish a Release. The exe remains the native kernel; custom features are delivered by the accompanying plugin bundle. Node 24/Git/Bun are still required for the complete development worker, not just launching the CLI.
