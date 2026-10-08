@@ -70,4 +70,4 @@ node scripts/smoke-test-package.mjs dist/codeagent-opencode-windows-x64
 
 本机生成 dist/codeagent-opencode-windows-x64/。脚本按当前主机平台构建；Linux/macOS 构建会产生对应平台二进制，不会声称 Windows exe 已验证。原生构建在临时 clone 执行，固定内核文件不会被构建生成物覆盖。下载模型列表、Bun 原生依赖等需要网络；失败必须解决后再重试。
 
-仓库 lockfile 格式 v2，需要 Bun 1.4.2+ 读取；旧 Bun 1.3.11 会报 Unknown lockfile version。构建使用 frozen 安装。CLI-only 安装跳过生命周期脚本，验证预发布 Bash/PowerShell WASM 已存在，再使用原生 --single --skip-install 构建当前平台，避免无关 Electron/node-gyp 构建。产物保留 KERNEL-BUILD.bun.lock，BUILD.json 记录其 SHA256 与 Bun 版本；二进制并不承诺逐字节重现。
+仓库 lockfile 格式 v2，需要 Bun 1.4.2+ 读取；旧 Bun 1.3.11 会报 Unknown lockfile version。框架依赖 frozen 安装；原生内核在 Linux/macOS 同样 frozen，Windows 则需在临时 checkout 重新解析平台依赖，不能宣称与原始 lock 完全相同。CLI-only 安装跳过生命周期脚本，验证预发布 Bash/PowerShell WASM 已存在，再使用原生 --single --skip-install 构建当前平台，避免无关 Electron/node-gyp 构建。产物保留 KERNEL-BUILD.bun.lock，BUILD.json 记录其 SHA256 与 Bun 版本；二进制并不承诺逐字节重现。

@@ -33,7 +33,9 @@ try {
   const env = { ...process.env, OPENCODE_VERSION: version, OPENCODE_CHANNEL: 'codeagent-test', OPENCODE_RELEASE: '' }
   // CLI uses the published parser WASM/native packages, not grammar node-gyp bindings
   // or Electron. Skip lifecycle builds for this CLI-only package.
-  run(bun, ['install', '--frozen-lockfile', '--ignore-scripts'], kernel, env)
+  // Windows needs additional platform entries in this upstream lock; resolve only
+  // inside the disposable clone and archive the resulting lock for provenance.
+  run(bun, process.platform === 'win32' ? ['install', '--ignore-scripts'] : ['install', '--frozen-lockfile', '--ignore-scripts'], kernel, env)
   for (const grammar of ['bash', 'powershell']) {
     const resolved = execFileSync(bun, ['-e', `console.log(require.resolve("tree-sitter-${grammar}/tree-sitter-${grammar}.wasm"))`], { cwd: path.join(kernel, 'packages/opencode'), encoding: 'utf8' }).trim()
     if (!existsSync(resolved)) throw new Error(`Missing prebuilt ${grammar} grammar WASM`)
@@ -64,7 +66,7 @@ try {
   }
   writeFileSync(path.join(output, 'THIRD-PARTY-NOTICES.txt'), notices.join('\n') + '\n')
   cpSync(path.join(kernel, 'bun.lock'), path.join(output, 'KERNEL-BUILD.bun.lock'))
-  writeFileSync(path.join(output, 'BUILD.json'), JSON.stringify({ version, wrapperCommit: sha, kernelCommit, platform, arch: process.arch, bunVersion, kernelBuildLockSHA256: createHash('sha256').update(readFileSync(path.join(kernel, 'bun.lock'))).digest('hex'), dependencyResolution: 'Frozen upstream lock, no lifecycle scripts; see KERNEL-BUILD.bun.lock', builtAt: new Date().toISOString(), dirty: Boolean(git('status', '--porcelain', '--untracked-files=no', '--ignore-submodules=all')), embeddedWebUI: false, releasePublished: false }, null, 2))
+  writeFileSync(path.join(output, 'BUILD.json'), JSON.stringify({ version, wrapperCommit: sha, kernelCommit, platform, arch: process.arch, bunVersion, kernelBuildLockSHA256: createHash('sha256').update(readFileSync(path.join(kernel, 'bun.lock'))).digest('hex'), dependencyResolution: process.platform === 'win32' ? 'Windows dependencies resolved in disposable checkout; see KERNEL-BUILD.bun.lock' : 'Frozen upstream lock, no lifecycle scripts; see KERNEL-BUILD.bun.lock', builtAt: new Date().toISOString(), dirty: Boolean(git('status', '--porcelain', '--untracked-files=no', '--ignore-submodules=all')), embeddedWebUI: false, releasePublished: false }, null, 2))
   const files = []
   const walk = dir => { for (const item of readdirSync(dir, { withFileTypes: true })) { const file = path.join(dir, item.name); if (item.isDirectory()) walk(file); else files.push(file) } }
   walk(output)

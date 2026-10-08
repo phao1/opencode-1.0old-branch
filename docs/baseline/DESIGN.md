@@ -1,6 +1,6 @@
-# One-shot framework design v0.4
+# One-shot framework design v0.5
 
-Updated: 2026-09-29. Normative requirements: SPEC.md.
+Updated: 2026-10-08. Normative requirements: SPEC.md.
 
 ## Ownership
 
