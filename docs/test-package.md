@@ -10,7 +10,7 @@ dev push、针对 dev 的 PR 或手动触发 Actions → Windows test package �
 
 ## 本地准备
 
-完整开发链路需要 Git、Bun >=1.3.11、Node >=24、可用模型/凭据；自动 PR 还需 gh。CLI exe 自带 Bun 运行时，但独立 worker 和任务构建/测试仍需要这些开发工具。
+完整开发链路需要 Git、Bun 1.4.2+（1.x）、Node >=24、可用模型/凭据；自动 PR 还需 gh。CLI exe 自带 Bun 运行时，但独立 worker 和任务构建/测试仍需要这些开发工具。
 
 ```powershell
 git clone --branch dev --recurse-submodules https://github.com/phao1/opencode-1.0old-branch.git C:\work\CodeAgentPlugin
@@ -70,4 +70,4 @@ node scripts/smoke-test-package.mjs dist/codeagent-opencode-windows-x64
 
 本机生成 dist/codeagent-opencode-windows-x64/。脚本按当前主机平台构建；Linux/macOS 构建会产生对应平台二进制，不会声称 Windows exe 已验证。原生构建在临时 clone 执行，固定内核文件不会被构建生成物覆盖。下载模型列表、Bun 原生依赖等需要网络；失败必须解决后再重试。
 
-固定内核的原始 lockfile 在新环境下无法通过 frozen 安装，因此仅在临时构建 checkout 中重新解析依赖。CLI-only 安装跳过生命周期脚本，验证预发布 Bash/PowerShell WASM 已存在，再使用原生 --single --skip-install 构建当前平台，避免无关 Electron/node-gyp 构建。产物保留 KERNEL-BUILD.bun.lock，BUILD.json 记录其 SHA256 与 Bun 版本。源码 commit 固定，不意味着依赖解析或二进制可以逐字节重现。
+仓库 lockfile 格式 v2，需要 Bun 1.4.2+ 读取；旧 Bun 1.3.11 会报 Unknown lockfile version。构建使用 frozen 安装。CLI-only 安装跳过生命周期脚本，验证预发布 Bash/PowerShell WASM 已存在，再使用原生 --single --skip-install 构建当前平台，避免无关 Electron/node-gyp 构建。产物保留 KERNEL-BUILD.bun.lock，BUILD.json 记录其 SHA256 与 Bun 版本；二进制并不承诺逐字节重现。

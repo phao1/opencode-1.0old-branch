@@ -8,6 +8,9 @@ import { fileURLToPath } from 'node:url'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const kernelCommit = '517e6c9aa4c61dbc125e7654fc596f1d529f20d9'
 const bun = process.env.BUN_BINARY ?? 'bun'
+const bunVersion = execFileSync(bun, ['--version'], { encoding: 'utf8' }).trim()
+const [bunMajor, bunMinor, bunPatch] = bunVersion.split('.').map(Number)
+if (bunMajor !== 1 || bunMinor < 4 || (bunMinor === 4 && bunPatch < 2)) throw new Error('Use Bun 1.4.2+ (1.x) to read the committed v2 lockfiles')
 const run = (cmd, args, cwd, env = process.env) => {
   const result = spawnSync(cmd, args, { cwd, env, stdio: 'inherit' })
   if (result.error) throw result.error
@@ -28,11 +31,9 @@ try {
   run('git', ['clone', '--local', '--no-hardlinks', '--no-checkout', path.join(root, 'agent-kernel'), kernel], root)
   run('git', ['checkout', '--detach', kernelCommit], kernel)
   const env = { ...process.env, OPENCODE_VERSION: version, OPENCODE_CHANNEL: 'codeagent-test', OPENCODE_RELEASE: '' }
-  // The pinned upstream lock does not pass a fresh frozen install. Resolve only in this
-  // disposable checkout; upstream build.ts also resolves target-native dependencies.
   // CLI uses the published parser WASM/native packages, not grammar node-gyp bindings
   // or Electron. Skip lifecycle builds for this CLI-only package.
-  run(bun, ['install', '--ignore-scripts'], kernel, env)
+  run(bun, ['install', '--frozen-lockfile', '--ignore-scripts'], kernel, env)
   for (const grammar of ['bash', 'powershell']) {
     const resolved = execFileSync(bun, ['-e', `console.log(require.resolve("tree-sitter-${grammar}/tree-sitter-${grammar}.wasm"))`], { cwd: path.join(kernel, 'packages/opencode'), encoding: 'utf8' }).trim()
     if (!existsSync(resolved)) throw new Error(`Missing prebuilt ${grammar} grammar WASM`)
@@ -63,8 +64,7 @@ try {
   }
   writeFileSync(path.join(output, 'THIRD-PARTY-NOTICES.txt'), notices.join('\n') + '\n')
   cpSync(path.join(kernel, 'bun.lock'), path.join(output, 'KERNEL-BUILD.bun.lock'))
-  const bunVersion = execFileSync(bun, ['--version'], { encoding: 'utf8' }).trim()
-  writeFileSync(path.join(output, 'BUILD.json'), JSON.stringify({ version, wrapperCommit: sha, kernelCommit, platform, arch: process.arch, bunVersion, kernelBuildLockSHA256: createHash('sha256').update(readFileSync(path.join(kernel, 'bun.lock'))).digest('hex'), dependencyResolution: 'Upstream lock re-resolved in disposable checkout; see KERNEL-BUILD.bun.lock', builtAt: new Date().toISOString(), dirty: Boolean(git('status', '--porcelain', '--untracked-files=no', '--ignore-submodules=all')), embeddedWebUI: false, releasePublished: false }, null, 2))
+  writeFileSync(path.join(output, 'BUILD.json'), JSON.stringify({ version, wrapperCommit: sha, kernelCommit, platform, arch: process.arch, bunVersion, kernelBuildLockSHA256: createHash('sha256').update(readFileSync(path.join(kernel, 'bun.lock'))).digest('hex'), dependencyResolution: 'Frozen upstream lock, no lifecycle scripts; see KERNEL-BUILD.bun.lock', builtAt: new Date().toISOString(), dirty: Boolean(git('status', '--porcelain', '--untracked-files=no', '--ignore-submodules=all')), embeddedWebUI: false, releasePublished: false }, null, 2))
   const files = []
   const walk = dir => { for (const item of readdirSync(dir, { withFileTypes: true })) { const file = path.join(dir, item.name); if (item.isDirectory()) walk(file); else files.push(file) } }
   walk(output)
