@@ -1,5 +1,5 @@
 import { execFileSync, spawnSync } from 'node:child_process'
-import { mkdtempSync, mkdirSync, cpSync, existsSync, readFileSync, writeFileSync, readdirSync, rmSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, cpSync, existsSync, readFileSync, writeFileSync, readdirSync, rmSync, realpathSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import os from 'node:os'
@@ -24,7 +24,9 @@ const version = '1.3.17'
 const platform = process.platform === 'win32' ? 'windows' : process.platform
 const name = `codeagent-opencode-${platform}-${process.arch}`
 const output = path.join(root, 'dist', name)
-const temporary = mkdtempSync(path.join(os.tmpdir(), 'codeagent-build-'))
+// GitHub Windows TEMP can be an 8.3 RUNNER~1 alias; Bun workspace junctions must
+// use a single canonical spelling. RUNNER_TEMP is normally the short D:\a\_temp path.
+const temporary = realpathSync.native(mkdtempSync(path.join(realpathSync.native(process.env.RUNNER_TEMP ?? os.tmpdir()), 'codeagent-build-')))
 try {
   // Native build.ts writes models-snapshot and dependencies; confine these to a disposable clone.
   const kernel = path.join(temporary, 'agent-kernel')

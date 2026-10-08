@@ -30,7 +30,7 @@ Copy-Item one-shot.config.example.json one-shot.config.json
 窗口 1 启动测试版 server（模型账号可在窗口 3 的 TUI 中配置）：
 
 ```powershell
-& C:\tools\codeagent\start-opencode.ps1 -Project C:\work\CodeAgentPlugin serve --port 4096 --hostname 127.0.0.1
+& C:\tools\codeagent\start-opencode.ps1 -Project C:\work\CodeAgentPlugin -OpenCodeArgs @('serve', '--port', '4096', '--hostname', '127.0.0.1')
 ```
 
 窗口 2 启动 worker，负责扫描和执行已入队任务：
