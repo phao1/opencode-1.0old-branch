@@ -1,5 +1,5 @@
 import { execFileSync, spawnSync } from 'node:child_process'
-import { mkdtempSync, mkdirSync, cpSync, existsSync, readFileSync, writeFileSync, readdirSync, rmSync, realpathSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, cpSync, existsSync, readFileSync, writeFileSync, readdirSync, rmSync, realpathSync, chmodSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import os from 'node:os'
@@ -55,7 +55,12 @@ try {
   for (const directory of ['command', 'skills']) cpSync(path.join(root, '.opencode', directory), path.join(output, '.opencode', directory), { recursive: true })
   writeFileSync(path.join(output, '.opencode/opencode.json'), JSON.stringify({ plugin: ['./plugins/codeagent.js'] }, null, 2))
   for (const file of ['one-shot.config.example.json', 'docs/test-package.md']) cpSync(path.join(root, file), path.join(output, path.basename(file)))
-  for (const file of ['start-opencode.ps1', 'start-worker.ps1']) cpSync(path.join(root, 'scripts', file), path.join(output, file))
+  const launchers = process.platform === 'win32' ? ['start-opencode.ps1', 'start-worker.ps1'] : ['start-opencode.sh', 'start-worker.sh']
+  for (const file of launchers) {
+    cpSync(path.join(root, 'scripts', file), path.join(output, file))
+    if (process.platform !== 'win32') chmodSync(path.join(output, file), 0o755)
+  }
+  if (process.platform !== 'win32') chmodSync(path.join(output, binary), 0o755)
   cpSync(path.join(kernel, 'LICENSE'), path.join(output, 'OPENCODE-LICENSE'))
   const notices = ['This test package includes the pinned OpenCode binary and its upstream dependencies. See OPENCODE-LICENSE and the pinned upstream repository for dependency licensing.']
   for (const dependency of ['zod', '@opencode-ai/plugin']) {

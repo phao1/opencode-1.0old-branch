@@ -20,3 +20,8 @@
 
 - Add commit-based Codex/Pi/OpenCode source loops with bare Git caches, bounded implementation evidence, persistent analysis reports and success-only cursors.
 - Add portable native CLI/plugin/worker packaging and Windows CI smoke tests/30-day Actions artifacts; document manual installation and Release archival.
+
+## 2026-10-09
+
+- Target macOS test delivery instead of Windows: Apple Silicon/Intel native CI builds, Bash launchers and tar.gz archives preserving executable permissions.
+- Update Mac installation instructions; no native kernel source edits or automatic Release publication.
