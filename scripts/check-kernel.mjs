@@ -11,4 +11,10 @@ if (actual !== expected) {
   console.error(`Wrong kernel commit: ${actual}; expected ${expected}`)
   process.exit(1)
 }
-console.log(`OpenCode kernel pinned: ${actual}`)
+try {
+  execFileSync("git", ["-C", "agent-kernel", "diff", "--quiet", "HEAD", "--"], { stdio: "pipe" })
+} catch {
+  console.error("Tracked kernel files differ from the pinned commit")
+  process.exit(1)
+}
+console.log(`OpenCode kernel pinned and tracked files clean: ${actual}`)

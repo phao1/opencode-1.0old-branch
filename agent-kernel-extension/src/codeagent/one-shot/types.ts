@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const PROMPT_VERSION = "one-shot/1"
+export const PROMPT_VERSION = "one-shot/2"
 const text = z.string().trim().min(1).max(100_000)
 const id = z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,79}$/)
 const argv = z.array(text).min(1).max(100)

@@ -1,0 +1,13 @@
+{
+  "kernel": "517e6c9aa4c61dbc125e7654fc596f1d529f20d9",
+  "provider": "deterministic wire fixture",
+  "fixture": "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/kernel-lab-Cmxj4L",
+  "session": "ses_e969e3f28ffeiFogrB3Db7HabL",
+  "providerRequests": 1,
+  "userMessages": 2,
+  "conclusion": "Concurrent guidance persisted, but structured completion ended the loop without another model request.",
+  "rawReport": ".codeagent/structured-boundary-report.json",
+  "rawSha256": "ec97d849a6eb6ba2175406a3b8587b5e7d5ed92d57b4cca15d51becdf52d6540",
+  "reproduction": "node scripts/probe-steering-termination.mjs",
+  "interpretation": "Reproduces a native delivery gap; does not satisfy steering acceptance."
+}

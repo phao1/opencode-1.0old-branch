@@ -1,0 +1,49 @@
+{
+  "kind": "real-kernel-deterministic-provider-public-api-probe",
+  "reports": [
+    {
+      "report": ".codeagent/steering-resume-2bo7cq/report.json",
+      "sha256": "06a9cbaade6d60232b9429713eedebad225d401b048e483a73fb77e323f39bfe",
+      "provider": "deterministic wire fixture",
+      "assertions": {
+        "reproducedStructuredGap": true,
+        "resumedWithSameID": true,
+        "providerReceivedGuidance": true,
+        "userMessages": 2,
+        "providerRequests": 2,
+        "chatMessageCalls": 5,
+        "preservedParts": true,
+        "duplicateActiveRequestCount": 2,
+        "duplicateCompletedRequestCount": 2
+      },
+      "limitations": [
+        "No atomic active-turn check or delivery acknowledgement.",
+        "Metadata preservation is not automatic; plain wake clears omitted optional metadata and refreshes info.time.created.",
+        "Only tested after StructuredOutput idle and these two duplicate timings; restart, cancellation, failures, concurrent writers, and earlier snapshot/ID race not covered.",
+        "No assertion of exactly-once semantics or real-model quality. This uses public prompt upsert, not a dedicated resume endpoint."
+      ]
+    },
+    {
+      "report": ".codeagent/steering-resume-Ls4IyJ/report.json",
+      "sha256": "a19a27f1d55d5af99f9547b14b8133c09213e2d04c3072640ed33498e0a22f4c",
+      "provider": "deterministic wire fixture",
+      "assertions": {
+        "reproducedStructuredGap": true,
+        "resumedWithSameID": true,
+        "providerReceivedGuidance": true,
+        "userMessages": 2,
+        "providerRequests": 2,
+        "chatMessageCalls": 5,
+        "preservedParts": true,
+        "duplicateActiveRequestCount": 2,
+        "duplicateCompletedRequestCount": 2
+      },
+      "limitations": [
+        "No atomic active-turn check or delivery acknowledgement.",
+        "Metadata preservation is not automatic; plain wake clears omitted optional metadata and refreshes info.time.created.",
+        "Only tested after StructuredOutput idle and these two duplicate timings; restart, cancellation, failures, concurrent writers, and earlier snapshot/ID race not covered.",
+        "No assertion of exactly-once semantics or real-model quality. This uses public prompt upsert, not a dedicated resume endpoint."
+      ]
+    }
+  ]
+}

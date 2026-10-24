@@ -73,3 +73,41 @@ The bundled tests exercise a real Git workspace and a deterministic command adap
 ### Test binary delivery
 
 See docs/test-package.md. `npm run package:test` builds the native CLI in a disposable pinned-kernel clone, bundles the external plugin and worker, and emits a portable directory with launchers and provenance/checksums. GitHub Actions builds Windows x64 on dev pushes/PRs/manual runs and uploads the smoke-verified package as a 30-day artifact. It does not publish a Release. The exe remains the native kernel; custom features are delivered by the accompanying plugin bundle. Node 24/Git/Bun are still required for the complete development worker, not just launching the CLI.
+
+## Skills v0.6 (2026-10-23)
+
+`/create-issue` prepares observable criteria and evidence; `/one-shot` queues and inspects the durable workflow. `.opencode/skills/external-plugin-dev/SKILL.md` guides direct development and worker roles through the fixed public API. Worker prompt v2 reads that skill when present, without recursively queueing work. Stage contracts and the user-supplied methodology sources are under `.opencode/skills/one-shot/references/`. The portable build already copies the complete skills directory.
+
+Example request: `/one-shot 开发一个外置工具插件，返回当前项目的基本信息；不读取敏感配置，并为正常调用和缺少项目元数据提供行为测试。` The agent refines this into stable criteria, checks the real public API, and queues it only when configuration and the worker are available. Do not run an unconfigured example as a claim of validation.
+
+Commit the intended skill changes into the configured baseRef before queueing: worktrees start from committed Git objects and cannot see uncommitted prompt guidance. These project skills are not installed globally in Codex. A new real-model run is required to evaluate instruction quality; deterministic runner tests alone do not establish it.
+
+Change log: v0.6 adds project development skill routing and distinguishes skill guidance from worker execution.
+
+## Steering 引导（v0.3）
+
+运行任务时，在同一会话直接发送补充要求，例如：
+
+```text
+steer: 先修复测试失败，保留已经完成的接口改动。
+```
+
+steer: 是普通文本标记；API 客户端使用原生 session prompt/prompt_async。插件不将普通文本转成 command 模板，不展开其中的 shell/file 标记，也不改变用户的工具权限。
+
+新引导已保存而旧模型请求尚未读到时，公开 tool.execute.before 检查点阻止该请求的后续工具，并返回明确工具错误，让原生循环进入下一轮。已经通过检查点的工具允许完成。batch 内部子工具、MCP 等待授权之后的动作以及已启动的子任务没有可撤销保证。
+
+steering_status 工具查询当前会话的消息级证据。已保存与上下文已准备是不同事实；provider 收到与模型实际采纳在缺少独立证据时显示 unknown。成功结束后，默认对本进程在活动任务中观察的未处理引导做一次有界恢复，追加可审计的 synthetic 控制记录，原消息和附件不重复。已观察到取消、失败或进程重启后不自动续跑。autoResume:false 可关闭恢复。固定内核没有原子 expected_turn_id 接收，也不能原子协调取消与恢复派发；机制见 baseline/STEERING-RECOVERY.md。
+
+### 独立安装
+
+运行 npm run package:steering（Node 24+ 与 Bun；可用 BUN_BINARY 指定 Bun），得到 dist/oneshot-opencode-steering-0.3.1.tgz。安装与卸载步骤见 ../external-plugins/steering/README.md。独立包无需 one-shot worker；总 CodeAgentPlugin 已包含 steering 时不要再次安装。尚未发布到 npm registry。
+
+### 手工验收
+
+1. 在任务正在准备下一工具时发送修正，确认仍为同一会话、只保存一次输入，旧动作被拦截，后续模型按修正执行。
+2. 连续发送两条修正，查看实际保存顺序、后续输出与 steering_status；另开会话验证没有串话。
+3. 检查附件和已完成工作保留，空显式输入有用法反馈，普通文本中的 shell/file 标记没有在发送时展开。
+4. 请求仍执行时使用原生停止功能，确认 pending-cancelled 且没有自动续跑。成功 StructuredOutput 结束时，确认有一个 synthetic 控制记录及后续包含指导的请求；单独的 dispatched 状态不代表已送达。取消恰好与续跑派发交错仍是非原子边界。
+5. 真实 CLI/UI 手工验收与 HTTP/provider 自动验收分别记录；自动脚本不冒充已经操作过交互式 TUI。
+
+自动验证命令为 node scripts/verify-steering.mjs；真实模型通过 CODEX_BINARY 指定可用且已登录的 Codex CLI。缺少模型、网络失败或未完成的行为不能算通过。协议探针的确定性 provider 与真实模型运行证据分开保存。

@@ -1,0 +1,607 @@
+{
+  "date": "2026-10-24",
+  "version": "0.3.1",
+  "kernel": "517e6c9aa4c61dbc125e7654fc596f1d529f20d9",
+  "artifact": {
+    "path": "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/dist/oneshot-opencode-steering-0.3.1.tgz",
+    "sha256": "6bf16ee3198a23532848b5108d83d7f30d981b139f26b23405e9b8ec00b1a4d6",
+    "bundleSHA256": "2702ad1075951c21c91ae9355acea2921048b4450ed1aed38da751ec1e48f187"
+  },
+  "sourceIntegration": ".codeagent/steering-integration-0.3.1.json",
+  "checks": [
+    {
+      "id": "kernel",
+      "code": 0,
+      "durationMs": 67
+    },
+    {
+      "id": "types",
+      "code": 0,
+      "durationMs": 159
+    },
+    {
+      "id": "tests",
+      "code": 0,
+      "durationMs": 15210
+    },
+    {
+      "id": "api-feasibility",
+      "code": 0,
+      "durationMs": 7802
+    },
+    {
+      "id": "kernel-smoke",
+      "code": 0,
+      "durationMs": 3048
+    },
+    {
+      "id": "package",
+      "code": 0,
+      "durationMs": 505
+    },
+    {
+      "id": "steering-e2e",
+      "code": 0,
+      "durationMs": 123440
+    }
+  ],
+  "tests": {
+    "total": 57,
+    "passed": 57,
+    "steeringComponents": 35
+  },
+  "verification": {
+    "path": "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz",
+    "corePassed": true,
+    "fullAcceptancePassed": true,
+    "cases": [
+      {
+        "id": "baseline-stale-actions",
+        "passed": true,
+        "assertions": {
+          "actualInstalledPackage": false,
+          "sameSession": true,
+          "exactUserCount": 3,
+          "originalAttachmentPreserved": true,
+          "completedWorkPreserved": true,
+          "bothGuidanceMessagesInNextProviderRequest": true,
+          "actualRevisedAction": true,
+          "statusDoesNotInventTransportOrAdoption": false
+        },
+        "evidence": "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/baseline-stale-actions"
+      },
+      {
+        "id": "installed-package-gate",
+        "passed": true,
+        "assertions": {
+          "actualInstalledPackage": true,
+          "sameSession": true,
+          "exactUserCount": 3,
+          "originalAttachmentPreserved": true,
+          "completedWorkPreserved": true,
+          "bothGuidanceMessagesInNextProviderRequest": true,
+          "actualRevisedAction": true,
+          "statusDoesNotInventTransportOrAdoption": true
+        },
+        "evidence": "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/installed-package-gate"
+      },
+      {
+        "id": "checkpoint-already-passed",
+        "passed": true,
+        "assertions": {
+          "toolAlreadyPastGateMayFinish": true,
+          "followingRequestContainsGuidance": true
+        },
+        "evidence": "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/checkpoint-already-passed"
+      },
+      {
+        "id": "session-isolation",
+        "passed": true,
+        "assertions": {
+          "otherSessionUnaffected": true,
+          "staleActionBlockedOnlyInItsSession": true
+        },
+        "evidence": "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/session-isolation"
+      },
+      {
+        "id": "real-model-gate",
+        "passed": true,
+        "assertions": {
+          "actualInstalledPackage": true,
+          "sameSession": true,
+          "exactUserCount": 3,
+          "originalAttachmentPreserved": true,
+          "completedWorkPreserved": "covered by deterministic installed-package case",
+          "bothGuidanceMessagesInNextProviderRequest": true,
+          "actualRevisedAction": true,
+          "statusDoesNotInventTransportOrAdoption": true
+        },
+        "evidence": "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/real-model-gate"
+      },
+      {
+        "id": "real-model-completion-recovery",
+        "passed": true,
+        "assertions": {
+          "realModelResponses": 2,
+          "originalUserInputs": 2,
+          "syntheticControlRecords": 1,
+          "preservedOriginalPartsAndMetadata": true,
+          "permissionsUnchanged": true,
+          "nextRequestContainsGuidanceAndAttachment": true,
+          "revisedModelOutput": true,
+          "noToolReplay": true,
+          "noRecoveryLoop": true
+        },
+        "evidence": "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/real-model-completion-recovery"
+      },
+      {
+        "id": "lifecycle-structured",
+        "passed": true,
+        "assertions": {
+          "actualInstalledPlugin": true,
+          "originalUsers": 2,
+          "syntheticControls": 1,
+          "originalGuidanceMetadataAndPartsPreserved": true,
+          "observationAfterIdleMs": 700,
+          "noExtraLoop": true,
+          "providerAndAdoptionRemainUnknown": true,
+          "automaticContinuation": true,
+          "secondProviderRequestContainsGuidance": true,
+          "realPreparationEvidence": true
+        }
+      },
+      {
+        "id": "lifecycle-permissions",
+        "passed": true,
+        "assertions": {
+          "actualInstalledPlugin": true,
+          "originalUsers": 2,
+          "syntheticControls": 1,
+          "originalGuidanceMetadataAndPartsPreserved": true,
+          "observationAfterIdleMs": 700,
+          "noExtraLoop": true,
+          "providerAndAdoptionRemainUnknown": true,
+          "automaticContinuation": true,
+          "secondProviderRequestContainsGuidance": true,
+          "realPreparationEvidence": true
+        }
+      },
+      {
+        "id": "lifecycle-cancel",
+        "passed": true,
+        "assertions": {
+          "actualInstalledPlugin": true,
+          "originalUsers": 2,
+          "syntheticControls": 0,
+          "originalGuidanceMetadataAndPartsPreserved": true,
+          "observationAfterIdleMs": 700,
+          "noExtraLoop": true,
+          "providerAndAdoptionRemainUnknown": true,
+          "noAutomaticWake": true,
+          "honestPendingEvidence": true
+        }
+      },
+      {
+        "id": "lifecycle-provider-error",
+        "passed": true,
+        "assertions": {
+          "actualInstalledPlugin": true,
+          "originalUsers": 2,
+          "syntheticControls": 0,
+          "originalGuidanceMetadataAndPartsPreserved": true,
+          "observationAfterIdleMs": 700,
+          "noExtraLoop": true,
+          "providerAndAdoptionRemainUnknown": true,
+          "noAutomaticWake": true,
+          "honestPendingEvidence": true
+        }
+      },
+      {
+        "id": "lifecycle-restart",
+        "passed": true,
+        "assertions": {
+          "realProcessRestart": true,
+          "sameDatabaseAndLedger": true,
+          "noAutomaticWake": true,
+          "observationAfterRestartMs": 700,
+          "explicitInputPrepared": true,
+          "priorGuidanceIncluded": true,
+          "otherSessionUnchanged": true
+        }
+      },
+      {
+        "id": "lifecycle-auto-resume-disabled",
+        "passed": true,
+        "assertions": {
+          "actualInstalledPlugin": true,
+          "originalUsers": 2,
+          "syntheticControls": 0,
+          "originalGuidanceMetadataAndPartsPreserved": true,
+          "observationAfterIdleMs": 700,
+          "noExtraLoop": true,
+          "providerAndAdoptionRemainUnknown": true,
+          "noAutomaticWake": true,
+          "honestPendingEvidence": true
+        }
+      },
+      {
+        "id": "completion-late-save",
+        "passed": true,
+        "assertions": {
+          "installedProductLoaded": true,
+          "nativeGuideIDPredatesAssistant": true,
+          "guideSavedAfterInitialRequest": true,
+          "automaticProductRecovery": true,
+          "providerRequests": 2,
+          "originalUserRows": 2,
+          "syntheticControlRows": 1,
+          "originalPartsAndExistingMetadataUnchanged": true,
+          "originalAttachmentInNextRequest": true,
+          "permissionsUnchanged": true,
+          "toolExecutions": 0,
+          "guidancePrepared": true,
+          "providerAndAdoptionRemainUnknown": true,
+          "boundedObservationMs": 700
+        }
+      },
+      {
+        "id": "native-task-review-command",
+        "passed": true,
+        "assertions": {
+          "expectedProviderRequests": 2,
+          "childSessions": 1,
+          "taskStatus": [
+            "completed"
+          ],
+          "ordinaryModelTaskStillGated": false,
+          "mixedUnpreparedInputBlocked": false
+        }
+      },
+      {
+        "id": "native-task-after-history",
+        "passed": true,
+        "assertions": {
+          "expectedProviderRequests": 3,
+          "childSessions": 1,
+          "taskStatus": [
+            "completed"
+          ],
+          "ordinaryModelTaskStillGated": false,
+          "mixedUnpreparedInputBlocked": false
+        }
+      },
+      {
+        "id": "native-task-pending-input",
+        "passed": true,
+        "assertions": {
+          "expectedProviderRequests": 0,
+          "childSessions": 0,
+          "taskStatus": [
+            "running"
+          ],
+          "ordinaryModelTaskStillGated": false,
+          "mixedUnpreparedInputBlocked": true
+        }
+      },
+      {
+        "id": "native-task-model-stale",
+        "passed": true,
+        "assertions": {
+          "expectedProviderRequests": 2,
+          "childSessions": 0,
+          "taskStatus": [
+            "error"
+          ],
+          "ordinaryModelTaskStillGated": true,
+          "mixedUnpreparedInputBlocked": false
+        }
+      }
+    ]
+  },
+  "evaluation": {
+    "summary": "正式独立 evaluate（0.3.1）：重新核对原 ST-01..ST-07，7 项均有本轮通过证据；7 个 trusted checks 全部 exit0，57 项测试全部通过（35 项 steering 组件），精确安装包真实内核验收 TxFSnz 共 17/17，core/full 均 true，无 unsupported。独立重算 tgz SHA256=6bf16ee3198a23532848b5108d83d7f30d981b139f26b23405e9b8ec00b1a4d6、installed bundle SHA256=2702ad1075951c21c91ae9355acea2921048b4450ed1aed38da751ec1e48f187，匹配本次正式 package 检查及验收安装入口；未复用上一版哈希或评价。本人未编写生产源码、组件或验收 harness，本阶段只读核查原始消息/provider/model 事件与修复差异，并写本 response。先前 native /review 兼容性缺陷已由限定原生身份识别修复，新真实用例显示纯命令及历史后命令各创建一个子会话并完成，普通模型旧 task 仍被阻止。通过结论限于明确证据：有界 synthetic continuation 不具有原子 expected-turn/cancel、exactly-once 或任意重启自动恢复；已过检查点/现存子任务/batch 内部执行不可撤回。native SubtaskPart 混合未准备文本/附件仍 fail closed，原生可留下 running ToolPart，插件无法安全修复，这在 README/RECOVERY 已披露，不能称其完成了全部 native pending 恢复。真实验证通过公开 HTTP/API 及固定内核运行，未实际操作交互 TUI。ST-08 整体 one-shot 流程仍须主会话在后续正式 code_review/handoff 完成后审计，不由本阶段提前宣称。",
+    "results": [
+      {
+        "criterionId": "ST-01",
+        "passed": true,
+        "evidence": [
+          "check:steering-e2e",
+          "check:tests",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/installed-package-gate：同 session ses_e953a1e36ffeuHhu7et9iMCBQ7 保存初始输入和两次修正，实际动作 completed-work→final-3870edf6，已完成工作保留。real-model-gate 也保存准确三条真实 user，原附件保留。",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/real-model-gate 和 real-model-completion-recovery：已独立逐条比较 messages-before-release.json/messages-final.json，原 parts/附件及已有 info（内核 summary 除外）不变；完成边界保留两条原用户输入，仅新增一条显式 synthetic/continuation metadata 控制记录，不复制原 guidance 正文、不另建会话、不 abort/replay。该新增存储记录在安装 README 中明确告知。"
+        ]
+      },
+      {
+        "criterionId": "ST-02",
+        "passed": true,
+        "evidence": [
+          "check:steering-e2e",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/real-model-gate：原始 model-1/2/3 request/result/events 与工具日志证明真实 CLI 依次选择 old-211cc881、final-211cc881、完成文本；旧工具被 gate 阻止，两条修正在下一次实际 provider 请求中，实际仅 final-211cc881 执行。",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/real-model-completion-recovery：真实初次请求 tools 含 StructuredOutput、tool_choice=required，真实模型选择 {value:INITIAL_c7c81fee}；修正先保存后释放完成响应，产品自动提交一次独立 synthetic control，下一次真实 provider 请求含原指导/附件，真实模型输出 REVISED_c7c81fee。独立核查五次模型进程均 exit0、独立 thread、无外部命令/MCP/web 执行；relay 仅传实际 messages/tools/tool_choice，未向模型注入验收目标或替选答案。",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/lifecycle/report.json 的 lifecycle-structured 及 late-save/report.json 的 completion-late-save：精确安装包在 StructuredOutput 和 native guidance ID 早于 assistant 的迟保存路径均自动启动第二次请求并带入原指导，恰一条控制、原附件和权限不变。已在执行的工具允许完成；非原子取消及有界重试限制明确披露。"
+        ]
+      },
+      {
+        "criterionId": "ST-03",
+        "passed": true,
+        "evidence": [
+          "check:steering-e2e",
+          "check:api-feasibility",
+          "check:tests",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/installed-package-gate：两个旧并行 call 被 STEERING_STALE_CONTEXT 阻止，实际只有 completed-work 与 final-3870edf6；无 gate 对照真实执行 old/old-parallel。real-model-gate 的 old-211cc881 同样未执行，后续模型读到修正后真实执行 final。checkpoint-already-passed 证明已经启动的 already-running 可完成，后续请求含指导并执行 after-guidance。",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/native-task/report.json：原生 /review 两次 provider 请求、一个 child、task completed；已正常完成历史后原生 task 三次请求、一个 child、task completed；普通模型旧 task 被 gate 转为 error，零 child，下一 provider 请求含 CORRECTED_NATIVE_TASK。新 fallback 仅在普通 callID owner 缺失时精确验证原生 part.id/独立 callID、assistant、parent SubtaskPart 参数，不伪造正常 snapshot/prepared；混合未准备 text/file 原生输入零 provider/child、仍 saved confirmed + prepared=[]。其可能遗留 running ToolPart 是已披露原生 fail-closed 限制，不作为自动恢复成功。"
+        ]
+      },
+      {
+        "criterionId": "ST-04",
+        "passed": true,
+        "evidence": [
+          "check:tests",
+          "check:steering-e2e",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/installed-package-gate/status.json 与 session-isolation：两个不同 guidance ID 按公开 session.messages 顺序保留并进入后续请求；A pending 时 B-independent 正常执行，A 旧动作阻止后 A-final 正常执行。35 组件/57 总测试覆盖空 steer、附件型输入、同 ID 幂等、不同 ID 不去重、重复事件、并发 fingerprints、迟 callback、新输入/取消抑制、未知网络不重试及读取/存储失败等。",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/lifecycle/report.json：取消和 provider 错误保留 pending-cancelled/pending-failed，不自动 wake；默认 StructuredOutput 完成自动续跑，显式 autoResume:false 保留 pending-ended。真实 PID 98406→98524，在同 kernel-lab-UHc52M DB/ledger 重启，原消息/状态保持，旧 pending 无观察窗口内自动续跑；用户显式输入后下一请求带旧指导，另一会话 ledger 不变。late-save 案例证明完成边界自动续跑且 700ms 内无重复控制/请求。取消与最终准入非原子、任意崩溃/媒体压缩组合未作全面保证。"
+        ]
+      },
+      {
+        "criterionId": "ST-05",
+        "passed": true,
+        "evidence": [
+          "check:tests",
+          "check:kernel-smoke",
+          "check:steering-e2e",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/installed-package-gate/status.json、real-model-completion-recovery/status.json 与 lifecycle/report.json：saved、prepared assistant/source/context 指纹、provider/adopted 分开，生产 provider/adopted 始终 unknown。实际 provider 请求和模型输出/操作证据由验收器外部记录，prompt_async ACK/dispatched、control ID 观察、busy 或结束事件均未变成模型遵从声明。",
+          "源码只在 SDK 观察实际保存 parts 后标 saved，prepare 需唯一正常 assistant 关联；原生兼容分支只写 native-subtask-checkpoint-passed 诊断、不制造正常 prepared/snapshot。只读 steering_status 限当前 session 可按 messageID 过滤，给出状态文件路径；组件覆盖观察但未保存、partial parts、source 改变、状态损坏/不可写和 SDK 失败，未知事实不冒充成功。"
+        ]
+      },
+      {
+        "criterionId": "ST-06",
+        "passed": true,
+        "evidence": [
+          "check:kernel",
+          "check:tests",
+          "check:steering-e2e",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/lifecycle/report.json 的 lifecycle-permissions：原 guidance.tools={bash:true}，用户随后收窄真实 session 权限至 bash deny；控制未传 tools，恢复后及最终权限仍 deny，后续 provider tools 无 bash。该测试的 noReply metadata 保真 helper 不实现产品恢复。",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/installed-package-gate/messages-final.json：!touch、@missing-file、反引号和 $() 保持字面输入，真实执行仅 probe 动作。源码仅依赖公开 Plugin/SDK 与 node 内建，未导入内核私有模块，未执行输入 shell/file 标记；上下文保留 user role。已独立检查 runtime 根和 worker 的 kernel pin 均为 517e6c9aa4c61dbc125e7654fc596f1d529f20d9，git diff --quiet HEAD 均通过；新版 kernel guard 同时验证 commit 与 tracked clean。"
+        ]
+      },
+      {
+        "criterionId": "ST-07",
+        "passed": true,
+        "evidence": [
+          "check:package",
+          "check:kernel",
+          "check:steering-e2e",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/dist/steering-package-report.json：0.3.1 tgz 只含 README.md、dist/index.js、package.json，干净目录离线 install 与 entry import 通过。重算 tgz SHA256=6bf16ee3198a23532848b5108d83d7f30d981b139f26b23405e9b8ec00b1a4d6、bundle SHA256=2702ad1075951c21c91ae9355acea2921048b4450ed1aed38da751ec1e48f187，匹配本阶段 trusted package stdout 和 TxFSnz report 的精确产物。",
+          "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-TxFSnz/installed-package-gate/kernel.json、report.package.installedPluginPath 指向 steering-package-TSiIPY/install/node_modules/@oneshot/opencode-steering/dist/index.js；同一安装包在真实固定 kernel 注册工具并通过 17 个行为用例。包入口及依赖已捆绑，独立安装不依赖开发仓库/one-shot worker；README 给出安装、配置、使用、状态、升级及卸载步骤。"
+        ]
+      }
+    ]
+  },
+  "codeReviews": {
+    "code_review:0:2:review-a": {
+      "summary": "正式最终独立 code_review（0.3.1）：未发现尚需阻止交付的具体缺陷，findings 为空。关闭本人上一轮 native-subtask-unconditionally-blocked major 的依据为实际修复和新的真实固定内核证据，未复用旧评价。已只读复核 ledger.ts:445-500：普通 ToolPart.callID 关联优先，只有普通 owner 完全不存在时才对 tool=task 识别固定原生专用路径；要求唯一未完成 assistant、不同的 part.id/callID、part 与 session/message 一致、唯一 parent user SubtaskPart，以及精确 prompt/description/agent/command 输入。原生分支只在所有有效真实输入已正常准备或为完成历史 baseline、保存与证据完整且无 pending 时允许，不新增 normal snapshot/prepared；普通模型 task 仍检查自身 snapshot。新增六类组件验证来源/身份差异、混合 text/file、unknown/变更历史/读写失败和正常模型 task 的隔离；本人未改生产实现或测试。\n\n已直接读取最终 .codeagent/steering-verification-TxFSnz/report.json 和 native-task/report.json 并重算实际产物哈希：tgz=6bf16ee3198a23532848b5108d83d7f30d981b139f26b23405e9b8ec00b1a4d6，验收安装 bundle=2702ad1075951c21c91ae9355acea2921048b4450ed1aed38da751ec1e48f187，与正式 package check 和验收报告匹配。native-task-review-command 实际两次 provider 请求、一个子会话、task completed；after-history 三次请求、一个子会话、task completed，修复了原安装后零请求/零子会话的确定回归。pending-input 仍零 provider/child，原指导 saved confirmed、prepared=[]、provider/adopted unknown，未伪造准备证据；model-stale 的普通模型 task 被 STEERING_STALE_CONTEXT 阻止、零子会话，随后 provider 请求包含修正。完整报告 17/17、core/full true；本正式 request 的七个 trusted checks 均 exit0，测试 57/57，正式独立 evaluator ST-01..07 均通过。\n\n通过结论保留已经披露的边界：混合未准备 text/file 的原生 SubtaskPart 仍 fail closed，固定内核可能遗留 running ToolPart/未完成 assistant，插件不承诺自动修复该原生路径；有界 synthetic continuation 不等于原子 expected-turn/cancel、exactly-once 或重启自动恢复；已通过检查点、batch 内部和现存子任务不能撤回，复杂媒体压缩与交互 TUI 未作全面验收。README 与恢复文档已明确这些限制。本人未编写生产修复，只在上一轮独立复现回归，本轮只读审查修复和新证据；本 response 不提前宣称后续 handoff/ST-08 已完成。",
+      "findings": []
+    },
+    "code_review:0:2:review-b": {
+      "summary": "正式独立 code_review B（最终 0.3.1）：已只读复核生产变更、原生子任务修复及最终 TxFSnz 证据。之前的 native-subtask-gate-regression major 已解决：fallback 精确识别 native ToolPart.id/独立 callID、assistant/parent/SubtaskPart 输入关联，正常模型 task 仍走自身快照；未知或 pending 输入保持 fail closed，不伪造 normal preparation。TxFSnz 17/17、57 项测试及 7 个可信检查均通过；重新计算 tgz SHA256=6bf16ee3198a23532848b5108d83d7f30d981b139f26b23405e9b8ec00b1a4d6、installed bundle SHA256=2702ad1075951c21c91ae9355acea2921048b4450ed1aed38da751ec1e48f187，与最终报告匹配。独立核查五个真实模型 subprocess 的原始结果/事件均 exit0、不同实际 thread、无额外命令/MCP/web 执行，模型实际选择旧动作、修正动作和修订最终文本；确定性探针没有冒充模型质量证据。原始输入/附件保持与新增一条 synthetic user-role 控制记录均有明确说明，provider/adopted 仍 unknown。check-kernel 现核对固定 HEAD 及 tracked dirty，实际内核 tracked clean。本次无剩余 blocker/major/minor findings；结论限于已有公开 API 行为及实际证据，不扩张为原子 expected-turn/cancel、exactly-once、复杂媒体压缩全覆盖或交互 TUI 已操作。native 混合未准备 text/file 拒绝可能留下 running/unfinished，自动恢复该 native 路径并未实现且 README/RECOVERY 已披露；不把此边界隐去。本人未参与实现/验收 harness 编写，本阶段未修改 source、标准、checks 或 worker state，只写本 transport response。ST-08 后续 handoff/人工接受由 worker 与主会话负责。",
+      "findings": []
+    }
+  },
+  "workflow": {
+    "id": "run-09f76aad-178e-46c0-9eb6-3a7267a608d8",
+    "status": "awaiting_acceptance",
+    "phase": "handoff",
+    "repairCount": 2,
+    "successfulRoleCalls": {
+      "plan": 1,
+      "design_review": 2,
+      "build": 3,
+      "evaluate": 3,
+      "code_review": 4
+    },
+    "artifacts": "/Users/penghao/Documents/opc/oneshot/oneshotcode/opencode-1.0old-branch/.codeagent/one-shot-steering/artifacts/run-09f76aad-178e-46c0-9eb6-3a7267a608d8",
+    "manualAccepted": false,
+    "transport": "Original persistent runner with actual desktop subagents via AgentExecutor. Earlier failed CLI/agent calls are retained.",
+    "calls": [
+      {
+        "id": "bcc35188-0780-465d-b5fc-4146e7e03b49",
+        "role": "plan",
+        "agent": "planner",
+        "startedAt": "2026-10-23T15:13:53.537Z",
+        "status": "failed",
+        "pid": 28262,
+        "error": "Agent planner: Cancelled",
+        "finishedAt": "2026-10-23T15:16:32.197Z"
+      },
+      {
+        "id": "20e94864-3404-432f-966f-331d3333ab35",
+        "role": "plan",
+        "agent": "planner",
+        "startedAt": "2026-10-23T15:16:54.017Z",
+        "status": "failed",
+        "pid": 28881,
+        "error": "Agent planner: Cancelled",
+        "finishedAt": "2026-10-23T15:32:01.179Z"
+      },
+      {
+        "id": "4f4edb38-04ba-4779-8481-c8720ecd5da1",
+        "role": "plan",
+        "agent": "planner",
+        "startedAt": "2026-10-23T15:32:43.982Z",
+        "status": "failed",
+        "pid": 30302,
+        "error": "Agent planner: Command timed out",
+        "finishedAt": "2026-10-23T16:02:44.003Z"
+      },
+      {
+        "id": "17198481-3151-4bf2-8d72-7c0c4288d757",
+        "role": "plan",
+        "agent": "planner",
+        "startedAt": "2026-10-23T16:05:15.990Z",
+        "status": "done",
+        "sessionId": "/root/oneshot_planner",
+        "finishedAt": "2026-10-23T16:12:23.239Z"
+      },
+      {
+        "id": "cb7df759-7cde-4d12-986b-6f705958f8c9",
+        "role": "design_review",
+        "agent": "review-a",
+        "startedAt": "2026-10-23T16:12:23.333Z",
+        "status": "done",
+        "sessionId": "/root/steering_feasibility_review",
+        "finishedAt": "2026-10-23T16:14:00.122Z"
+      },
+      {
+        "id": "c0c08b0c-057b-442f-9d1e-bd71cbf0fffe",
+        "role": "design_review",
+        "agent": "review-b",
+        "startedAt": "2026-10-23T16:12:23.364Z",
+        "status": "done",
+        "sessionId": "/root/steering_validation",
+        "finishedAt": "2026-10-23T16:14:39.727Z"
+      },
+      {
+        "id": "023302bc-8595-471d-be87-d1e1e98ff81b",
+        "role": "build",
+        "agent": "builder",
+        "startedAt": "2026-10-23T16:14:39.776Z",
+        "status": "done",
+        "sessionId": "/root/steering_builder",
+        "finishedAt": "2026-10-23T16:30:23.485Z"
+      },
+      {
+        "id": "f793e7ca-dd28-44cf-b621-5d1890fb0be5",
+        "role": "evaluate",
+        "agent": "evaluator",
+        "startedAt": "2026-10-23T16:32:05.316Z",
+        "status": "done",
+        "sessionId": "/root/steering_feasibility_review",
+        "finishedAt": "2026-10-23T16:35:48.022Z"
+      },
+      {
+        "id": "f5b3126c-af87-4574-8e3e-aef151d6856e",
+        "role": "build",
+        "agent": "builder",
+        "startedAt": "2026-10-23T16:35:48.090Z",
+        "status": "failed",
+        "error": "The operation was aborted.",
+        "finishedAt": "2026-10-23T16:36:18.884Z"
+      },
+      {
+        "id": "14a7f85a-c98a-4d99-b1bd-fc72f464fa4b",
+        "role": "build",
+        "agent": "builder",
+        "startedAt": "2026-10-23T16:36:45.948Z",
+        "status": "failed",
+        "sessionId": "/root/steering_builder",
+        "error": "本 repair 阶段无法给出已有证据支持的安全修复，ST-02 仍未满足，应由 worker 标记 blocked，而非伪成功 build。已只读检查正式 packet：独立 evaluation 为 ST-01/03/04/05/06/07 通过、ST-02 失败；check:steering-e2e exit 1。最终包 SHA256=f8df43e6b8f91a855d0b2bd487162e2fadc31ccdf03a380f4e7f54307d70a088 的 .codeagent/steering-verification-zBoeHw/report.json 明列 lifecycle-structured unmet ST-02。真实 session ses_e966523abffe706S1BpEsFYVYl 的指导 msg_1699addb5001hPYk6poP1A3G1X 已保存，但 prepared=[]、pending-ended；StructuredOutput 完成后仅一次 provider 请求，没有包含指导的后续 normal request。普通工具路径的真实模型成功不能抵消此结束边界。\n\n这不是公开 API 完全不能恢复：同 session、同 messageID、parts:[] 的探针已证实能够唤醒，chat.message 中读回/恢复原 metadata 的模式也已通过实验。但该候选尚无生产级验证覆盖取消与唤醒之间的原子性、并发 wake/新输入、终止原因变化和崩溃恢复；公开 busy/idle 查询及非 await event hook 不能直接组成与内核取消共享的 compare-and-set。把该实验接到 idle 自动触发，会把未验证的取消/并发行为作为默认产品能力，与不默认自动复活取消任务的约束不符。当前没有足够证据证明在不改固定 kernel、不降低 criterion 的前提下可安全自动填补这一缺口。\n\n下一步需要产品选择和新的有限实现/验证范围：可先定义用户显式触发、针对仍保存且未 prepared 的指定 messageID 的恢复入口，再验证 metadata/parts/权限保真、两个并发 wake、重复 active/completed wake、新输入、取消/error、读失败及重启；该显式入口本身不自动等于现有 ST-02 全通过。若要求自动且严格解决结束/取消竞态，需要已验证的公开原子 resume/expected-turn 或等价协调能力。本阶段没有修改源码、kernel、criteria、trusted checks，也没有重跑未变化检查；保留当前六项通过与 ST-02 失败的准确状态。",
+        "finishedAt": "2026-10-23T16:38:17.476Z"
+      },
+      {
+        "id": "36745315-bf6b-45e6-ae2e-d65e7302a3c7",
+        "role": "build",
+        "agent": "builder",
+        "startedAt": "2026-10-23T16:50:15.911Z",
+        "status": "done",
+        "sessionId": "/root/steering_builder",
+        "finishedAt": "2026-10-23T17:10:50.969Z"
+      },
+      {
+        "id": "56c5a391-1854-48c8-a0da-0de76d83a11a",
+        "role": "evaluate",
+        "agent": "evaluator",
+        "startedAt": "2026-10-23T17:13:20.607Z",
+        "status": "failed",
+        "error": "The operation was aborted.",
+        "finishedAt": "2026-10-23T17:43:20.623Z"
+      },
+      {
+        "id": "de6d61ec-513a-4308-88c1-ad8b9fb53eb4",
+        "role": "evaluate",
+        "agent": "evaluator",
+        "startedAt": "2026-10-23T21:51:38.238Z",
+        "status": "done",
+        "sessionId": "/root/final_evaluator",
+        "finishedAt": "2026-10-23T21:53:01.508Z"
+      },
+      {
+        "id": "dbe87f55-2386-4c30-b929-06c6e51197dc",
+        "role": "code_review",
+        "agent": "review-a",
+        "startedAt": "2026-10-23T21:53:01.648Z",
+        "status": "done",
+        "sessionId": "/root/final_review_a",
+        "finishedAt": "2026-10-23T21:53:53.370Z"
+      },
+      {
+        "id": "49987c20-63b3-4a96-8c6d-235aa6e22a06",
+        "role": "code_review",
+        "agent": "review-b",
+        "startedAt": "2026-10-23T21:53:01.679Z",
+        "status": "done",
+        "sessionId": "/root/final_review_b",
+        "finishedAt": "2026-10-23T21:53:53.880Z"
+      },
+      {
+        "id": "4455da43-62df-4739-aa7c-99bf4979adff",
+        "role": "build",
+        "agent": "builder",
+        "startedAt": "2026-10-23T21:53:53.939Z",
+        "status": "done",
+        "sessionId": "/root/native_task_repair",
+        "finishedAt": "2026-10-23T21:58:01.517Z"
+      },
+      {
+        "id": "4a93785c-ba6b-4660-bb81-08677f8d4cd7",
+        "role": "evaluate",
+        "agent": "evaluator",
+        "startedAt": "2026-10-23T22:00:32.012Z",
+        "status": "done",
+        "sessionId": "/root/final_evaluator",
+        "finishedAt": "2026-10-23T22:01:28.259Z"
+      },
+      {
+        "id": "9f9602b7-3cca-4758-af64-e58143775ad6",
+        "role": "code_review",
+        "agent": "review-a",
+        "startedAt": "2026-10-23T22:01:28.403Z",
+        "status": "done",
+        "sessionId": "/root/final_review_a",
+        "finishedAt": "2026-10-23T22:02:09.086Z"
+      },
+      {
+        "id": "0e3d460b-3026-4289-bffb-d62e14debfa1",
+        "role": "code_review",
+        "agent": "review-b",
+        "startedAt": "2026-10-23T22:01:28.436Z",
+        "status": "done",
+        "sessionId": "/root/final_review_b",
+        "finishedAt": "2026-10-23T22:02:16.648Z"
+      }
+    ]
+  },
+  "ST08": {
+    "passed": true,
+    "evidence": [
+      "Actual plan and two independent parallel design reviews",
+      "Actual build and review-driven repair",
+      "Seven trusted commands, independent final evaluation, two final parallel code reviews with no findings",
+      "Runner fingerprint gate and actual handoff-complete; local PR.md, TEST-MANUAL.md, EVALUATION.json"
+    ]
+  },
+  "limitations": [
+    "No atomic expected_turn_id admission or cancel/dispatch transaction.",
+    "Recovery appends an identified synthetic control record; original user input is not duplicated.",
+    "Unknown dispatch is not retried; restart does not automatically resume old pending guidance.",
+    "Already passed tool checkpoints, batch-internal subtools and started child tasks cannot be retracted.",
+    "Mixed native subtask and unprepared real text/file input fails closed and may leave a native running ToolPart; automatic recovery of this branch is unsupported.",
+    "Complex media compaction/replay and interactive TUI acceptance are not claimed."
+  ],
+  "history": {
+    "previousCandidate": "0.2.0",
+    "previousSHA256": "f8df43e6b8f91a855d0b2bd487162e2fadc31ccdf03a380f4e7f54307d70a088",
+    "previousStructuredGap": "Resolved in the defined bounded continuation scope; original counterexample evidence is retained.",
+    "failedHarnessRun": ".codeagent/one-shot-steering/workspaces/run-09f76aad-178e-46c0-9eb6-3a7267a608d8/.codeagent/steering-verification-sOdzRS",
+    "nativeTaskRegression": ".codeagent/validation-drafts/subtask-review/report.json"
+  }
+}
