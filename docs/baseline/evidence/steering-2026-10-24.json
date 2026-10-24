@@ -1,0 +1,158 @@
+{
+  "date": "2026-10-24",
+  "baseCommit": "b134339f551506457c4cc693b0042b2442a0f180",
+  "branch": "dev1024",
+  "kernel": "517e6c9aa4c61dbc125e7654fc596f1d529f20d9",
+  "package": {
+    "version": "0.3.2",
+    "sha256": "3e02dfecb7bd66bdd95b5f6d0209e70d04aeb02f70ca89510f42769520fb282b",
+    "installedBundleSHA256": "39a88b37ac82eb4f973b086c651b20dc9d3e1a4f44dd6bec86b4f8d7f85532d5"
+  },
+  "tests": {
+    "total": 63,
+    "passed": 63,
+    "failed": 0,
+    "log": ".codeagent/verification-tests-2026-10-24.log"
+  },
+  "typecheck": "passed",
+  "kernelTrackedFiles": "clean",
+  "kernelVerification": {
+    "fullAcceptancePassed": true,
+    "corePassed": true,
+    "report": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-verification-RVEC5v/report.json",
+    "criteria": [
+      {
+        "id": "ST-01",
+        "status": "passed"
+      },
+      {
+        "id": "ST-02",
+        "status": "passed"
+      },
+      {
+        "id": "ST-03",
+        "status": "passed"
+      },
+      {
+        "id": "ST-04",
+        "status": "passed"
+      },
+      {
+        "id": "ST-05",
+        "status": "passed"
+      },
+      {
+        "id": "ST-06",
+        "status": "passed"
+      },
+      {
+        "id": "ST-07",
+        "status": "passed"
+      }
+    ],
+    "cases": [
+      {
+        "id": "baseline-stale-actions",
+        "passed": true
+      },
+      {
+        "id": "installed-package-gate",
+        "passed": true
+      },
+      {
+        "id": "checkpoint-already-passed",
+        "passed": true
+      },
+      {
+        "id": "session-isolation",
+        "passed": true
+      },
+      {
+        "id": "real-model-gate",
+        "passed": true
+      },
+      {
+        "id": "real-model-completion-recovery",
+        "passed": true
+      },
+      {
+        "id": "lifecycle-structured",
+        "passed": true
+      },
+      {
+        "id": "lifecycle-permissions",
+        "passed": true
+      },
+      {
+        "id": "lifecycle-cancel",
+        "passed": true
+      },
+      {
+        "id": "lifecycle-provider-error",
+        "passed": true
+      },
+      {
+        "id": "lifecycle-restart",
+        "passed": true
+      },
+      {
+        "id": "lifecycle-auto-resume-disabled",
+        "passed": true
+      },
+      {
+        "id": "completion-late-save",
+        "passed": true
+      },
+      {
+        "id": "native-task-review-command",
+        "passed": true
+      },
+      {
+        "id": "native-task-after-history",
+        "passed": true
+      },
+      {
+        "id": "native-task-pending-input",
+        "passed": true
+      },
+      {
+        "id": "native-task-model-stale",
+        "passed": true
+      },
+      {
+        "id": "history-undo",
+        "passed": true
+      },
+      {
+        "id": "history-delete",
+        "passed": true
+      }
+    ]
+  },
+  "web": {
+    "report": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-web-fDFGU5/web-verification.json",
+    "url": "http://127.0.0.1:4318",
+    "checks": {
+      "threeOriginalInputsSaved": true,
+      "correctionsInProviderOrder": true,
+      "staleToolBlocked": true,
+      "onlyFinalActionExecuted": true,
+      "undoFollowupToolCompleted": true,
+      "nativeStop": true,
+      "pendingCancelled": true,
+      "noRevival": true,
+      "providerRequests": 6
+    },
+    "screenshots": [
+      "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-web-fDFGU5/steering-success.png",
+      "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-web-fDFGU5/undo-success.png"
+    ],
+    "knownIssue": "Pinned Web first-open project initialization can throw worktree TypeError; page restart recovered; no kernel source edit."
+  },
+  "notRepeated": [
+    "ST-08 full one-shot development run",
+    "Interactive TUI",
+    "Complex media and compaction combinations"
+  ],
+  "publication": "Not published; source changes pushed only to the user-requested dev1024 branch."
+}

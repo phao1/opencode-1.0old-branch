@@ -1,10 +1,27 @@
-# Steering 0.3.1 交付与验收
+# Steering 0.3.2 交付与验收
+
+## 2026-10-24 本机复验
+
+从远端 `dev1024` 的 `b134339f551506457c4cc693b0042b2442a0f180` 拉取并复验。发现并修复 Undo 后已删除历史永久阻断后续工具的问题；新增六项删除生命周期回归测试、真实内核 Undo/DELETE 场景。修复验证脚本生成探针时的换行转义错误，以及对并行工具完成顺序的错误假设。固定内核 tracked 文件保持干净。
+
+- 当前独立包：[oneshot-opencode-steering-0.3.2.tgz](../../dist/oneshot-opencode-steering-0.3.2.tgz)
+- SHA256：`3e02dfecb7bd66bdd95b5f6d0209e70d04aeb02f70ca89510f42769520fb282b`。
+- `npm test`：63/63 通过；`npm run typecheck`、`npm run check:kernel`、`git diff --check` 通过。
+- `node scripts/verify-steering.mjs --use-package-report`：19/19 场景通过，ST-01..07 均通过；包含真实 Codex 模型改向、完成边界恢复及独立安装包加载。完整报告：`.codeagent/steering-verification-RVEC5v/report.json`。
+- 固定版本 Web app 实际浏览器操作：同一会话连续两次插话，旧工具被阻止，仅执行最终目标；Undo 后新任务工具正常执行；插话后点击原生“停止”，保持取消且没有自动复活。真实 provider 请求、工具动作、ledger 状态与截图分别留证：`.codeagent/steering-web-fDFGU5/web-verification.json`。
+- 便携汇总：[steering-2026-10-24.json](evidence/steering-2026-10-24.json)。新增 `npm run debug:steering` 用于重现本地 Web 调试环境。
+
+当前 Web 调试地址为 `http://127.0.0.1:4318`，仅本机可访问。固定前端第一次打开项目出现过 `Cannot read properties of undefined (reading 'worktree')`；点击“重启”后恢复并完成上述操作，未修改内核前端。TUI、复杂媒体压缩未在本次进行交互验证；已有 HTTP 证据与 Web 体验分别记录。
+
+本次没有重跑 ST-08 的完整开发编排，也不代替操作员的最终 accept。仅提交源码、测试与报告到用户指定分支，不创建远端 PR、不发布包或 release。
+
+## 0.3.1 历史交付记录
 
 开发及自动验收完成。原 ST-01..07 全通过，ST-08 的实际 one-shot 编排已完成设计、并行改进、实现、验证、独立评估、两路代码评审与 handoff。Run 当前为 `awaiting_acceptance`，等待人工体验；尚未记录人工 accept。
 
 ## 安装包
 
-- [独立 tgz](../../dist/oneshot-opencode-steering-0.3.1.tgz)
+- 历史独立包：`dist/oneshot-opencode-steering-0.3.1.tgz`（当前安装请使用上面的 0.3.2）
 - SHA256：`6bf16ee3198a23532848b5108d83d7f30d981b139f26b23405e9b8ec00b1a4d6`
 - [安装、使用及卸载说明](../../external-plugins/steering/README.md)
 - [最终变更说明](STEERING-PR.md)；[逐条证据](evidence/steering-final.json)

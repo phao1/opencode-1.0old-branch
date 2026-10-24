@@ -1,6 +1,8 @@
-# Steering 0.3.1 人工体验清单
+# Steering 0.3.2 交互体验清单
 
-自动验收及独立评审已通过；下面是尚未执行的交互式体验，不会自动记录人工 accept。原 runner 生成的完整 TEST-MANUAL.md 保留在 STEERING-DELIVERY.md 列出的 artifacts 目录。
+2026-10-24 更新：以下同类场景已通过实际 Web 浏览器操作复验：连续插话、最终目标执行、Undo 后继续任务、原生停止且无自动恢复。证据见 [STEERING-DELIVERY.md](STEERING-DELIVERY.md) 的 0.3.2 记录。TUI 与复杂媒体压缩仍未交互验收；保留原清单供操作员继续体验，不自动记录 accept。
+
+自动验收及独立评审已通过；以下保留为操作员检查清单，已完成的 Web 场景见上方记录，不会自动记录人工 accept。原 runner 生成的完整 TEST-MANUAL.md 保留在 STEERING-DELIVERY.md 列出的 artifacts 目录。
 
 1. 在临时项目只加载一种入口：独立包或本仓库组合插件。重启固定 OpenCode，确认能查询 steering_status。安装方法见外置包 README。
 2. 给模型一个有可观察结果的任务。工作仍运行时在同一会话输入“steer: 保留已完成的工作，接下来改用新的目标”。确认历史和附件保留，后续动作采用修正，已开始动作可以完成。

@@ -82,3 +82,11 @@ steering_status 查询当前会话的逐消息状态。saved、prepared、provid
 本版学习这些实现的消息归属和执行边界，通过公开工具检查点实现旧动作拦截。原子 turn 接收、独立 follow-up 队列和持久化 inbox 并未因此获得；不宣称完整复刻，也没有复制参考项目代码。
 
 独立包入口及说明位于 external-plugins/steering/。scripts/package-steering.mjs 负责构建与干净安装；scripts/verify-steering.mjs 使用安装后的文件启动真实固定内核并保存行为证据。构建、加载、调度和真实模型采纳分别判断，不能互相代替。
+
+## v0.3.2 删除确认与交互验证（2026-10-24）
+
+原实现将 Undo cleanup 删除的历史保留为 `saved: unknown`，导致新 assistant 即使准备完整上下文仍永久被 gate 拒绝。现在公开 `message.removed` 为已知输入记录 `removedAt`；reconcile 确认有效输入缺失后，该条目退出待处理阻断集合，但保留审计记录。有效输入重新出现立即清除 `removedAt`，无删除事件的缺失以及仅附件删除继续按未知/未读证据阻断。字段随 ledger 持久化。
+
+新增真实内核历史探针覆盖 revert→新 prompt cleanup 和 DELETE 两条路径。动作探针改成静态公共插件 fixture，避免原生成代码中的字面换行转义错误；基线并行工具只约束每个动作一次及批次先后，不要求并行批次内部的完成顺序。
+
+`npm run debug:steering` 启动固定内核、安装后的独立包、固定版本 Vite Web app 与真实 Codex 中继，目录、状态、模型请求和工具动作均隔离保存。它只提供可观察的动作工具和模型协议转换，不替模型选择目标；不更改内核源码或用户全局配置。原生前端首次打开项目可能发生 `worktree` 初始化竞态，页面重启后继续验证，未修改固定前端。

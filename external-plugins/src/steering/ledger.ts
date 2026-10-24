@@ -17,7 +17,7 @@ type Entry = {
   observationSequence: number; kernelCreated?: number; order?: number; expectedFingerprint?: string; fingerprint?: string
   saved: "confirmed" | "unknown"; prepared: Prepared[]; historicalBaseline: boolean; baselineReason?: string; compacted?: boolean
   provider: { status: "unknown"; source: string }; adopted: { status: "unknown"; source: string }
-  pendingReason: string | null; lastError?: string
+  pendingReason: string | null; lastError?: string; removedAt?: number
 }
 type Snapshot = { assistantID: string; sequence: number; preparedAt: number; users: Array<{ messageID: string; sourceFingerprint: string; contextFingerprint: string }>; coverage: Record<string, string> }
 type RecoveryAttempt = { key: string; assistantID: string; pending: Array<{ messageID: string; fingerprint: string }>; attemptedAt: number; status: "attempted" | "dispatched" | "suppressed" | "dispatch-unknown"; controlMessageID?: string }
@@ -131,7 +131,7 @@ export class SteeringLedger {
     state.evidence = this.storageErrors.has(state.sessionID) || this.readErrors.has(state.sessionID) ? "unavailable" : "available"
     for (const entry of state.messages) {
       const covered = entry.prepared.some(prepared => prepared.sourceFingerprint === entry.fingerprint)
-      entry.pendingReason = state.evidence === "unavailable" ? "evidence-unavailable" : entry.saved !== "confirmed" ? "awaiting-save"
+      entry.pendingReason = state.evidence === "unavailable" ? "evidence-unavailable" : entry.removedAt ? "removed" : entry.saved !== "confirmed" ? "awaiting-save"
         : covered ? null : entry.historicalBaseline ? "historical-coverage-unknown" : state.lifecycle === "cancelled" ? "pending-cancelled" : state.lifecycle === "failed" ? "pending-failed"
         : state.lifecycle === "idle" ? "pending-ended" : entry.compacted ? "pending-compacted" : "awaiting-normal-request"
     }
@@ -175,6 +175,9 @@ export class SteeringLedger {
       for (const [order, message] of users.entries()) {
         const existing = state.messages.some(entry => entry.messageID === message.info.id)
         const entry = this.entry(state, message.info.id)
+        // A reappearing effective input needs normal evidence again. A stale
+        // deletion notification must never excuse present or changed content.
+        delete entry.removedAt
         seen.add(entry.messageID)
         const actual = fingerprint(message.parts)
         entry.order = order
@@ -192,7 +195,10 @@ export class SteeringLedger {
         if (previous && (previous.info.id >= message.info.id || (previous.info.time?.created ?? 0) > (message.info.time?.created ?? Infinity))) state.ordering.status = "ambiguous"
         previous = message
       }
-      for (const entry of state.messages) if (!seen.has(entry.messageID)) { entry.saved = "unknown"; entry.lastError = "message-or-effective-parts-unavailable" }
+      for (const entry of state.messages) if (!seen.has(entry.messageID)) {
+        entry.saved = "unknown"
+        entry.lastError = entry.removedAt ? "message-removed" : "message-or-effective-parts-unavailable"
+      }
       state.messages.sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity) || a.observationSequence - b.observationSequence)
       state.initialized = true
       state.lastReconciledAt = Date.now()
@@ -462,7 +468,7 @@ export class SteeringLedger {
           this.diagnostic(state, "tool-association-unavailable", { callID: input.callID })
           throw unavailable("tool call has no trustworthy assistant snapshot")
         }
-        const unresolved = state.messages.filter(entry => entry.saved === "unknown" && (nativeOwner || entry.fingerprint))
+        const unresolved = state.messages.filter(entry => entry.saved === "unknown" && !entry.removedAt && (nativeOwner || entry.fingerprint))
         if (unresolved.length) throw unavailable("saved message parts changed or became unavailable")
         // Native SubtaskPart dispatch precedes normal messages.transform. It
         // may proceed without inventing a snapshot only when every real input
@@ -520,7 +526,7 @@ export class SteeringLedger {
     })
   }
   async event(event: { type: string; properties?: unknown }) {
-    const properties = event.properties as { sessionID?: string; info?: Message["info"]; part?: { sessionID?: string }; status?: { type: string }; error?: { name?: string; data?: { message?: string } } } | undefined
+    const properties = event.properties as { sessionID?: string; messageID?: string; info?: Message["info"]; part?: { sessionID?: string }; status?: { type: string }; error?: { name?: string; data?: { message?: string } } } | undefined
     const sessionID = properties?.sessionID ?? properties?.info?.sessionID ?? properties?.part?.sessionID
       ?? (event.type === "session.deleted" ? properties?.info?.id : undefined)
     if (!sessionID) return
@@ -558,6 +564,13 @@ export class SteeringLedger {
           return
         }
         if (this.deleted.has(sessionID)) return
+        if (event.type === "message.removed" && typeof properties?.messageID === "string") {
+          const entry = state.messages.find(item => item.messageID === properties.messageID)
+          if (entry) {
+            entry.removedAt = Date.now()
+            this.diagnostic(state, "message-removal-observed", { messageIDs: [entry.messageID] })
+          }
+        }
         if (event.type === "session.status") {
           if (properties?.status?.type === "busy" || properties?.status?.type === "retry") state.lifecycle = "active"
           else if (!["cancelled", "failed"].includes(state.lifecycle)) state.lifecycle = "idle"

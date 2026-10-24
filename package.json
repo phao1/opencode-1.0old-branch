@@ -14,7 +14,8 @@
     "one-shot": "node scripts/one-shot.ts",
     "smoke:kernel": "node scripts/smoke-one-shot.mjs",
     "package:test": "node scripts/build-test-package.mjs",
-    "package:steering": "node scripts/package-steering.mjs"
+    "package:steering": "node scripts/package-steering.mjs",
+    "debug:steering": "node scripts/steering-web-lab.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.3",

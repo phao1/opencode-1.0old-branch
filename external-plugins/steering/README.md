@@ -1,4 +1,4 @@
-# @oneshot/opencode-steering 0.3.1
+# @oneshot/opencode-steering 0.3.2
 
 A standalone public-API plugin for OpenCode v1.3.17, pinned commit `517e6c9aa4c61dbc125e7654fc596f1d529f20d9`. It records message evidence, schedules bounded synthetic continuation after successful completion leaves active-turn guidance pending, and prevents a tool that has not passed its execution checkpoint from acting on an older assistant context after new user guidance has been saved.
 
@@ -12,13 +12,13 @@ Build the archive from the development checkout:
 npm run package:steering
 ```
 
-This creates `dist/oneshot-opencode-steering-0.3.1.tgz` and `dist/steering-package-report.json`. The report includes the archive SHA256, npm integrity, clean installation path and entry-module check. Packaging alone does not verify kernel behavior.
+This creates `dist/oneshot-opencode-steering-0.3.2.tgz` and `dist/steering-package-report.json`. The report includes the archive SHA256, npm integrity, clean installation path and entry-module check. Packaging alone does not verify kernel behavior.
 
 Install the archive in a dedicated directory:
 
 ```sh
 mkdir -p "$HOME/.local/share/opencode-steering"
-npm install --prefix "$HOME/.local/share/opencode-steering" --ignore-scripts /absolute/path/oneshot-opencode-steering-0.3.1.tgz
+npm install --prefix "$HOME/.local/share/opencode-steering" --ignore-scripts /absolute/path/oneshot-opencode-steering-0.3.2.tgz
 ```
 
 Add the installed entry's absolute path once to your OpenCode configuration. Replace `/home/me` with your actual home directory:
@@ -54,6 +54,8 @@ Pending text or attachments block native dispatch, including text/files submitte
 ## Inspect evidence
 
 The read-only `steering_status` tool returns evidence for the current session. Its optional `messageID` argument filters one message; it cannot query another session. Tool availability follows the host's normal agent permissions.
+
+Version 0.3.2 retains an audit record for inputs removed by the host's public `message.removed` event. Once a public message query confirms the effective input is absent, its `pendingReason` is `removed` and it no longer blocks a new task after Undo. A missing row without a deletion event still fails closed; removing one attachment does not retire the remaining guidance. Provider receipt and adoption remain unknown.
 
 The same JSON is written beneath `$XDG_STATE_HOME/codeagent-steering` (or `~/.local/state/codeagent-steering`). Hashed project/session names prevent message text from becoming a path. An optional plugin configuration can set the state root explicitly:
 

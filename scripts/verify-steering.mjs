@@ -10,6 +10,7 @@ import { callRealModel, sendModelResponse } from './lib/model-relay.mjs'
 import { runLifecycleProbe } from './probe-steering-lifecycle.mjs'
 import { runLateSaveProbe } from './verify-steering-late-save.mjs'
 import { runNativeTaskProbe } from './verify-steering-native-task.mjs'
+import { runHistoryProbe } from './verify-steering-history.mjs'
 
 const expectedKernel = '517e6c9aa4c61dbc125e7654fc596f1d529f20d9'
 const mode = process.argv.includes('--core-only') ? 'core' : 'full'
@@ -45,6 +46,8 @@ try {
   if (lateSave.setupError) reports.push({ id: 'late-save-setup', passed: false, error: lateSave.setupError })
   const native = await runNativeTaskProbe({ installedPluginPath: packageReport.installedPluginPath, evidenceDir: path.join(evidence, 'native-task') })
   reports.push(...native.cases)
+  const history = await runHistoryProbe({ installedPluginPath: packageReport.installedPluginPath, evidenceDir: path.join(evidence, 'history') })
+  reports.push(...history.cases)
   // Execute the independent evidence formerly left as unresolved placeholders.
   for (const [id, args] of [['kernel-boundary', ['scripts/check-kernel.mjs']], ['component-behavior', ['--test', 'test/steering/plugin.test.mjs']]]) {
     try {
@@ -62,7 +65,7 @@ const criteriaDefinitions = [
   { id: 'ST-01', evidence: ['installed-package-gate', 'real-model-gate', 'real-model-completion-recovery'], scope: 'Same session and original user inputs; recovery adds one separately identified synthetic control record without rewriting guidance or attachments.' },
   { id: 'ST-02', evidence: ['installed-package-gate', 'real-model-gate', 'real-model-completion-recovery', 'lifecycle-structured', 'completion-late-save'], scope: 'Actual subsequent provider context and model action, including the completion boundary.' },
   { id: 'ST-03', evidence: ['installed-package-gate', 'checkpoint-already-passed', 'native-task-review-command', 'native-task-after-history', 'native-task-pending-input', 'native-task-model-stale'], scope: 'Per-assistant stale calls are blocked; already-started tools are allowed to finish.' },
-  { id: 'ST-04', evidence: ['installed-package-gate', 'session-isolation', 'lifecycle-cancel', 'lifecycle-provider-error', 'lifecycle-restart'], externalEvidenceRequired: ['component-behavior'], scope: 'Multiple guidance messages, isolation, cancellation, failure and restart.' },
+  { id: 'ST-04', evidence: ['installed-package-gate', 'session-isolation', 'lifecycle-cancel', 'lifecycle-provider-error', 'lifecycle-restart', 'history-undo', 'history-delete'], externalEvidenceRequired: ['component-behavior'], scope: 'Multiple guidance messages, isolation, cancellation, failure, restart and confirmed history removal.' },
   { id: 'ST-05', evidence: ['installed-package-gate', 'lifecycle-structured', 'lifecycle-provider-error'], externalEvidenceRequired: ['component-behavior'], scope: 'Persisted saved/prepared facts remain distinct from external provider and adoption observations.' },
   { id: 'ST-06', evidence: ['installed-package-gate', 'lifecycle-permissions'], externalEvidenceRequired: ['kernel-boundary', 'component-behavior'], scope: 'Literal text and retained attachments; separate checks audit permissions and the kernel boundary.' },
   { id: 'ST-07', evidence: ['installed-package-gate'], scope: 'The exact SHA256 artifact is installed offline in an empty directory and its installed entry is loaded by the actual pinned kernel.' },
@@ -125,9 +128,8 @@ async function createLab(name, { gate = true, handler, holdAction, structured = 
   const releaseFile = path.join(directory, 'release-tool')
   await writeFile(log, '')
   // A public plugin fixture records real tool execution. It has no steering gate.
-  const fixturePlugin = path.join(directory, 'probe.mjs')
-  const publicTool = path.join(root, 'node_modules/@opencode-ai/plugin/src/tool.ts')
-  await writeFile(fixturePlugin, `import { tool } from ${JSON.stringify(publicTool)}\nimport { appendFile, access } from 'node:fs/promises'\nimport { setTimeout as delay } from 'node:timers/promises'\nexport const ProbePlugin = async () => ({ tool: { probe_step: tool({ description: 'Record the requested action in the task artifact. Perform exactly the requested action.', args: { action: tool.schema.string() }, async execute(args, context) { const event={sessionID:context.sessionID,assistantID:context.messageID,action:args.action}; await appendFile(${JSON.stringify(log)},JSON.stringify({...event,kind:'started'})+'\\n'); if(args.action===${JSON.stringify(holdAction ?? null)}) { const end=Date.now()+30000; while(Date.now()<end) { if(context.abort.aborted) throw new Error('aborted'); if(await access(${JSON.stringify(releaseFile)}).then(()=>true,()=>false)) break; await delay(20); } } await appendFile(${JSON.stringify(log)},JSON.stringify({...event,kind:'completed'})+'\\n'); return 'Recorded action: '+args.action } }) } })\n`)
+  const fixturePlugin = [path.join(root, 'test/steering/fixtures/action-probe.ts'), { log, holdAction, releaseFile }]
+
   const requests = [], failures = []
   const server = http.createServer(async (req, res) => {
     try {
@@ -217,7 +219,10 @@ async function raceCase({ gate, real, completed }) {
     const after = await messages(env.lab, id)
     const events = await logEvents(env.log)
     const actions = events.filter(event => event.kind === 'completed').map(event => event.action)
-    assert.deepEqual(actions, [...(completed ? ['completed-work'] : []), ...(!gate ? [old, `${old}-parallel`] : []), revised])
+    const expected = [...(completed ? ['completed-work'] : []), ...(!gate ? [old, `${old}-parallel`] : []), revised]
+    assert.deepEqual([...actions].sort(), [...expected].sort(), 'Every expected action completes exactly once; parallel calls may finish in either order')
+    assert.equal(actions.at(-1), revised, 'The revised action runs after the previous tool batch')
+    if (completed) assert.equal(actions[0], 'completed-work', 'Earlier completed work is preserved')
     assert.equal(after.filter(message => message.info.role === 'user').length, 3)
     const original = after.find(message => message.info.id === retained.info.id)
     assert.deepEqual(original.parts, retained.parts, 'Original text, synthetic attachment content and attachment must be unchanged')

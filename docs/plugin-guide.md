@@ -100,7 +100,7 @@ steering_status 工具查询当前会话的消息级证据。已保存与上下�
 
 ### 独立安装
 
-运行 npm run package:steering（Node 24+ 与 Bun；可用 BUN_BINARY 指定 Bun），得到 dist/oneshot-opencode-steering-0.3.1.tgz。安装与卸载步骤见 ../external-plugins/steering/README.md。独立包无需 one-shot worker；总 CodeAgentPlugin 已包含 steering 时不要再次安装。尚未发布到 npm registry。
+运行 npm run package:steering（Node 24+ 与 Bun；可用 BUN_BINARY 指定 Bun），得到 dist/oneshot-opencode-steering-0.3.2.tgz。安装与卸载步骤见 ../external-plugins/steering/README.md。独立包无需 one-shot worker；总 CodeAgentPlugin 已包含 steering 时不要再次安装。尚未发布到 npm registry。
 
 ### 手工验收
 
@@ -111,3 +111,11 @@ steering_status 工具查询当前会话的消息级证据。已保存与上下�
 5. 真实 CLI/UI 手工验收与 HTTP/provider 自动验收分别记录；自动脚本不冒充已经操作过交互式 TUI。
 
 自动验证命令为 node scripts/verify-steering.mjs；真实模型通过 CODEX_BINARY 指定可用且已登录的 Codex CLI。缺少模型、网络失败或未完成的行为不能算通过。协议探针的确定性 provider 与真实模型运行证据分开保存。
+
+### 本地 Web 调试
+
+先初始化固定子模块，并分别在根目录与 `agent-kernel/` 安装依赖，然后运行 `npm run package:steering` 和 `npm run debug:steering`。需要 Node 24+、npm、Bun 和已登录的 Codex CLI。默认网页为 `http://127.0.0.1:4317`；可用 `STEERING_WEB_PORT` 指定其他空闲端口。日志、实际 server 地址和临时项目路径写入 `.codeagent/steering-web-lab.json`。
+
+在网页打开该临时项目，选择 Verification agent 和 Codex verification relay。可要求模型调用 `probe_step` 记录一个明确的 action，再在运行中发送 `steer:` 修正；观察下一动作和 `steering_status`。首次打开若遇到固定前端的 `worktree` 初始化错误，点击“重启”恢复。Ctrl+C 停止调试进程；不会安装后台服务。
+
+为了稳定复现“旧 provider 请求尚未返回时插话”，调试中继的本地 `/control` 接口接受 POST 暂停下一响应，GET 查询 waiting；`/release` 的 POST 释放响应。模型始终读取暂停前的真实上下文，测试端只控制响应放行时刻。停止体验可在暂停后发送修正，再点击网页“停止”，释放旧响应后核对没有自动续跑。这些控制接口仅绑定 localhost。

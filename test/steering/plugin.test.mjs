@@ -305,6 +305,126 @@ test('partial saved parts stay unknown until complete; changed source cannot pas
   await assert.rejects(f.call(a), /STEERING_EVIDENCE_UNAVAILABLE/)
 })
 
+test('confirmed history removal permits a newly prepared task after undo without resetting the ledger', async t => {
+  const f = await fixture(t)
+  const original = await f.save(f.user('m01', 'original task'))
+  const completed = f.assistant('m02', original.info.id)
+  await f.prepare(completed)
+  await f.call(completed, 'before-undo')
+  completed.info.finish = 'stop'; completed.info.time.completed = 3
+
+  // SessionRevert.cleanup removes the reverted message and its descendants
+  // before the next prompt, publishing this public event for each message.
+  f.sessions.one.splice(0)
+  await f.hooks.event({ event: { type: 'message.removed', properties: { sessionID: 'one', messageID: original.info.id } } })
+  await f.hooks.event({ event: { type: 'message.removed', properties: { sessionID: 'one', messageID: completed.info.id } } })
+  const next = await f.save(f.user('m04', 'new task after undo'))
+  const current = f.assistant('m05', next.info.id)
+  await f.prepare(current)
+
+  await assert.doesNotReject(f.call(current, 'after-undo'))
+  const status = await f.status()
+  assert.equal(status.snapshots.length, 2, 'Undo must not require clearing all earlier evidence')
+  assert.ok(status.messages.find(item => item.messageID === next.info.id).prepared.some(item => item.assistantID === current.info.id))
+})
+
+test('confirmed history removal remains effective after recreating the ledger', async t => {
+  const f = await fixture(t)
+  const original = await f.save(f.user('m01', 'original task'))
+  const completed = f.assistant('m02', original.info.id)
+  await f.prepare(completed)
+  completed.info.finish = 'stop'; completed.info.time.completed = 3
+  f.sessions.one.splice(0)
+  await f.hooks.event({ event: { type: 'message.removed', properties: { sessionID: 'one', messageID: original.info.id } } })
+
+  const restarted = await fixture(t, f.sessions, { stateDirectory: f.stateDirectory })
+  const next = await restarted.save(restarted.user('m04', 'new task after restart'))
+  const current = restarted.assistant('m05', next.info.id)
+  await restarted.prepare(current)
+  await assert.doesNotReject(restarted.call(current, 'after-removal-and-restart'))
+  const status = await restarted.status()
+  assert.equal(status.messages.find(item => item.messageID === original.info.id).pendingReason, 'removed')
+  assert.ok(status.messages.find(item => item.messageID === next.info.id).prepared.some(item => item.assistantID === current.info.id))
+})
+
+test('guidance reappearing under the same ID loses removal exemption and blocks its old assistant', async t => {
+  const f = await fixture(t)
+  const original = await f.save(f.user('m01', 'original task'))
+  const old = f.assistant('m02', original.info.id)
+  await f.prepare(old)
+  const guidance = await f.save(f.user('m03', 'steer: use the revised target'))
+  assert.equal((await f.status()).messages.find(item => item.messageID === guidance.info.id).saved, 'confirmed')
+  f.sessions.one.splice(f.sessions.one.indexOf(guidance), 1)
+  await f.hooks.event({ event: { type: 'message.removed', properties: { sessionID: 'one', messageID: guidance.info.id } } })
+  await assert.doesNotReject(f.call(old, 'after-guidance-removal'))
+
+  await f.save(guidance)
+  await assert.rejects(f.call(old, 'after-guidance-reappearance'), /STEERING_STALE_CONTEXT/)
+  const evidence = (await f.status()).messages.find(item => item.messageID === guidance.info.id)
+  assert.equal(evidence.saved, 'confirmed')
+  assert.notEqual(evidence.pendingReason, 'removed')
+  assert.equal(evidence.prepared.length, 0)
+  assert.equal(evidence.provider.status, 'unknown')
+  assert.equal(evidence.adopted.status, 'unknown')
+})
+
+test('a late removal notification cannot exempt guidance that is still present in public history', async t => {
+  const f = await fixture(t)
+  const original = await f.save(f.user('m01', 'original task'))
+  const old = f.assistant('m02', original.info.id)
+  await f.prepare(old)
+  const guidance = await f.save(f.user('m03', 'steer: preserve the revised target'))
+  assert.equal((await f.status()).messages.find(item => item.messageID === guidance.info.id).saved, 'confirmed')
+
+  // Events are asynchronous. A stale deletion notification must not override
+  // the public message query showing this effective input still exists.
+  await f.hooks.event({ event: { type: 'message.removed', properties: { sessionID: 'one', messageID: guidance.info.id } } })
+  await assert.rejects(f.call(old, 'after-late-removal-notification'), /STEERING_STALE_CONTEXT/)
+  const evidence = (await f.status()).messages.find(item => item.messageID === guidance.info.id)
+  assert.equal(evidence.saved, 'confirmed')
+  assert.notEqual(evidence.pendingReason, 'removed')
+  assert.equal(evidence.prepared.length, 0)
+})
+
+test('previously saved guidance missing from SDK remains blocking without a confirmed removal', async t => {
+  const f = await fixture(t)
+  const original = await f.save(f.user('m01', 'original task'))
+  const old = f.assistant('m02', original.info.id)
+  await f.prepare(old)
+  const guidance = await f.save(f.user('m03', 'steer: use the revised target'))
+  assert.equal((await f.status()).messages.find(item => item.messageID === guidance.info.id).saved, 'confirmed')
+  // An absent row alone is not proof that the host deliberately removed it.
+  f.sessions.one.splice(f.sessions.one.indexOf(guidance), 1)
+
+  await assert.rejects(f.call(old, 'old-after-unexplained-missing-row'), /STEERING_(?:EVIDENCE_UNAVAILABLE|STALE_CONTEXT)/)
+  const evidence = (await f.status()).messages.find(item => item.messageID === guidance.info.id)
+  assert.equal(evidence.saved, 'unknown')
+  assert.equal(evidence.prepared.length, 0)
+  assert.equal(evidence.provider.status, 'unknown')
+  assert.equal(evidence.adopted.status, 'unknown')
+})
+
+test('removing an attachment cannot retire the remaining unread user guidance or admit an old tool', async t => {
+  const f = await fixture(t)
+  const original = await f.save(f.user('m01', 'original task'))
+  const old = f.assistant('m02', original.info.id)
+  await f.prepare(old)
+  const guidance = await f.save(f.user('m03', 'steer: do not write the old target', 'one', [
+    { id: 'removed-attachment', type: 'file', mime: 'text/plain', filename: 'note.txt', url: 'data:text/plain;base64,bm90ZQ==' },
+  ]))
+  assert.equal((await f.status()).messages.find(item => item.messageID === guidance.info.id).saved, 'confirmed')
+  guidance.parts.splice(1)
+  await f.hooks.event({ event: { type: 'message.part.removed', properties: { sessionID: 'one', messageID: guidance.info.id, partID: 'removed-attachment' } } })
+
+  await assert.rejects(f.call(old, 'old-after-attachment-removal'), /STEERING_(?:EVIDENCE_UNAVAILABLE|STALE_CONTEXT)/)
+  assert.equal(guidance.parts[0].text, 'steer: do not write the old target')
+  const evidence = (await f.status()).messages.find(item => item.messageID === guidance.info.id)
+  assert.ok(evidence, 'A part deletion must not remove the entire user message from evidence')
+  assert.equal(evidence.prepared.length, 0)
+  assert.equal(evidence.provider.status, 'unknown')
+  assert.equal(evidence.adopted.status, 'unknown')
+})
+
 test('compaction preparation does not clear pending; normal context restores known omitted guidance once', async t => {
   const f = await fixture(t)
   const old = await f.save(f.user('m01', 'old task'))
