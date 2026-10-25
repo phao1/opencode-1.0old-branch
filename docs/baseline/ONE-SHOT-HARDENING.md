@@ -39,3 +39,9 @@
 - bfe6ea7ad 基线的重跑在 planner 触发 10 分钟超时，保留 blocked 日志后标为被新基线替代；该轮没有端到端通过。最终基线将重新运行，使用显式记录的 Codex medium 推理配置，模型检查标准不变。
 
 - 最终定向收尾后完整回归 83/83，类型检查、固定内核源码检查和 diff 格式检查通过。medium 模型连通性探针 5 秒返回，尚不替代真实研发流程。
+
+## 最终结果
+
+- 最终基线 2ea87f6f6783799c4d5732cc7833f0f62fa1d771：run run-1e5b897b-36ce-47a6-a9da-ffec7d9fb465 已完成真实模型全链路，7 个独立会话读取 skill，两组评审均实测并行，5组独立检查全部通过，样例 87/87，43个声明文件及精确许可清单重验通过。约9分钟，最终 awaiting_acceptance。
+- Claude 桌面 Opus 5.5 Extra 最后定向核对确认三项收尾均落实，声明边界内未发现新阻断；仅材料审查，未自行执行命令。最终 E2E 使用该回复要求的 2ea87f6 新基线新入队任务，非旧格式 run。
+- 详细证据与超时尝试保留在 .codeagent/one-shot-hardening-20261025/REPORT.md、verified-report.json、CLAUDE-CLOSURE-AX.txt。没有 accept、合并、推送或发布。
