@@ -2,13 +2,14 @@ import path from "node:path"
 import { readFileSync } from "node:fs"
 import { setTimeout as delay } from "node:timers/promises"
 import { loadConfig, openStore, lock } from "../agent-kernel-extension/src/codeagent/one-shot/store.ts"
-import { createIssue, enqueue, runQueue, resume, cancel, accept, reject } from "../agent-kernel-extension/src/codeagent/one-shot/runner.ts"
+import { createIssue, updateIssue, enqueue, runQueue, resume, cancel, accept, reject } from "../agent-kernel-extension/src/codeagent/one-shot/runner.ts"
 import { executeAgent } from "../agent-kernel-extension/src/codeagent/one-shot/agents.ts"
 import { tick } from "../agent-kernel-extension/src/codeagent/one-shot/loops.ts"
 
 const [command, ...args] = process.argv.slice(2)
 const help = `one-shot commands:
   issue <signal.json>            create a candidate (sourceId/triageId enable handoffs)
+  issue-update <id> <signal.json> explicitly replace an unqueued candidate, preserving source identity
   todo <issue-id|--from-triage ID> authorize and queue one development run
   status [run-id]                inspect state and evidence
   run                           execute pending jobs, then exit
@@ -27,6 +28,7 @@ try {
   let result: unknown
   switch (command) {
     case "issue": result = await createIssue(store, JSON.parse(readFileSync(path.resolve(args[0]), "utf8"))); break
+    case "issue-update": result = await updateIssue(store, args[0], JSON.parse(readFileSync(path.resolve(args[1]), "utf8"))); break
     case "todo": {
       let issueId = args[0]
       if (issueId === "--from-triage") {

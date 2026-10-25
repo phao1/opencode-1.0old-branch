@@ -4,6 +4,8 @@
   "baseRef": "dev",
   "concurrency": 5,
   "allowedPaths": ["external-plugins/", "agent-kernel-extension/", "test/", "docs/", ".opencode/", "agents/", "scripts/"],
+  "protectedPaths": ["AGENTS.md", ".opencode/", "scripts/", "package.json", "package-lock.json", "bun.lock", "bun.lockb", "tsconfig.json", ".gitattributes"],
+  "trustedFiles": [],
   "agents": {
     "planner": { "kind": "opencode", "serverUrl": "http://127.0.0.1:4096" },
     "builder": { "kind": "opencode", "serverUrl": "http://127.0.0.1:4096" },

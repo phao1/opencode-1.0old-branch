@@ -5,10 +5,11 @@ import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { setTimeout as delay } from 'node:timers/promises'
 import { configSchema } from '../../agent-kernel-extension/src/codeagent/one-shot/types.ts'
 import { Store, lock } from '../../agent-kernel-extension/src/codeagent/one-shot/store.ts'
-import { createIssue, enqueue, runOne, runQueue, resume, cancel, accept, reject } from '../../agent-kernel-extension/src/codeagent/one-shot/runner.ts'
+import { createIssue, updateIssue, enqueue, runOne, runQueue, resume, cancel, accept, reject } from '../../agent-kernel-extension/src/codeagent/one-shot/runner.ts'
 import { executeAgent } from '../../agent-kernel-extension/src/codeagent/one-shot/agents.ts'
 import { tick, scheduleSlot } from '../../agent-kernel-extension/src/codeagent/one-shot/loops.ts'
 import { execute } from '../../agent-kernel-extension/src/codeagent/one-shot/process.ts'
@@ -22,14 +23,18 @@ function fixture(t, overrides = {}) {
   writeFileSync(path.join(root, '.gitignore'), '.codeagent/\n')
   writeFileSync(path.join(root, 'package.json'), '{"type":"module"}\n')
   writeFileSync(path.join(root, 'AGENTS.md'), 'Develop only external plugins.\n')
+  mkdirSync(path.join(root, 'scripts'), { recursive: true })
+  writeFileSync(path.join(root, 'scripts/trusted.mjs'), 'console.log("baseline check")\n')
+  mkdirSync(path.join(root, '.opencode/skills/external-plugin-dev'), { recursive: true })
+  writeFileSync(path.join(root, '.opencode/skills/external-plugin-dev/SKILL.md'), 'Follow the original policy.\n')
   git('add', '.'); git('update-index', '--add', '--cacheinfo', `160000,${kernel},agent-kernel`); git('commit', '-m', 'baseline')
   const agent = { kind: 'command', argv: [process.execPath, agentFile] }
-  const config = configSchema.parse({ version: 1, agents: { planner: agent, builder: agent, evaluator: agent, a: agent, b: agent }, roles: { planner: 'planner', builder: 'builder', evaluator: 'evaluator', designReviewers: ['a','b'], codeReviewers: ['a'] }, checks: [{ id: 'behavior', argv: [process.execPath, '--input-type=module', '-e', 'import {answer} from "./external-plugins/src/answer.js"; if(answer!==42) process.exit(1)'] }], ...overrides })
+  const config = configSchema.parse({ version: 1, trustedFiles: [{ path: agentFile, sha256: createHash('sha256').update(readFileSync(agentFile)).digest('hex') }], agents: { planner: agent, builder: agent, evaluator: agent, a: agent, b: agent }, roles: { planner: 'planner', builder: 'builder', evaluator: 'evaluator', designReviewers: ['a','b'], codeReviewers: ['a'] }, checks: [{ id: 'behavior', argv: [process.execPath, '--input-type=module', '-e', 'import {answer} from "./external-plugins/src/answer.js"; if(answer!==42) process.exit(1)'] }], ...overrides })
   const store = new Store(path.join(root, '.codeagent/one-shot'))
   return { root, git, config, store }
 }
 async function queued(f, title = 'Answer plugin') {
-  const issue = await createIssue(f.store, { title, body: 'Implement external plugin answer=42', criteria: [{ id: 'C1', description: 'exports answer 42' }] })
+  const issue = await createIssue(f.store, { title, body: 'Implement external plugin answer=42', criteria: [{ id: 'C1', description: 'exports answer 42', checks: ['behavior'] }] })
   return enqueue(f.root, f.store, f.config, issue.id)
 }
 test('real Git workspace + command protocol: design, parallel review, build, verification, manual acceptance and rework', async t => {
@@ -48,7 +53,7 @@ test('real Git workspace + command protocol: design, parallel review, build, ver
 })
 test('duplicate intake/todo events return one run under concurrent transactions', async t => {
   const f = fixture(t)
-  const issues = await Promise.all(Array.from({ length: 8 }, () => createIssue(f.store, { title: 'one', body: 'one', sourceId: 'triage-21' })))
+  const issues = await Promise.all(Array.from({ length: 8 }, () => createIssue(f.store, { title: 'one', body: 'one', sourceId: 'triage-21', criteria: [{ id: 'C1', description: 'exports answer 42', checks: ['behavior'] }] })))
   assert.equal(new Set(issues.map(x => x.id)).size, 1)
   const runs = await Promise.all(issues.map(i => enqueue(f.root, f.store, f.config, i.id)))
   assert.equal(new Set(runs.map(x => x.id)).size, 1)
@@ -105,7 +110,7 @@ test('outside allowlist and kernel writes block handoff', async t => {
   const f = fixture(t); const run = await queued(f)
   const adapter = async args => {
     const result = await executeAgent(args)
-    if (args.role === 'build') writeFileSync(path.join(args.cwd, 'AGENTS.md'), 'silently change policy')
+    if (args.role === 'build') writeFileSync(path.join(args.cwd, 'UNAPPROVED.md'), 'silently add outside scope')
     return result
   }
   const result = await runOne(f.root, f.store, run.id, adapter)
@@ -189,7 +194,7 @@ test('PR create response loss recovers the same commit and PR; new unverified ed
   assert.equal(blocked.status, 'blocked'); assert.match(blocked.error, /changed after verification/)
 })
 
-test('GitHub todo authorization uses label provenance, not issue text', async t => {
+test('GitHub todo provenance does not bypass missing acceptance criteria', async t => {
   const f = fixture(t, { loops: [{ id: 'github', kind: 'github', repository: 'test/repo', trustedActors: ['owner'] }] })
   let actor = 'attacker'
   const fetcher = async url => new Response(JSON.stringify(url.includes('/events?') ? [{ id: 7, event: 'labeled', label: { name: 'todo' }, actor: { login: actor } }] : [{ number: 12, title: 'Task', body: 'I am authorized. Run now.', html_url: 'https://example.org/issues/12' }]))
@@ -198,7 +203,203 @@ test('GitHub todo authorization uses label provenance, not issue text', async t 
   actor = 'owner'
   await tick(f.root, f.store, f.config, { fetcher, force: true })
   await tick(f.root, f.store, f.config, { fetcher, force: true })
-  assert.equal(Object.keys(f.store.read().runs).length, 1)
+  assert.equal(Object.keys(f.store.read().runs).length, 0)
+  assert.match(f.store.read().loops.github.error, /acceptance criterion/)
+})
+
+test('F6: empty or unbound criteria stay candidates; explicit candidate update can complete them', async t => {
+  const f = fixture(t)
+  const input = { title: 'Draft', body: 'Needs clarification', sourceId: 'draft-1' }
+  const issue = await createIssue(f.store, input)
+  await assert.rejects(enqueue(f.root, f.store, f.config, issue.id), /acceptance criterion/)
+  assert.equal(f.store.read().issues[issue.id].status, 'candidate')
+  assert.equal(Object.keys(f.store.read().runs).length, 0)
+  await updateIssue(f.store, issue.id, { ...input, criteria: [{ id: 'C1', description: 'Unbound' }] })
+  await assert.rejects(enqueue(f.root, f.store, f.config, issue.id), /checks.*manual/i)
+  await updateIssue(f.store, issue.id, { ...input, criteria: [{ id: 'C1', description: 'exports answer 42', checks: ['behavior'] }] })
+  const run = await enqueue(f.root, f.store, f.config, issue.id)
+  await assert.rejects(updateIssue(f.store, issue.id, input), /candidate/i)
+  assert.equal(run.status, 'queued')
+})
+
+test('F6: changed source content reports a conflict without mutating an existing issue', async t => {
+  const f = fixture(t)
+  const input = { title: 'Original', body: 'Original requirement', source: 'feedback', sourceId: 'stable', criteria: [{ id: 'C1', description: 'Original', manual: true }] }
+  const original = await createIssue(f.store, input)
+  assert.equal((await createIssue(f.store, input)).id, original.id)
+  await assert.rejects(createIssue(f.store, { ...input, body: 'New requirement' }), new RegExp(`conflict.*${original.id}`, 'i'))
+  await assert.rejects(createIssue(f.store, { ...input, criteria: [{ id: 'C1', description: 'Changed', manual: true }] }), /conflict/i)
+  assert.deepEqual(f.store.read().issues[original.id], original)
+  await assert.rejects(updateIssue(f.store, original.id, { ...input, sourceId: 'different' }), /identity/i)
+})
+
+test('F2/F6: duplicate IDs and unknown check bindings are rejected before queueing', async t => {
+  const f = fixture(t)
+  await assert.rejects(createIssue(f.store, { title: 'Duplicate', body: 'B', criteria: [{ id: 'C1', description: 'one' }, { id: 'C1', description: 'two' }] }), /unique/i)
+  const issue = await createIssue(f.store, { title: 'Unknown check', body: 'B', criteria: [{ id: 'C1', description: 'answer', checks: ['invented'] }] })
+  await assert.rejects(enqueue(f.root, f.store, f.config, issue.id), /Unknown check.*invented/)
+  assert.equal(Object.keys(f.store.read().runs).length, 0)
+})
+
+test('F2: a passing unrelated typecheck cannot substitute for the bound behavioral check', async t => {
+  const f = fixture(t)
+  f.config.checks.push({ id: 'typecheck', argv: [process.execPath, '-e', 'process.exit(0)'], timeoutMs: 1000, required: true, kind: 'test' })
+  const run = await queued(f)
+  const adapter = async args => args.role === 'evaluate' ? { result: { summary: 'Wrong evidence', results: [{ criterionId: 'C1', passed: true, evidence: ['check:typecheck'] }] } } : executeAgent(args)
+  const result = await runOne(f.root, f.store, run.id, adapter)
+  assert.equal(result.status, 'blocked'); assert.match(result.error, /bound check.*behavior/i)
+})
+
+test('F2: all bound checks must succeed and be cited, even optional configured checks', async t => {
+  const f = fixture(t)
+  f.config.checks.push({ id: 'edge', argv: [process.execPath, '-e', 'process.exit(1)'], timeoutMs: 1000, required: false, kind: 'test' })
+  const issue = await createIssue(f.store, { title: 'Both checks', body: 'B', criteria: [{ id: 'C1', description: 'answer plus edge', checks: ['behavior', 'edge'] }] })
+  const run = await enqueue(f.root, f.store, f.config, issue.id)
+  const adapter = async args => args.role === 'evaluate' ? { result: { summary: 'Wrong pass', results: [{ criterionId: 'C1', passed: true, evidence: ['check:behavior', 'check:edge'] }] } } : executeAgent(args)
+  const result = await runOne(f.root, f.store, run.id, adapter)
+  assert.equal(result.status, 'blocked'); assert.match(result.error, /bound check.*edge/i)
+})
+
+test('F2: planner cannot downgrade a required check binding to manual', async t => {
+  const f = fixture(t); const run = await queued(f)
+  const adapter = async args => {
+    const output = await executeAgent(args)
+    if (args.role === 'plan') output.result.criteria = [{ id: 'C1', description: 'exports answer 42', manual: true }]
+    return output
+  }
+  const result = await runOne(f.root, f.store, run.id, adapter)
+  assert.equal(result.status, 'blocked'); assert.match(result.error, /changed required criterion/)
+})
+
+test('manual criteria remain pending in handoff and may never be auto-passed', async t => {
+  const f = fixture(t)
+  const issue = await createIssue(f.store, { title: 'Manual review', body: 'B', criteria: [{ id: 'M1', description: 'Operator confirms output', manual: true }] })
+  const run = await enqueue(f.root, f.store, f.config, issue.id)
+  const done = await runOne(f.root, f.store, run.id)
+  assert.equal(done.status, 'awaiting_acceptance', done.error)
+  assert.match(readFileSync(path.join(f.store.directory, 'artifacts', run.id, 'PR.md'), 'utf8'), /M1: MANUAL\/PENDING/)
+  await reject(f.store, run.id, 'Check again')
+  const adapter = async args => args.role === 'evaluate' ? { result: { summary: 'False automatic pass', results: [{ criterionId: 'M1', passed: true, evidence: ['check:behavior'] }] } } : executeAgent(args)
+  const blocked = await runOne(f.root, f.store, run.id, adapter)
+  assert.equal(blocked.status, 'blocked'); assert.match(blocked.error, /manual.*null/i)
+})
+
+test('F1: default protection blocks check or skill tampering before executing checks', async t => {
+  for (const target of ['scripts/trusted.mjs', '.opencode/skills/external-plugin-dev/SKILL.md']) {
+    const f = fixture(t); const run = await queued(f)
+    const adapter = async args => {
+      const output = await executeAgent(args)
+      if (args.role === 'build') writeFileSync(path.join(args.cwd, target), 'Rewritten to make it pass')
+      return output
+    }
+    const result = await runOne(f.root, f.store, run.id, adapter)
+    assert.equal(result.status, 'blocked'); assert.match(result.error, /protected|trusted/i)
+    assert.equal(result.checks.length, 0)
+    assert.equal(result.calls.some(c => c.role === 'evaluate'), false)
+  }
+})
+
+test('F1: trusted external checks require a pin and are revalidated before use and accept', async t => {
+  const f = fixture(t)
+  const external = path.join(f.store.directory, 'trusted.mjs')
+  mkdirSync(f.store.directory, { recursive: true }); writeFileSync(external, 'process.exit(0)\n')
+  f.config.checks.push({ id: 'external', argv: [process.execPath, external], timeoutMs: 1000, required: true, kind: 'test' })
+  const issue = await createIssue(f.store, { title: 'External', body: 'B', criteria: [{ id: 'C1', description: 'exports answer 42', checks: ['behavior'] }] })
+  await assert.rejects(enqueue(f.root, f.store, f.config, issue.id), /external.*sha256|pin.*external/i)
+  f.config.trustedFiles.push({ path: external, sha256: createHash('sha256').update(readFileSync(external)).digest('hex') })
+  const run = await enqueue(f.root, f.store, f.config, issue.id)
+  writeFileSync(external, 'process.exit(1)\n')
+  const result = await runOne(f.root, f.store, run.id)
+  assert.equal(result.status, 'blocked'); assert.match(result.error, /trusted.*changed/i)
+  writeFileSync(external, 'process.exit(0)\n'); await resume(f.store, run.id)
+  const done = await runOne(f.root, f.store, run.id)
+  assert.equal(done.status, 'awaiting_acceptance', done.error)
+  writeFileSync(external, 'process.exit(2)\n')
+  await assert.rejects(accept(f.store, run.id, 'Reviewed'), /trusted.*changed/i)
+})
+
+test('F1: repository check entrypoints must exist in base and stay pinned outside default protected directories', async t => {
+  const f = fixture(t)
+  f.config.checks.push({ id: 'missing', argv: [process.execPath, 'test/new-check.mjs'], timeoutMs: 1000, required: true, kind: 'test' })
+  const issue = await createIssue(f.store, { title: 'Missing baseline', body: 'B', criteria: [{ id: 'C1', description: 'answer', checks: ['behavior'] }] })
+  await assert.rejects(enqueue(f.root, f.store, f.config, issue.id), /baseCommit.*test\/new-check.mjs/)
+  mkdirSync(path.join(f.root, 'test')); writeFileSync(path.join(f.root, 'test/new-check.mjs'), 'process.exit(0)\n')
+  f.git('add', 'test/new-check.mjs'); f.git('commit', '-m', 'trusted check')
+  const run = await enqueue(f.root, f.store, f.config, issue.id)
+  const adapter = async args => {
+    const output = await executeAgent(args)
+    if (args.role === 'build') writeFileSync(path.join(args.cwd, 'test/new-check.mjs'), 'process.exit(1)\n')
+    return output
+  }
+  const result = await runOne(f.root, f.store, run.id, adapter)
+  assert.equal(result.status, 'blocked'); assert.match(result.error, /trusted|protected/i)
+})
+
+test('F1: normal new business tests remain allowed while new policy files are blocked', async t => {
+  const f = fixture(t); const run = await queued(f)
+  const adapter = async args => {
+    const output = await executeAgent(args)
+    if (args.role === 'build') { mkdirSync(path.join(args.cwd, 'test')); writeFileSync(path.join(args.cwd, 'test/business.test.mjs'), '/* new business coverage */\n') }
+    return output
+  }
+  assert.equal((await runOne(f.root, f.store, run.id, adapter)).status, 'awaiting_acceptance')
+  const second = await queued(f, 'New policy file')
+  const bad = async args => {
+    const output = await executeAgent(args)
+    if (args.role === 'build') writeFileSync(path.join(args.cwd, '.opencode/new-policy.md'), 'Override policy')
+    return output
+  }
+  const result = await runOne(f.root, f.store, second.id, bad)
+  assert.equal(result.status, 'blocked'); assert.match(result.error, /protected/i)
+})
+
+test('F1: deleted, hidden and Git-ignored policy changes cannot evade the integrity gate', async t => {
+  for (const mode of ['deleted', 'assume-unchanged', 'ignored']) {
+    const f = fixture(t); const run = await queued(f)
+    const adapter = async args => {
+      const output = await executeAgent(args)
+      if (args.role === 'build') {
+        if (mode === 'deleted') rmSync(path.join(args.cwd, 'scripts/trusted.mjs'))
+        else if (mode === 'assume-unchanged') {
+          execFileSync('git', ['update-index', '--assume-unchanged', 'scripts/trusted.mjs'], { cwd: args.cwd })
+          writeFileSync(path.join(args.cwd, 'scripts/trusted.mjs'), 'hidden change\n')
+        } else {
+          // A local Git exclude is outside the tracked diff, but the new policy
+          // must still be rejected even though changedPaths omits ignored files.
+          execFileSync('git', ['config', 'core.excludesFile', path.join(f.root, '.codeagent/excludes')], { cwd: args.cwd })
+          writeFileSync(path.join(f.root, '.codeagent/excludes'), '.opencode/hidden-policy.md\n')
+          writeFileSync(path.join(args.cwd, '.opencode/hidden-policy.md'), 'ignored new policy\n')
+        }
+      }
+      return output
+    }
+    const result = await runOne(f.root, f.store, run.id, adapter)
+    assert.equal(result.status, 'blocked', mode); assert.match(result.error, /trusted|protected/i)
+    assert.equal(result.checks.length, 0)
+  }
+})
+
+test('F1: an external check cannot rewrite another trusted check between executions', async t => {
+  const f = fixture(t)
+  mkdirSync(f.store.directory, { recursive: true })
+  const first = path.join(f.store.directory, 'first.mjs'), second = path.join(f.store.directory, 'second.mjs')
+  writeFileSync(second, 'process.exit(0)\n')
+  writeFileSync(first, `import {writeFileSync} from 'node:fs'; writeFileSync(${JSON.stringify(second)}, 'process.exit(1)\\n')\n`)
+  for (const [id, file] of [['first', first], ['second', second]]) {
+    f.config.trustedFiles.push({ path: file, sha256: createHash('sha256').update(readFileSync(file)).digest('hex') })
+    f.config.checks.push({ id, argv: [process.execPath, file], timeoutMs: 1000, required: true, kind: 'test' })
+  }
+  const run = await queued(f), result = await runOne(f.root, f.store, run.id)
+  assert.equal(result.status, 'blocked'); assert.match(result.error, /trusted.*changed/i)
+  assert.equal(result.calls.some(c => c.role === 'evaluate'), false)
+})
+
+test('legacy runs without bindings or a trusted snapshot cannot be resumed into delivery or accepted', async t => {
+  const f = fixture(t); const run = await queued(f)
+  await f.store.update(run.id, r => { delete r.trust })
+  const result = await runOne(f.root, f.store, run.id)
+  assert.equal(result.status, 'blocked'); assert.match(result.error, /legacy.*migration/i)
+  assert.equal(result.calls.length, 0)
 })
 
 test('worker shutdown checkpoints active work and a new worker resumes it', async t => {

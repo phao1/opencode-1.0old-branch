@@ -4,6 +4,7 @@ import { createHash } from "node:crypto"
 import { checked, execute } from "./process.ts"
 import { type Config, type Run } from "./types.ts"
 import { Store } from "./store.ts"
+import { matchesPath, verifyTrust } from "./trust.ts"
 
 const git = (cwd: string, args: string[]) => checked(["git", ...args], cwd)
 export async function baseCommit(root: string, config: Config) {
@@ -27,10 +28,16 @@ export async function changedPaths(cwd: string, base: string) {
   return [...new Set((tracked.stdout + untracked.stdout).split("\0").filter(Boolean))]
 }
 export async function guard(cwd: string, run: Run) {
+  verifyTrust(cwd, run)
+  if (run.config.protectedPaths.length) {
+    const ignored = await git(cwd, ["ls-files", "--others", "--ignored", "--exclude-standard", "-z", "--", ...run.config.protectedPaths.map(p => `:(literal)${p}`)])
+    if (ignored) throw new Error(`Protected ignored path changes forbidden: ${ignored.split("\0")[0]}`)
+  }
   await git(cwd, ["merge-base", "--is-ancestor", run.baseCommit, "HEAD"])
   const paths = await changedPaths(cwd, run.baseCommit)
   for (const file of paths) {
     if (file === run.config.kernelPath || file.startsWith(`${run.config.kernelPath}/`)) throw new Error(`Kernel changes forbidden: ${file}`)
+    if (run.config.protectedPaths.some(p => matchesPath(file, p))) throw new Error(`Protected path changes forbidden: ${file}`)
     if (!run.config.allowedPaths.some(prefix => prefix.endsWith("/") ? file.startsWith(prefix) : file === prefix)) throw new Error(`Outside allowed paths: ${file}`)
     const parts = file.split("/")
     for (let i = 1; i <= parts.length; i++) {

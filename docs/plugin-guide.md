@@ -22,6 +22,7 @@ The runtime is in agent-kernel-extension/src/codeagent/one-shot/. The fixed regi
 
 ```bash
 npm run one-shot -- issue request.json
+npm run one-shot -- issue-update ISSUE_ID complete-request.json  # only when the candidate needs explicit completion
 npm run one-shot -- todo ISSUE_ID
 npm run one-shot -- run
 npm run one-shot -- status RUN_ID
@@ -34,10 +35,18 @@ npm run one-shot -- reject RUN_ID "Actual observed failure and reproduction"
 request.json and file/command signal loops use this shape (loops wrap it as signals: [ ... ]):
 
 ```json
-{"title":"Add an external plugin capability","body":"Scope, evidence, expected behavior and constraints","source":"feedback","sourceId":"0021","triageId":"0021","criteria":[{"id":"AC1","description":"A concrete observable result"}],"evidence":["source URL or log reference"]}
+{"title":"Add an external plugin capability","body":"Scope, evidence, expected behavior and constraints","source":"feedback","sourceId":"0021","triageId":"0021","criteria":[{"id":"AC1","description":"The configured tests assert this feature’s observable result","checks":["tests"]}],"evidence":["source URL or log reference"]}
 ```
 
 one-shot.config.json is trusted operator configuration. Generated code cannot alter the run's captured commands, models, limits or allowlist. Root package manifests are outside the default allowlist; explicitly allow a needed file before queueing tasks that must change it. Staged changes, untracked files and kernel gitlink/source are checked before handoff. Local programs run with the worker user's permissions: worktrees provide task isolation, not an OS security sandbox. Run untrusted repositories in a sandbox/container.
+
+Candidates may omit criteria while requirements are being refined. `todo` rejects empty/duplicate criterion IDs, missing checks/manual bindings and unknown check IDs. Repeated source identity with identical normalized content is idempotent; changed body, criteria or evidence reports a conflict containing the existing issue ID. `issue-update` (or `one_shot_issue` with `updateIssueId`) explicitly replaces only an unqueued candidate, preserves its source identity, and takes complete input. Requirements associated with a run cannot be overwritten. Trusted GitHub labels alone cannot bypass missing criteria; complete the candidate before queueing.
+
+Default `protectedPaths` protects AGENTS.md, .opencode/, scripts/ and existing root build manifests. Enqueue captures their baseline SHA256 and executable mode directly from baseCommit, along with script paths referenced by setup/check/command-agent argv. Repository entrypoints must already exist in that commit. Changed, deleted, Git-hidden or newly ignored policy files block execution/handoff. For skill/script maintenance an operator may explicitly narrow protectedPaths before queueing, but must keep independent verification outside the editable scope; allowlisting alone does not override protection.
+
+Absolute script paths require `trustedFiles: [{"path":"/absolute/operator/check.mjs","sha256":"<actual 64-character sha256>"}]`. Relative trustedFiles are resolved against the run workspace and must match baseCommit; absolute ones remain external and are verified against the explicit hash, real path and executable mode. Use `shasum -a 256 /absolute/operator/check.mjs` to obtain a pin. Declare transitive helpers, inline-command imports, interpreters/package dependencies or wrapper dependencies that need protection explicitly; automatic argv discovery is a convenience for script paths, not dependency analysis. Normal new business tests remain editable unless explicitly selected as trusted files. Trust is rechecked before/after stages and commands, before handoff and before accept. EVALUATION.json includes the captured manifest. These are integrity checks, not a filesystem access sandbox or protection from a same-user process that can rewrite state or race execution.
+
+Legacy runs lacking bindings or a trusted snapshot fail closed on execution/accept; do not silently regenerate trust from an already modified workspace. Preserve their artifacts and arrange an explicit operator migration/re-verification. Current CLI resume does not migrate or reset budgets.
 
 ### Monitoring and loops
 
@@ -56,7 +65,7 @@ OpenCode adapters call the pinned kernel's public session/message API. A new ses
 
 A command adapter is any executable argv implementing the protocol below. This is an integration contract, **not a claim that raw claude/codex/qoder commands accept this JSON**. Wrap a native CLI's documented input/output modes to implement it. Command arguments are trusted configuration and executed with shell=false. Input arrives as one JSON object on stdin; output is one JSON object on stdout; diagnostics go to stderr. Timeouts, cancellation and output limits terminate the process. Fallback agent IDs may be configured on each agent.
 
-Input: protocol=one-shot/v1, promptVersion, role, cwd, payload, prompt and JSON schema. Output: {"result": <object matching schema>, "usage": {"tokens": 123, "cost": 0.1}}. Usage is optional and unknown when unavailable. Roles are analyze, plan, revise, design_review, build, evaluate, code_review. Every evaluator passing criterion must cite at least one successful configured check as exactly check:<check-id>, alongside concrete observed evidence. Missing/duplicate criteria, malformed results, failed required commands and unresolved major/blocker findings fail the gate.
+Input: protocol=one-shot/v1, promptVersion, role, cwd, payload, prompt and JSON schema. Output: {"result": <object matching schema>, "usage": {"tokens": 123, "cost": 0.1}}. Usage is optional and unknown when unavailable. Roles are analyze, plan, revise, design_review, build, evaluate, code_review. Each criterion specifies checks (all bound check IDs must succeed and be cited exactly as check:<check-id>) or manual:true (evaluator must return passed:null, displayed as MANUAL/PENDING). Planner/revise cannot change original descriptions or bindings. Unrelated successful checks cannot substitute; automatic criteria require boolean passed, with false triggering bounded repair. Missing/duplicate criteria, malformed results, failed required commands and unresolved major/blocker findings fail the gate.
 
 The runner writes stage input/output, DESIGN.md, command logs, EVALUATION.json, TEST-MANUAL.md, SKILL-PROPOSAL.md and PR.md. Retry resumes the failed phase. Design/code review findings are deduplicated, bounded repair rounds rerun real checks, and final acceptance requires an operator note. Review artifact retention/rotation is an operator concern in this initial single-host implementation.
 
@@ -76,7 +85,7 @@ See docs/test-package.md. `npm run package:test` builds the native CLI in a disp
 
 ## Skills v0.6 (2026-10-23)
 
-`/create-issue` prepares observable criteria and evidence; `/one-shot` queues and inspects the durable workflow. `.opencode/skills/external-plugin-dev/SKILL.md` guides direct development and worker roles through the fixed public API. Worker prompt v2 reads that skill when present, without recursively queueing work. Stage contracts and the user-supplied methodology sources are under `.opencode/skills/one-shot/references/`. The portable build already copies the complete skills directory.
+`/create-issue` prepares observable criteria and evidence; `/one-shot` queues and inspects the durable workflow. `.opencode/skills/external-plugin-dev/SKILL.md` guides direct development and worker roles through the fixed public API. Worker prompt v3 reads that skill when present, without recursively queueing work. Stage contracts and the user-supplied methodology sources are under `.opencode/skills/one-shot/references/`. The portable build already copies the complete skills directory.
 
 Example request: `/one-shot 开发一个外置工具插件，返回当前项目的基本信息；不读取敏感配置，并为正常调用和缺少项目元数据提供行为测试。` The agent refines this into stable criteria, checks the real public API, and queues it only when configuration and the worker are available. Do not run an unconfigured example as a claim of validation.
 

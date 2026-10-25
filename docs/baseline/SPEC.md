@@ -1,8 +1,8 @@
-# One-shot 自动化开发框架 Spec v0.6
+# One-shot 自动化开发框架 Spec v0.7
 
 Steering 的当前规范为 [STEERING.md](STEERING.md)，公开 API 证据见 [STEERING-FEASIBILITY.md](STEERING-FEASIBILITY.md)。旧 v0.1 的提示包装不满足本版行为验收。
 
-更新：2026-10-23。本版取代 v0.3 的具体跨会话产品需求。
+更新：2026-10-25。本版取代 v0.3 的具体跨会话产品需求。
 
 ## 目标与范围
 
@@ -56,6 +56,10 @@ Steering 的当前规范为 [STEERING.md](STEERING.md)，公开 API 证据见 [S
 需求依据是用户提供的 2026.06 长文和 8 月升级帖正文，原作者完整 skill 未提供。多 reviewer 的意见由 planner 单写合并；固定四模型和设计时间比例不是验收条件。参考源码未到位时明确记录缺口。新 skills 需进入 run 的 base commit 才会在隔离工作目录生效。
 
 变更记录：v0.6 补全研发技能与来源追溯；验证记录见下。
+
+## v0.7 验收门禁（2026-10-25）
+
+F2：验收标准必须绑定全部对应 checks 或明确 manual:true，原始描述/绑定不可被 planner 改写；人工项只能 MANUAL/PENDING。F6：空/未绑定候选不入队，同源内容变化必须显式报冲突；只允许显式更新未入队 candidate。F1：受信脚本和 skill 基于 baseCommit 或操作员 SHA256 固定，执行与交付前后重验，不能改写检查来通过验收。具体标准 H2/H6/H1/HM/HE、设计及验证记录见 [ONE-SHOT-HARDENING.md](ONE-SHOT-HARDENING.md)。
 
 ## Steering 外置插件 v0.3
 

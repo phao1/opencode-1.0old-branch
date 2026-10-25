@@ -1,12 +1,16 @@
 import { z } from "zod"
 
-export const PROMPT_VERSION = "one-shot/2"
+export const PROMPT_VERSION = "one-shot/3"
 const text = z.string().trim().min(1).max(100_000)
 const id = z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,79}$/)
 const argv = z.array(text).min(1).max(100)
 const command = z.object({ id, argv, timeoutMs: z.number().int().positive().max(3_600_000).default(300_000), required: z.boolean().default(true), kind: z.enum(["cli", "ui", "api", "db", "test"]).default("test") })
-export const criterionSchema = z.object({ id, description: text })
-export const issueInputSchema = z.object({ title: text.max(300), body: text, criteria: z.array(criterionSchema).max(100).default([]), source: text.max(2000).default("manual"), sourceId: text.max(2000).optional(), evidence: z.array(text).max(100).default([]), triageId: id.optional() })
+export const criterionSchema = z.object({ id, description: text, checks: z.array(id).min(1).max(100).optional(), manual: z.literal(true).optional() }).superRefine((c, ctx) => {
+  if (c.checks && c.manual) ctx.addIssue({ code: "custom", message: "Choose checks or manual, not both" })
+  if (c.checks && new Set(c.checks).size !== c.checks.length) ctx.addIssue({ code: "custom", message: "Criterion check IDs must be unique" })
+})
+export type Criterion = z.infer<typeof criterionSchema>
+export const issueInputSchema = z.object({ title: text.max(300), body: text, criteria: z.array(criterionSchema).max(100).default([]), source: text.max(2000).default("manual"), sourceId: text.max(2000).optional(), evidence: z.array(text).max(100).default([]), triageId: id.optional() }).refine(i => new Set(i.criteria.map(c => c.id)).size === i.criteria.length, "Criterion IDs must be unique")
 export type IssueInput = z.input<typeof issueInputSchema>
 export type Issue = z.output<typeof issueInputSchema> & { id: string; dedupKey: string; status: "candidate" | "todo" | "running" | "awaiting_acceptance" | "accepted" | "blocked"; runId?: string; createdAt: string }
 const agentSchema = z.object({
@@ -31,6 +35,8 @@ export const configSchema = z.object({
   concurrency: z.number().int().min(1).max(20).default(5),
   kernelPath: text.default("agent-kernel"), kernelCommit: z.string().regex(/^[0-9a-f]{40}$/).default("517e6c9aa4c61dbc125e7654fc596f1d529f20d9"),
   allowedPaths: z.array(text).min(1).default(["agent-kernel-extension/", "external-plugins/", "docs/", "test/", "agents/", "scripts/", ".opencode/"]),
+  protectedPaths: z.array(text).default(["AGENTS.md", ".opencode/", "scripts/", "package.json", "package-lock.json", "bun.lock", "bun.lockb", "tsconfig.json", ".gitattributes"]),
+  trustedFiles: z.array(z.object({ path: text, sha256: z.string().regex(/^[a-f0-9]{64}$/) })).default([]),
   agents: z.record(id, agentSchema),
   roles: z.object({ planner: id, builder: id, evaluator: id, analyst: id.optional(), designReviewers: z.array(id).min(1).max(8), codeReviewers: z.array(id).max(8).default([]) }),
   checks: z.array(command).min(1), setup: z.array(command).default([]),
@@ -48,7 +54,7 @@ export const configSchema = z.object({
     if ((loop.kind === "file" && !loop.file) || (loop.kind === "command" && !loop.argv) || (loop.kind === "source" && !loop.repository) || (loop.kind === "github" && (!loop.repository || !loop.trustedActors.length))) ctx.addIssue({ code: "custom", message: `Missing source configuration for ${loop.id}` })
     try { new Intl.DateTimeFormat("en", { timeZone: loop.timezone }) } catch { ctx.addIssue({ code: "custom", message: `Invalid timezone ${loop.timezone}` }) }
   }
-  for (const p of c.allowedPaths) if (p.startsWith("/") || p.includes("..") || p.includes("\\") || p === ".") ctx.addIssue({ code: "custom", message: "allowedPaths must be explicit repository-relative paths" })
+  for (const p of [...c.allowedPaths, ...c.protectedPaths]) if (p.startsWith("/") || p.includes("..") || p.includes("\\") || p === ".") ctx.addIssue({ code: "custom", message: "allowedPaths/protectedPaths must be explicit repository-relative paths" })
 })
 export type Config = z.output<typeof configSchema>
 export type Role = "analyze" | "plan" | "design_review" | "revise" | "build" | "evaluate" | "code_review"
@@ -56,7 +62,7 @@ export const planSchema = z.object({ summary: text, design: text, criteria: z.ar
 const findingSchema = z.object({ id, severity: z.enum(["blocker", "major", "minor"]), description: text, evidence: text })
 export const reviewSchema = z.object({ summary: text, findings: z.array(findingSchema).max(100) })
 export const buildSchema = z.object({ summary: text, evidence: z.array(text).min(1) })
-export const evaluationSchema = z.object({ summary: text, results: z.array(z.object({ criterionId: id, passed: z.boolean(), evidence: z.array(text).min(1) })).min(1) })
+export const evaluationSchema = z.object({ summary: text, results: z.array(z.object({ criterionId: id, passed: z.boolean().nullable(), evidence: z.array(text).min(1) })).min(1) })
 export const analysisSchema = z.object({ summary: text, candidates: z.array(issueInputSchema).max(30) })
 export const schemas = { analyze: analysisSchema, plan: planSchema, revise: planSchema, design_review: reviewSchema, code_review: reviewSchema, build: buildSchema, evaluate: evaluationSchema }
 export type Plan = z.infer<typeof planSchema>
@@ -66,12 +72,15 @@ export type Stage = "designing" | "design_review" | "implementing" | "verifying"
 export type RunStatus = "queued" | Stage | "blocked" | "cancelled" | "awaiting_acceptance" | "accepted"
 export type CheckResult = { id: string; kind: string; required: boolean; code: number; stdout: string; stderr: string; durationMs: number; error?: string }
 export type Invocation = { id: string; role: Role; agent: string; startedAt: string; finishedAt?: string; status: "running" | "done" | "failed"; sessionId?: string; pid?: number; error?: string; usage?: { tokens?: number; cost?: number }; result?: unknown }
+export type TrustedFile = { path: string; sha256: string; kind: "repository" | "external"; mode: number; realPath?: string }
+export type TrustSnapshot = { version: 1; files: TrustedFile[] }
 export type Run = {
   id: string; issueId: string; config: Config; status: RunStatus; phase: Stage; baseCommit: string; branch: string;
   createdAt: string; updatedAt: string; workspace?: string; plan?: Plan; planRevision: number;
   reviews: Record<string, Review>; checks: CheckResult[]; evaluation?: Evaluation; repairCount: number;
   calls: Invocation[]; activeCommand?: { pid: number; id: string }; error?: string; verifiedFingerprint?: string; cancelled: boolean; feedback: string[]; publication?: { commit?: string; url?: string };
   history: Array<{ at: string; event: string; detail?: string }>;
+  trust?: TrustSnapshot;
 }
 export type LoopState = { lastSlot?: string; nextAt?: number; cursor?: Record<string, string>; error?: string; lastRunAt?: string }
 export type Database = { version: 1; issues: Record<string, Issue>; runs: Record<string, Run>; loops: Record<string, LoopState>; reports: Array<{ id: string; source: string; at: string; report: unknown }> }

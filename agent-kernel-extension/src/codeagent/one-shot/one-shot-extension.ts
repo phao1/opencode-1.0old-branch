@@ -1,15 +1,16 @@
 import { tool } from "@opencode-ai/plugin"
 import type { GlobalExtension } from "../../custom-hw/extension/global-extension.ts"
 import { loadConfig, openStore } from "./store.ts"
-import { createIssue, enqueue, cancel } from "./runner.ts"
+import { createIssue, updateIssue, enqueue, cancel } from "./runner.ts"
+import { criterionSchema } from "./types.ts"
 
 export const OneShotExtension: GlobalExtension = async () => ({ tool: {
   one_shot_issue: tool({
-    description: "Create a deduplicated candidate issue with evidence. This does not authorize execution. Use the one-shot CLI todo command to select it.",
-    args: { title: tool.schema.string(), body: tool.schema.string(), source: tool.schema.string().optional(), sourceId: tool.schema.string().optional(), triageId: tool.schema.string().optional(), criteria: tool.schema.array(tool.schema.object({ id: tool.schema.string(), description: tool.schema.string() })).optional(), evidence: tool.schema.array(tool.schema.string()).optional() },
-    async execute(args, context) {
+    description: "Create a deduplicated candidate issue with evidence, or explicitly update an unqueued candidate using updateIssueId. Source conflicts are reported, never silently overwritten. Criteria bind checks or manual:true before queueing. This does not authorize execution.",
+    args: { title: tool.schema.string(), body: tool.schema.string(), source: tool.schema.string().optional(), sourceId: tool.schema.string().optional(), triageId: tool.schema.string().optional(), criteria: tool.schema.array(criterionSchema).optional(), evidence: tool.schema.array(tool.schema.string()).optional(), updateIssueId: tool.schema.string().optional() },
+    async execute({ updateIssueId, ...args }, context) {
       const config = loadConfig(context.directory), store = openStore(context.directory, config)
-      return JSON.stringify(await createIssue(store, args))
+      return JSON.stringify(await (updateIssueId ? updateIssue(store, updateIssueId, args) : createIssue(store, args)))
     },
   }),
   one_shot_start: tool({
