@@ -23,4 +23,10 @@
 - 本地回归 77/77 通过（原 63 项，加固后新增 14 项）。包含绑定错误、未知/重复标准、人工待验、同源冲突、显式候选更新、检查/skill 篡改、删除、assume-unchanged、Git 忽略新策略文件、外部检查链中途篡改、旧 run 保护及正常新增业务测试。
 - TypeScript 类型检查、git diff --check 通过；固定内核 gitlink/源码干净，commit 仍为 517e6c9aa4c61dbc125e7654fc596f1d529f20d9。
 - 真实 OpenCode 1.3.17 启动 smoke 通过，one_shot_issue/start/status/cancel 与 steering_status 均已注册；该 smoke 不调用真实模型。
-- 真实模型端到端及 Claude 桌面复审：待执行，结果追加于本文件。
+- 真实模型完整端到端通过：run-31f771ec-873f-4773-aa48-21ea14f71ef5，基线 e83bf6346a1beabeb6101bcf913b4728324897c7。7 个独立会话实际读取新 skill，设计与代码评审均有并行时间重叠；5 条原始标准/绑定保留，5 组检查全部通过，样例回归 83/83，40 个声明文件完整性通过（不代表工具链/全部间接依赖都被固定）。
+- 流程约 11.4 分钟，0 次设计修订、0 次修复；只证明该绿色路径。最终 awaiting_acceptance，未 accept、合并、推送或发布，样例代码留在隔离 worktree。详细证据在 .codeagent/one-shot-hardening-20261025/REPORT.md 和 report.json。
+- 真实内核公开 one_shot_issue 调用保留检查绑定，同源变更正确报错且原候选保留（确定性 provider，未冒充模型质量验证）。代码 reviewer 的轻微文档意见已在本地报告区分 Builder 早期失败与 worker 后续独立检查成功。
+- Claude 桌面 Opus 5.5 Extra 已只读复审：F2、F6 实现/回归相符，按声明契约无已证明的核心绕过；提出目录保护缺尾斜杠、未固定入口可见性和同源冲突影响同批信号三个收尾项。本地已修正：保护匹配统一、trust v2 记录 coverage 且未声明 allowUnpinned 的命令拒绝入队、监控逐条保留冲突并继续后续信号。
+- 修正后回归 80/80、类型检查和固定内核检查通过；新增三项覆盖目录两种写法、无扩展名生成依赖的声明/交付可见性、混合信号批次及重复冲突复用。真实模型端到端将使用修正后的新基线再验证。
+- 文件完整性不是安全执行环境：regression/package/kernel 等检查会以 worker 用户权限执行生成代码、包及可能的生命周期脚本，不能阻止被检代码的副作用或短暂篡改后恢复。PATH 工具链、生成依赖和动态导入没有自动获得可信身份；必须在 coverage/交付中明确未固定项，能固定的外部 helper 需另加 SHA256。
+- Claude 桌面属于主控经 UI 转交材料的参考评审，尚未作为 runner worker 或自动放行门禁。后续建议（逐个人工标准确认、PASS 的观察说明强校验）留待后续，不扩大本轮范围。

@@ -7,6 +7,11 @@ import { baseCommit, prepare, guard, fingerprint, publish } from "./workspace.ts
 import { execute } from "./process.ts"
 import { captureTrust } from "./trust.ts"
 
+export class IssueConflictError extends Error {
+  readonly issueId: string
+  constructor(issueId: string) { super(`Source content conflict with ${issueId}; inspect it and explicitly update an unqueued candidate or choose a new source identity`); this.name = "IssueConflictError"; this.issueId = issueId }
+}
+
 const sourceKey = (data: ReturnType<typeof issueInputSchema.parse>) => createHash("sha256").update(`${data.source}\0${data.sourceId ?? `${data.title}\0${data.body}`}`).digest("hex")
 const criterionKey = (c: Criterion) => JSON.stringify({ id: c.id, description: c.description, checks: c.checks ? [...c.checks].sort() : undefined, manual: c.manual })
 const contentKey = (data: ReturnType<typeof issueInputSchema.parse>) => JSON.stringify({ ...data, criteria: data.criteria.map(criterionKey).sort(), evidence: [...data.evidence].sort() })
@@ -42,7 +47,7 @@ export async function createIssue(store: Store, input: IssueInput) {
   return store.transact(db => {
     const existing = Object.values(db.issues).find(x => x.dedupKey === dedupKey)
     if (existing) {
-      if (contentKey(issueInputSchema.parse(existing)) !== contentKey(data)) throw new Error(`Source content conflict with ${existing.id}; inspect it and explicitly update an unqueued candidate or choose a new source identity`)
+      if (contentKey(issueInputSchema.parse(existing)) !== contentKey(data)) throw new IssueConflictError(existing.id)
       return existing
     }
     const id = `issue-${randomUUID()}`
@@ -234,7 +239,7 @@ export async function runOne(root: string, store: Store, id: string, executor: A
         store.artifact(id, "TEST-MANUAL.md", manual)
         store.artifact(id, "EVALUATION.json", JSON.stringify({ trust: run.trust, checks: run.checks, evaluation: run.evaluation, reviews: run.reviews, calls: run.calls.map(({ result, ...c }) => c) }, null, 2))
         store.artifact(id, "SKILL-PROPOSAL.md", run.plan!.skillProposal ?? "No reusable skill proposed. Review repeated successful runs before extracting a skill.\n")
-        store.artifact(id, "PR.md", `# ${issue.title}\n\n${run.plan!.summary}\n\n## Design\n\n${run.plan!.design}\n\n## Automated checks\n\n${run.checks.map(c => `- ${c.id}: exit ${c.code} (${c.durationMs}ms)`).join("\n")}\n\n## Independent evaluation\n\n${run.evaluation!.results.map(r => `- ${r.criterionId}: ${r.passed === null ? "MANUAL/PENDING" : r.passed ? "PASS" : "FAIL"}; ${r.evidence.join("; ")}`).join("\n")}\n\n${manual}\n\nSource: ${issue.source}\nRun: ${id}\nArtifacts: ${path.join(store.directory, "artifacts", id)}\n`)
+        store.artifact(id, "PR.md", `# ${issue.title}\n\n${run.plan!.summary}\n\n## Design\n\n${run.plan!.design}\n\n## Automated checks\n\n${run.checks.map(c => `- ${c.id}: exit ${c.code} (${c.durationMs}ms)`).join("\n")}\n\n## Unpinned toolchain/path arguments\n\n${run.trust!.coverage.map(c => `- ${c.command}: ${c.unpinned.length ? c.unpinned.join(", ") : "none"}; allowUnpinned=${c.allowUnpinned}`).join("\n")}\n\n## Independent evaluation\n\n${run.evaluation!.results.map(r => `- ${r.criterionId}: ${r.passed === null ? "MANUAL/PENDING" : r.passed ? "PASS" : "FAIL"}; ${r.evidence.join("; ")}`).join("\n")}\n\n${manual}\n\nSource: ${issue.source}\nRun: ${id}\nArtifacts: ${path.join(store.directory, "artifacts", id)}\n`)
         await publish(store, id, controller.signal)
         await store.update(id, (r, db) => { if (r.cancelled) throw new Error("Cancelled"); r.status = "awaiting_acceptance"; db.issues[r.issueId].status = "awaiting_acceptance"; event(r, "handoff-complete", r.publication?.url) })
         return store.run(id)

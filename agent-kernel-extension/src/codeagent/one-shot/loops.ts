@@ -6,7 +6,7 @@ import { Store, lock } from "./store.ts"
 import { execute } from "./process.ts"
 import { executeAgent, type AgentExecutor } from "./agents.ts"
 import { analysisSchema, issueInputSchema, type Config, type LoopState } from "./types.ts"
-import { createIssue, enqueue } from "./runner.ts"
+import { createIssue, enqueue, IssueConflictError } from "./runner.ts"
 import { collectSource, sourceOptions } from "./source.ts"
 
 const sourceRepos = { claudeCode: "anthropics/claude-code", codex: "openai/codex" }
@@ -43,6 +43,17 @@ export async function tick(root: string, store: Store, config: Config, options: 
       const slot = scheduleSlot(loop, state, now)
       if (!slot && !options.force) continue
       const next: LoopState = structuredClone(state)
+      next.conflicts = []
+      const intake = async (_store: Store, input: Parameters<typeof createIssue>[1]) => {
+        try { return await createIssue(store, input) } catch (e) {
+          if (!(e instanceof IssueConflictError)) throw e
+          const contentHash = digest(JSON.stringify(issueInputSchema.parse(input)))
+          const retained = state.conflicts?.find(c => c.issueId === e.issueId && c.contentHash === contentHash)
+          const artifact = retained?.artifact ?? await report(store, loop.id, { kind: "issue-conflict", issueId: e.issueId, incoming: input, error: e.message })
+          if (!next.conflicts!.some(c => c.contentHash === contentHash && c.issueId === e.issueId)) next.conflicts!.push({ issueId: e.issueId, contentHash, artifact })
+          return undefined
+        }
+      }
       try {
         if (loop.kind === "file" || loop.kind === "command") {
           let raw: string
@@ -58,7 +69,7 @@ export async function tick(root: string, store: Store, config: Config, options: 
             raw = result.stdout
           }
           if (Buffer.byteLength(raw) > config.limits.maxOutputBytes) throw new Error("Signal input too large")
-          for (const item of signalsSchema.parse(JSON.parse(raw)).signals) await createIssue(store, { ...item, source: `loop:${loop.id}:${item.source}` })
+          for (const item of signalsSchema.parse(JSON.parse(raw)).signals) await intake(store, { ...item, source: `loop:${loop.id}:${item.source}` })
         } else if (loop.kind === "source") {
           const key = `${loop.repository}@${loop.ref}`
           const source = await (options.sourceCollector ?? collectSource)(sourceOptions(config, loop, store.directory, state.cursor?.[key], options.signal))
@@ -69,7 +80,7 @@ export async function tick(root: string, store: Store, config: Config, options: 
             const value = await executor({ config, agentId: config.roles.analyst ?? config.roles.planner, role: "analyze", cwd: root, payload: { source, project: "Develop external plugins for pinned OpenCode. Explain changed features, exact source paths/commit evidence, architecture, edge cases, public plugin API compatibility and license constraints; distinguish observed implementation from inference. Produce candidates only, with stable feature sourceId; retain all omitted/unavailable evidence limitations." }, signal, onIdentity: async () => {} })
             const analysis = analysisSchema.parse(value.result)
             const analysisReport = await report(store, `${key}:${source.head}`, { source, analysis })
-            for (const candidate of analysis.candidates) await createIssue(store, { ...candidate, source: `https://github.com/${loop.repository}`, sourceId: candidate.sourceId ?? `${source.head}:${digest(candidate.title)}`, evidence: [...candidate.evidence, source.url, analysisReport] })
+            for (const candidate of analysis.candidates) await intake(store, { ...candidate, source: `https://github.com/${loop.repository}`, sourceId: candidate.sourceId ?? `${source.head}:${digest(candidate.title)}`, evidence: [...candidate.evidence, source.url, analysisReport] })
             next.cursor = { ...state.cursor, [key]: source.head }
           }
         } else if (loop.kind === "github") {
@@ -89,8 +100,8 @@ export async function tick(root: string, store: Store, config: Config, options: 
               if (!eventComplete) throw new Error(`Issue ${item.number}: label provenance pagination gap`)
               const event = events.filter(e => ["labeled", "unlabeled"].includes(e.event) && e.label?.name === loop.label).at(-1)
               if (event?.event !== "labeled" || !loop.trustedActors.includes(event.actor?.login)) continue
-              const issue = await createIssue(store, { title: item.title, body: item.body || item.title, source: item.html_url, sourceId: `${loop.repository}#${item.number}`, evidence: [item.html_url, `todo-label-event:${event.id}; actor:${event.actor.login}`] })
-              await enqueue(root, store, config, issue.id)
+              const issue = await intake(store, { title: item.title, body: item.body || item.title, source: item.html_url, sourceId: `${loop.repository}#${item.number}`, evidence: [item.html_url, `todo-label-event:${event.id}; actor:${event.actor.login}`] })
+              if (issue) await enqueue(root, store, config, issue.id)
             }
             if (issues.length < 100) { complete = true; break }
           }
@@ -125,7 +136,7 @@ export async function tick(root: string, store: Store, config: Config, options: 
                 const value = await executor({ config, agentId: config.roles.analyst ?? config.roles.planner, role: "analyze", cwd: root, payload: { source, contentHash: digest(JSON.stringify(source)), project: "Develop external plugins for the pinned OpenCode baseline. Produce candidates only when relevant." }, signal: options.signal ? AbortSignal.any([controller.signal, options.signal]) : controller.signal, onIdentity: async () => {} })
                 const analysis = analysisSchema.parse(value.result)
                 await report(store, `${repo}@${release.tag_name}`, { source, analysis })
-                for (const candidate of analysis.candidates) await createIssue(store, { ...candidate, source: release.html_url, sourceId: candidate.sourceId ?? digest(candidate.title), evidence: [...candidate.evidence, release.html_url] })
+                for (const candidate of analysis.candidates) await intake(store, { ...candidate, source: release.html_url, sourceId: candidate.sourceId ?? digest(candidate.title), evidence: [...candidate.evidence, release.html_url] })
                 processed = release.tag_name
               } finally { clearTimeout(timer) }
             }
@@ -138,7 +149,7 @@ export async function tick(root: string, store: Store, config: Config, options: 
       } catch (e) {
         const error = e instanceof Error ? e.message : String(e)
         // Preserve source cursor; bounded retry backoff avoids an outage hot loop.
-        await store.transact(db => { db.loops[loop.id] = { ...state, error, nextAt: now + Math.min(loop.intervalSeconds, 60) * 1000 } })
+        await store.transact(db => { db.loops[loop.id] = { ...state, conflicts: next.conflicts, error, nextAt: now + Math.min(loop.intervalSeconds, 60) * 1000 } })
         results.push({ id: loop.id, ok: false, error })
       }
     }

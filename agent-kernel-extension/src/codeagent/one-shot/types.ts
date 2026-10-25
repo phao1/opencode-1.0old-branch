@@ -4,7 +4,7 @@ export const PROMPT_VERSION = "one-shot/3"
 const text = z.string().trim().min(1).max(100_000)
 const id = z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,79}$/)
 const argv = z.array(text).min(1).max(100)
-const command = z.object({ id, argv, timeoutMs: z.number().int().positive().max(3_600_000).default(300_000), required: z.boolean().default(true), kind: z.enum(["cli", "ui", "api", "db", "test"]).default("test") })
+const command = z.object({ id, argv, allowUnpinned: z.boolean().default(false), timeoutMs: z.number().int().positive().max(3_600_000).default(300_000), required: z.boolean().default(true), kind: z.enum(["cli", "ui", "api", "db", "test"]).default("test") })
 export const criterionSchema = z.object({ id, description: text, checks: z.array(id).min(1).max(100).optional(), manual: z.literal(true).optional() }).superRefine((c, ctx) => {
   if (c.checks && c.manual) ctx.addIssue({ code: "custom", message: "Choose checks or manual, not both" })
   if (c.checks && new Set(c.checks).size !== c.checks.length) ctx.addIssue({ code: "custom", message: "Criterion check IDs must be unique" })
@@ -14,7 +14,7 @@ export const issueInputSchema = z.object({ title: text.max(300), body: text, cri
 export type IssueInput = z.input<typeof issueInputSchema>
 export type Issue = z.output<typeof issueInputSchema> & { id: string; dedupKey: string; status: "candidate" | "todo" | "running" | "awaiting_acceptance" | "accepted" | "blocked"; runId?: string; createdAt: string }
 const agentSchema = z.object({
-  kind: z.enum(["opencode", "command"]), argv: argv.optional(), serverUrl: z.string().url().optional(),
+  kind: z.enum(["opencode", "command"]), allowUnpinned: z.boolean().default(false), argv: argv.optional(), serverUrl: z.string().url().optional(),
   model: z.string().optional(), agent: z.string().default("build"), fallback: z.array(id).default([]),
 }).superRefine((a, ctx) => {
   if (a.kind === "command" && !a.argv) ctx.addIssue({ code: "custom", message: "command agent requires argv" })
@@ -73,7 +73,7 @@ export type RunStatus = "queued" | Stage | "blocked" | "cancelled" | "awaiting_a
 export type CheckResult = { id: string; kind: string; required: boolean; code: number; stdout: string; stderr: string; durationMs: number; error?: string }
 export type Invocation = { id: string; role: Role; agent: string; startedAt: string; finishedAt?: string; status: "running" | "done" | "failed"; sessionId?: string; pid?: number; error?: string; usage?: { tokens?: number; cost?: number }; result?: unknown }
 export type TrustedFile = { path: string; sha256: string; kind: "repository" | "external"; mode: number; realPath?: string }
-export type TrustSnapshot = { version: 1; files: TrustedFile[] }
+export type TrustSnapshot = { version: 2; files: TrustedFile[]; coverage: Array<{ command: string; unpinned: string[]; allowUnpinned: boolean }> }
 export type Run = {
   id: string; issueId: string; config: Config; status: RunStatus; phase: Stage; baseCommit: string; branch: string;
   createdAt: string; updatedAt: string; workspace?: string; plan?: Plan; planRevision: number;
@@ -82,5 +82,5 @@ export type Run = {
   history: Array<{ at: string; event: string; detail?: string }>;
   trust?: TrustSnapshot;
 }
-export type LoopState = { lastSlot?: string; nextAt?: number; cursor?: Record<string, string>; error?: string; lastRunAt?: string }
+export type LoopState = { conflicts?: Array<{ issueId: string; contentHash: string; artifact: string }>; lastSlot?: string; nextAt?: number; cursor?: Record<string, string>; error?: string; lastRunAt?: string }
 export type Database = { version: 1; issues: Record<string, Issue>; runs: Record<string, Run>; loops: Record<string, LoopState>; reports: Array<{ id: string; source: string; at: string; report: unknown }> }
