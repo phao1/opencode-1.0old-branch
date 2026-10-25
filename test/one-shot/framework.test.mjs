@@ -28,8 +28,8 @@ function fixture(t, overrides = {}) {
   mkdirSync(path.join(root, '.opencode/skills/external-plugin-dev'), { recursive: true })
   writeFileSync(path.join(root, '.opencode/skills/external-plugin-dev/SKILL.md'), 'Follow the original policy.\n')
   git('add', '.'); git('update-index', '--add', '--cacheinfo', `160000,${kernel},agent-kernel`); git('commit', '-m', 'baseline')
-  const agent = { kind: 'command', allowUnpinned: true, argv: [process.execPath, agentFile] }
-  const config = configSchema.parse({ version: 1, trustedFiles: [{ path: agentFile, sha256: createHash('sha256').update(readFileSync(agentFile)).digest('hex') }], agents: { planner: agent, builder: agent, evaluator: agent, a: agent, b: agent }, roles: { planner: 'planner', builder: 'builder', evaluator: 'evaluator', designReviewers: ['a','b'], codeReviewers: ['a'] }, checks: [{ id: 'behavior', allowUnpinned: true, argv: [process.execPath, '--input-type=module', '-e', 'import {answer} from "./external-plugins/src/answer.js"; if(answer!==42) process.exit(1)'] }], ...overrides })
+  const agent = { kind: 'command', allowUnpinned: [process.execPath], argv: [process.execPath, agentFile] }
+  const config = configSchema.parse({ version: 1, trustedFiles: [{ path: agentFile, sha256: createHash('sha256').update(readFileSync(agentFile)).digest('hex') }], agents: { planner: agent, builder: agent, evaluator: agent, a: agent, b: agent }, roles: { planner: 'planner', builder: 'builder', evaluator: 'evaluator', designReviewers: ['a','b'], codeReviewers: ['a'] }, checks: [{ id: 'behavior', allowUnpinned: [process.execPath], argv: [process.execPath, '--input-type=module', '-e', 'import {answer} from "./external-plugins/src/answer.js"; if(answer!==42) process.exit(1)'] }], ...overrides })
   const store = new Store(path.join(root, '.codeagent/one-shot'))
   return { root, git, config, store }
 }
@@ -204,7 +204,7 @@ test('GitHub todo provenance does not bypass missing acceptance criteria', async
   await tick(f.root, f.store, f.config, { fetcher, force: true })
   await tick(f.root, f.store, f.config, { fetcher, force: true })
   assert.equal(Object.keys(f.store.read().runs).length, 0)
-  assert.match(f.store.read().loops.github.error, /acceptance criterion/)
+  assert.match(f.store.read().loops.github.pending[0].reason, /acceptance criterion/)
 })
 
 test('F6: empty or unbound criteria stay candidates; explicit candidate update can complete them', async t => {
@@ -243,7 +243,7 @@ test('F2/F6: duplicate IDs and unknown check bindings are rejected before queuei
 
 test('F2: a passing unrelated typecheck cannot substitute for the bound behavioral check', async t => {
   const f = fixture(t)
-  f.config.checks.push({ id: 'typecheck', allowUnpinned: true, argv: [process.execPath, '-e', 'process.exit(0)'], timeoutMs: 1000, required: true, kind: 'test' })
+  f.config.checks.push({ id: 'typecheck', allowUnpinned: [process.execPath], argv: [process.execPath, '-e', 'process.exit(0)'], timeoutMs: 1000, required: true, kind: 'test' })
   const run = await queued(f)
   const adapter = async args => {
     if (args.role === 'evaluate') return { result: { summary: 'Wrong evidence', results: [{ criterionId: 'C1', passed: true, evidence: ['check:typecheck'] }] } }
@@ -259,7 +259,7 @@ test('F2: a passing unrelated typecheck cannot substitute for the bound behavior
 
 test('F2: all bound checks must succeed and be cited, even optional configured checks', async t => {
   const f = fixture(t)
-  f.config.checks.push({ id: 'edge', allowUnpinned: true, argv: [process.execPath, '-e', 'process.exit(1)'], timeoutMs: 1000, required: false, kind: 'test' })
+  f.config.checks.push({ id: 'edge', allowUnpinned: [process.execPath], argv: [process.execPath, '-e', 'process.exit(1)'], timeoutMs: 1000, required: false, kind: 'test' })
   const issue = await createIssue(f.store, { title: 'Both checks', body: 'B', criteria: [{ id: 'C1', description: 'answer plus edge', checks: ['behavior', 'edge'] }] })
   const run = await enqueue(f.root, f.store, f.config, issue.id)
   const adapter = async args => args.role === 'evaluate' ? { result: { summary: 'Wrong pass', results: [{ criterionId: 'C1', passed: true, evidence: ['check:behavior', 'check:edge'] }] } } : executeAgent(args)
@@ -310,7 +310,7 @@ test('F1: trusted external checks require a pin and are revalidated before use a
   const f = fixture(t)
   const external = path.join(f.store.directory, 'trusted.mjs')
   mkdirSync(f.store.directory, { recursive: true }); writeFileSync(external, 'process.exit(0)\n')
-  f.config.checks.push({ id: 'external', allowUnpinned: true, argv: [process.execPath, external], timeoutMs: 1000, required: true, kind: 'test' })
+  f.config.checks.push({ id: 'external', allowUnpinned: [process.execPath], argv: [process.execPath, external], timeoutMs: 1000, required: true, kind: 'test' })
   const issue = await createIssue(f.store, { title: 'External', body: 'B', criteria: [{ id: 'C1', description: 'exports answer 42', checks: ['behavior'] }] })
   await assert.rejects(enqueue(f.root, f.store, f.config, issue.id), /external.*sha256|pin.*external/i)
   f.config.trustedFiles.push({ path: external, sha256: createHash('sha256').update(readFileSync(external)).digest('hex') })
@@ -327,7 +327,7 @@ test('F1: trusted external checks require a pin and are revalidated before use a
 
 test('F1: repository check entrypoints must exist in base and stay pinned outside default protected directories', async t => {
   const f = fixture(t)
-  f.config.checks.push({ id: 'missing', allowUnpinned: true, argv: [process.execPath, 'test/new-check.mjs'], timeoutMs: 1000, required: true, kind: 'test' })
+  f.config.checks.push({ id: 'missing', allowUnpinned: [process.execPath], argv: [process.execPath, 'test/new-check.mjs'], timeoutMs: 1000, required: true, kind: 'test' })
   const issue = await createIssue(f.store, { title: 'Missing baseline', body: 'B', criteria: [{ id: 'C1', description: 'answer', checks: ['behavior'] }] })
   await assert.rejects(enqueue(f.root, f.store, f.config, issue.id), /baseCommit.*test\/new-check.mjs/)
   mkdirSync(path.join(f.root, 'test')); writeFileSync(path.join(f.root, 'test/new-check.mjs'), 'process.exit(0)\n')
@@ -394,7 +394,7 @@ test('F1: an external check cannot rewrite another trusted check between executi
   writeFileSync(first, `import {writeFileSync} from 'node:fs'; writeFileSync(${JSON.stringify(second)}, 'process.exit(1)\\n')\n`)
   for (const [id, file] of [['first', first], ['second', second]]) {
     f.config.trustedFiles.push({ path: file, sha256: createHash('sha256').update(readFileSync(file)).digest('hex') })
-    f.config.checks.push({ id, allowUnpinned: true, argv: [process.execPath, file], timeoutMs: 1000, required: true, kind: 'test' })
+    f.config.checks.push({ id, allowUnpinned: [process.execPath], argv: [process.execPath, file], timeoutMs: 1000, required: true, kind: 'test' })
   }
   const run = await queued(f), result = await runOne(f.root, f.store, run.id)
   assert.equal(result.status, 'blocked'); assert.match(result.error, /trusted.*changed/i)
@@ -425,12 +425,12 @@ test('F1 review: directory protection works with and without a trailing slash', 
 test('F1 review: extensionless generated tools need explicit consent and stay visible in handoff', async t => {
   const f = fixture(t)
   f.config.checks[0].argv = [process.execPath, 'node_modules/x/bin/tool']
-  f.config.checks[0].allowUnpinned = false
+  f.config.checks[0].allowUnpinned = []
   const issue = await createIssue(f.store, { title: 'Toolchain coverage', body: 'B', criteria: [{ id: 'C1', description: 'exports answer 42', checks: ['behavior'] }] })
   await assert.rejects(enqueue(f.root, f.store, f.config, issue.id), /unpinned.*node_modules\/x\/bin\/tool/i)
   assert.equal(Object.keys(f.store.read().runs).length, 0)
-  f.config.checks[0].allowUnpinned = true
-  f.config.setup = [{ id: 'dependency', allowUnpinned: true, argv: [process.execPath, '-e', 'require("fs").mkdirSync("node_modules/x/bin",{recursive:true});require("fs").writeFileSync("node_modules/x/bin/tool","process.exit(0)")'], timeoutMs: 1000, required: true, kind: 'test' }]
+  f.config.checks[0].allowUnpinned = [process.execPath, 'node_modules/x/bin/tool']
+  f.config.setup = [{ id: 'dependency', allowUnpinned: [process.execPath], argv: [process.execPath, '-e', 'require("fs").mkdirSync("node_modules/x/bin",{recursive:true});require("fs").writeFileSync("node_modules/x/bin/tool","process.exit(0)")'], timeoutMs: 1000, required: true, kind: 'test' }]
   writeFileSync(path.join(f.root, '.gitignore'), '.codeagent/\nnode_modules/\n'); f.git('add', '.gitignore'); f.git('commit', '-m', 'Ignore generated dependencies')
   const run = await enqueue(f.root, f.store, f.config, issue.id)
   assert.ok(run.trust.coverage.find(c => c.command === 'check:behavior').unpinned.includes('node_modules/x/bin/tool'))
@@ -438,7 +438,7 @@ test('F1 review: extensionless generated tools need explicit consent and stay vi
   assert.equal(done.status, 'awaiting_acceptance', done.error)
   const artifacts = path.join(f.store.directory, 'artifacts', run.id)
   assert.match(readFileSync(path.join(artifacts, 'PR.md'), 'utf8'), /node_modules\/x\/bin\/tool/)
-  assert.ok(JSON.parse(readFileSync(path.join(artifacts, 'EVALUATION.json'))).trust.coverage.some(c => c.command === 'check:behavior' && c.allowUnpinned))
+  assert.ok(JSON.parse(readFileSync(path.join(artifacts, 'EVALUATION.json'))).trust.coverage.some(c => c.command === 'check:behavior' && c.allowUnpinned.includes('node_modules/x/bin/tool')))
 })
 
 test('F6 review: a changed signal is retained as a visible conflict without starving the next signal', async t => {
@@ -458,6 +458,58 @@ test('F6 review: a changed signal is retained as a visible conflict without star
   assert.equal(JSON.parse(readFileSync(loop.conflicts[0].artifact)).incoming.body, 'Changed body')
   await tick(f.root, f.store, f.config, { now: 23000 })
   assert.equal(f.store.read().reports.length, db.reports.length, 'Repeated conflicts reuse their durable report')
+})
+
+test('F1 follow-up: exact exceptions cannot hide newly added paths or compiler -p arguments', async t => {
+  const f = fixture(t)
+  f.config.checks[0].argv = ['tsc', '-p', 'external-plugins/x/tsconfig.json']
+  f.config.checks[0].allowUnpinned = ['tsc']
+  const issue = await createIssue(f.store, { title: 'Compiler paths', body: 'B', criteria: [{ id: 'C1', description: 'answer', checks: ['behavior'] }] })
+  await assert.rejects(enqueue(f.root, f.store, f.config, issue.id), /unpinned.*external-plugins\/x\/tsconfig.json/)
+  f.config.checks[0].allowUnpinned = ['*']
+  await assert.rejects(enqueue(f.root, f.store, f.config, issue.id), /unpinned/)
+  f.config.checks[0].allowUnpinned = ['tsc', 'external-plugins/x/tsconfig.json']
+  const run = await enqueue(f.root, f.store, f.config, issue.id)
+  assert.deepEqual(run.trust.coverage.find(c => c.command === 'check:behavior').unpinned, ['tsc', 'external-plugins/x/tsconfig.json'])
+})
+
+test('F1 follow-up: option=value module loaders are fixed from base before build', async t => {
+  const f = fixture(t)
+  mkdirSync(path.join(f.root, 'test')); writeFileSync(path.join(f.root, 'test/hook.mjs'), '// trusted loader\n')
+  f.git('add', 'test/hook.mjs'); f.git('commit', '-m', 'pin loader')
+  f.config.checks[0].argv.splice(1, 0, '--import=./test/hook.mjs')
+  const run = await queued(f)
+  assert.ok(run.trust.files.some(f => f.path === 'test/hook.mjs'))
+  const adapter = async args => {
+    const output = await executeAgent(args)
+    if (args.role === 'build') writeFileSync(path.join(args.cwd, 'test/hook.mjs'), 'process.exit(0)\n')
+    return output
+  }
+  const result = await runOne(f.root, f.store, run.id, adapter)
+  assert.equal(result.status, 'blocked'); assert.match(result.error, /trusted.*test\/hook.mjs/i)
+})
+
+test('F6 follow-up: GitHub batches retain incomplete candidates and queue completed unchanged tasks', async t => {
+  const f = fixture(t, { loops: [{ id: 'github', kind: 'github', repository: 'test/repo', trustedActors: ['owner'] }] })
+  let changed = false
+  const raw = number => ({ title: `Task ${number}`, body: changed && number === 12 ? 'Changed upstream requirement' : `Body ${number}`, source: `https://example.org/issues/${number}`, sourceId: `test/repo#${number}`, evidence: [`https://example.org/issues/${number}`, 'todo-label-event:7; actor:owner'] })
+  const ready = await createIssue(f.store, { ...raw(13), criteria: [{ id: 'C1', description: 'answer', checks: ['behavior'] }] })
+  const fetcher = async url => new Response(JSON.stringify(url.includes('/events?') ? [{ id: 7, event: 'labeled', label: { name: 'todo' }, actor: { login: 'owner' } }] : [12,13].map(number => ({ number, title: raw(number).title, body: raw(number).body, html_url: raw(number).source }))))
+  assert.equal((await tick(f.root, f.store, f.config, { fetcher, force: true }))[0].ok, true)
+  assert.equal(Object.keys(f.store.read().runs).length, 1)
+  assert.ok(f.store.read().issues[ready.id].runId)
+  const pending = f.store.read().loops.github.pending
+  assert.equal(pending.length, 1)
+  const unfinished = f.store.read().issues[pending[0].issueId]
+  await updateIssue(f.store, unfinished.id, { ...raw(12), criteria: [{ id: 'C1', description: 'answer', checks: ['behavior'] }] })
+  await tick(f.root, f.store, f.config, { fetcher, force: true })
+  assert.equal(Object.keys(f.store.read().runs).length, 2)
+  assert.equal(f.store.read().loops.github.pending.length, 0)
+  changed = true
+  await tick(f.root, f.store, f.config, { fetcher, force: true })
+  assert.equal(Object.keys(f.store.read().runs).length, 2, 'Changed upstream text must not authorize a third run')
+  assert.equal(f.store.read().loops.github.conflicts[0].issueId, unfinished.id)
+  assert.equal(f.store.read().issues[unfinished.id].body, 'Body 12')
 })
 
 test('worker shutdown checkpoints active work and a new worker resumes it', async t => {

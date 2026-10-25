@@ -11,7 +11,7 @@ description: 将明确的外置插件开发需求交给持久化 one-shot worker
 
 1. 从用户请求提取目标、当前行为、期望行为、非目标和可观察的验收标准。普通实现选择由 agent 决定；只有会改变产品目标或无法从代码确认的关键缺口才问用户。分析和资料收集不自动变成开发授权。
 2. 使用 `create-issue` skill 的规则整理输入。每条标准有稳定 ID，并绑定能验证该行为的 `checks: [配置检查ID]`，确实需要操作员判断时用 `manual: true`；原始描述及绑定不可在设计修订时删减或降级。候选可以不完整，但空标准、缺绑定或未知检查不能入队。同源内容变化会报冲突：先查看旧需求，再显式更新未入队 candidate，已有关联 run 的需求不覆盖。用 `one_shot_issue` 创建候选；已有 issue/run 或 `--from-triage` 时先用 `one_shot_status` 找到唯一匹配，禁止猜 ID。
-3. 入队前检查模型、worker、allowedPaths、protectedPaths、trustedFiles、checks 和 baseRef。未固定的工具链/路径参数需操作员显式配置 allowUnpinned:true，并在交付中列出覆盖缺口；生成依赖不会自动获得可信状态。仓内受信入口须存在于 base commit，外部检查/适配器须显式固定 sha256；动态导入和检查辅助文件也需纳入受信范围。默认保护 skill/脚本，不修改受信检查来让任务通过；维护这些文件时由操作员显式配置范围。队列从 Git commit 创建工作目录，不携带未提交的 skills/代码。配置缺失时按 `docs/plugin-guide.md` 给出缺项，不暗中修改权限或安装后台服务。
+3. 入队前检查模型、worker、allowedPaths、protectedPaths、trustedFiles、checks 和 baseRef。未固定的工具链/路径参数需操作员在 allowUnpinned 中逐项列出（精确匹配，无通配符），并在交付中列出覆盖缺口；生成依赖不会自动获得可信状态。仓内受信入口须存在于 base commit，外部检查/适配器须显式固定 sha256；动态导入和检查辅助文件也需纳入受信范围。默认保护 skill/脚本，不修改受信检查来让任务通过；维护这些文件时由操作员显式配置范围。队列从 Git commit 创建工作目录，不携带未提交的 skills/代码。配置缺失时按 `docs/plugin-guide.md` 给出缺项，不暗中修改权限或安装后台服务。
 4. 用户已明确要求实现时，调用 `one_shot_start`，返回 run ID；重复启动复用已有 run。执行由独立 worker 负责，本会话不再并行实现同一 issue。
 
 ## 执行与交付

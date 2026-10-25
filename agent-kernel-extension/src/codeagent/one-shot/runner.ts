@@ -11,17 +11,18 @@ export class IssueConflictError extends Error {
   readonly issueId: string
   constructor(issueId: string) { super(`Source content conflict with ${issueId}; inspect it and explicitly update an unqueued candidate or choose a new source identity`); this.name = "IssueConflictError"; this.issueId = issueId }
 }
+export class IssueNotReadyError extends Error {}
 
 const sourceKey = (data: ReturnType<typeof issueInputSchema.parse>) => createHash("sha256").update(`${data.source}\0${data.sourceId ?? `${data.title}\0${data.body}`}`).digest("hex")
 const criterionKey = (c: Criterion) => JSON.stringify({ id: c.id, description: c.description, checks: c.checks ? [...c.checks].sort() : undefined, manual: c.manual })
 const contentKey = (data: ReturnType<typeof issueInputSchema.parse>) => JSON.stringify({ ...data, criteria: data.criteria.map(criterionKey).sort(), evidence: [...data.evidence].sort() })
 function validateCriteria(criteria: Criterion[], config: Config) {
-  if (!criteria.length) throw new Error("At least one acceptance criterion is required before enqueue")
+  if (!criteria.length) throw new IssueNotReadyError("At least one acceptance criterion is required before enqueue")
   if (new Set(criteria.map(c => c.id)).size !== criteria.length) throw new Error("Criterion IDs must be unique")
   for (const value of criteria) {
     const c = criterionSchema.parse(value)
-    if (!c.checks && !c.manual) throw new Error(`Criterion ${c.id} must specify checks or manual:true before enqueue`)
-    for (const check of c.checks ?? []) if (!config.checks.some(cmd => cmd.id === check)) throw new Error(`Unknown check ${check} for criterion ${c.id}`)
+    if (!c.checks && !c.manual) throw new IssueNotReadyError(`Criterion ${c.id} must specify checks or manual:true before enqueue`)
+    for (const check of c.checks ?? []) if (!config.checks.some(cmd => cmd.id === check)) throw new IssueNotReadyError(`Unknown check ${check} for criterion ${c.id}`)
   }
 }
 function validateEvaluation(plan: Plan, checks: CheckResult[], value: unknown): Evaluation {

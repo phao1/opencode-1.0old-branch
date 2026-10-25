@@ -39,7 +39,8 @@ export async function captureTrust(root: string, base: string, config: Config): 
     if (!path.isAbsolute(file)) selected.add(file)
   }
   const commands = [...config.checks.map(c => ({ ...c, label: `check:${c.id}` })), ...config.setup.map(c => ({ ...c, label: `setup:${c.id}` })), ...Object.entries(config.agents).filter(([,a]) => a.kind === "command").map(([id,a]) => ({ ...a, label: `agent:${id}` }))]
-  for (const command of commands) for (const arg of command.argv ?? []) {
+  for (const command of commands) for (const raw of command.argv ?? []) {
+    const arg = raw.startsWith("--") && raw.includes("=") ? raw.slice(raw.indexOf("=") + 1) : raw
     if (!script(arg)) continue
     if (path.isAbsolute(arg)) {
       if (!pins.has(path.resolve(arg))) throw new Error(`Pin external script with trustedFiles sha256 before enqueue: ${arg}`)
@@ -60,16 +61,18 @@ export async function captureTrust(root: string, base: string, config: Config): 
     files.push({ path: file, sha256, mode: actual.mode, realPath: actual.realPath, kind: "external" })
   }
   const coverage = commands.map(command => {
-    const argv = command.argv ?? [], inline = argv.findIndex((a, i) => i > 0 && ["-e", "--eval", "-c", "--command", "-p", "--print"].includes(a))
-    const candidates = argv.slice(0, inline < 0 ? undefined : inline).filter((a, i) => i === 0 || (!a.startsWith("-") && !a.includes("\n") && /[/\\]/.test(a)))
+    const argv = command.argv ?? [], executable = path.basename(argv[0] ?? "").toLowerCase().replace(/\.exe$/, "")
+    const inlineFlags = /^(node|bun)$/.test(executable) ? ["-e", "--eval", "-p", "--print"] : /^python[0-9.]*$/.test(executable) ? ["-c"] : /^(bash|sh|zsh|pwsh|powershell)$/.test(executable) ? ["-c", "-Command"] : []
+    const inline = argv.findIndex((a, i) => i > 0 && inlineFlags.includes(a))
+    const candidates = argv.slice(0, inline < 0 ? undefined : inline).map(a => a.startsWith("--") && a.includes("=") ? a.slice(a.indexOf("=") + 1) : a).filter((a, i) => i === 0 || (!a.startsWith("-") && !a.includes("\n") && (/[/\\]/.test(a) || /\.(?:jsonc?|ya?ml|toml)$/i.test(a))))
     const unpinned = [...new Set(candidates.filter(arg => !files.some(file => path.isAbsolute(arg) ? file.kind === "external" && file.path === path.resolve(arg) : file.kind === "repository" && file.path === arg.replace(/^\.\//, ""))))]
-    if (unpinned.length && !command.allowUnpinned) throw new Error(`${command.label} has unpinned toolchain/path arguments: ${unpinned.join(", ")}; explicitly set allowUnpinned:true or pin their files`)
+    if (unpinned.some(arg => !command.allowUnpinned.includes(arg))) throw new Error(`${command.label} has unpinned toolchain/path arguments: ${unpinned.join(", ")}; explicitly list each exact path in allowUnpinned or pin its file`)
     return { command: command.label, unpinned, allowUnpinned: command.allowUnpinned }
   })
   return { version: 2, files, coverage }
 }
 export function verifyTrust(cwd: string, run: Run) {
-  if (run.trust?.version !== 2 || !run.trust.coverage) throw new Error("Run lacks trusted file snapshot/coverage; legacy run requires explicit migration, not resume/accept")
+  if (run.trust?.version !== 2 || !run.trust.coverage?.every(c => Array.isArray(c.allowUnpinned))) throw new Error("Run lacks trusted file snapshot/coverage; legacy run requires explicit migration, not resume/accept")
   for (const file of run.trust.files) {
     const target = file.kind === "external" ? file.path : path.join(cwd, file.path)
     try {

@@ -6,7 +6,7 @@ import { Store, lock } from "./store.ts"
 import { execute } from "./process.ts"
 import { executeAgent, type AgentExecutor } from "./agents.ts"
 import { analysisSchema, issueInputSchema, type Config, type LoopState } from "./types.ts"
-import { createIssue, enqueue, IssueConflictError } from "./runner.ts"
+import { createIssue, enqueue, IssueConflictError, IssueNotReadyError } from "./runner.ts"
 import { collectSource, sourceOptions } from "./source.ts"
 
 const sourceRepos = { claudeCode: "anthropics/claude-code", codex: "openai/codex" }
@@ -44,9 +44,15 @@ export async function tick(root: string, store: Store, config: Config, options: 
       if (!slot && !options.force) continue
       const next: LoopState = structuredClone(state)
       next.conflicts = []
-      const intake = async (_store: Store, input: Parameters<typeof createIssue>[1]) => {
+      next.pending = []
+      const intake = async (_store: Store, input: Parameters<typeof createIssue>[1], completedSource = false) => {
         try { return await createIssue(store, input) } catch (e) {
           if (!(e instanceof IssueConflictError)) throw e
+          const existing = store.read().issues[e.issueId], data = issueInputSchema.parse(input)
+          // A trusted GitHub label may select operator-completed criteria only
+          // when the upstream task itself is unchanged. Changed task text must
+          // remain a conflict; source identity alone cannot authorize old work.
+          if (completedSource && existing.criteria.length && (existing.runId || existing.status === "candidate") && existing.source === data.source && existing.sourceId === data.sourceId && existing.title === data.title && existing.body === data.body && data.evidence.every(e => existing.evidence.includes(e))) return existing
           const contentHash = digest(JSON.stringify(issueInputSchema.parse(input)))
           const retained = state.conflicts?.find(c => c.issueId === e.issueId && c.contentHash === contentHash)
           const artifact = retained?.artifact ?? await report(store, loop.id, { kind: "issue-conflict", issueId: e.issueId, incoming: input, error: e.message })
@@ -100,8 +106,14 @@ export async function tick(root: string, store: Store, config: Config, options: 
               if (!eventComplete) throw new Error(`Issue ${item.number}: label provenance pagination gap`)
               const event = events.filter(e => ["labeled", "unlabeled"].includes(e.event) && e.label?.name === loop.label).at(-1)
               if (event?.event !== "labeled" || !loop.trustedActors.includes(event.actor?.login)) continue
-              const issue = await intake(store, { title: item.title, body: item.body || item.title, source: item.html_url, sourceId: `${loop.repository}#${item.number}`, evidence: [item.html_url, `todo-label-event:${event.id}; actor:${event.actor.login}`] })
-              if (issue) await enqueue(root, store, config, issue.id)
+              const issue = await intake(store, { title: item.title, body: item.body || item.title, source: item.html_url, sourceId: `${loop.repository}#${item.number}`, evidence: [item.html_url, `todo-label-event:${event.id}; actor:${event.actor.login}`] }, true)
+              if (issue) try { await enqueue(root, store, config, issue.id) } catch (e) {
+                if (!(e instanceof IssueNotReadyError)) throw e
+                const reason = e.message, contentHash = digest(JSON.stringify({ issueId: issue.id, criteria: issue.criteria, reason }))
+                const retained = state.pending?.find(p => p.contentHash === contentHash)
+                const artifact = retained?.artifact ?? await report(store, loop.id, { kind: "issue-not-ready", issueId: issue.id, reason })
+                next.pending!.push({ issueId: issue.id, contentHash, artifact, reason })
+              }
             }
             if (issues.length < 100) { complete = true; break }
           }

@@ -17,10 +17,10 @@
     "planner": "planner", "builder": "builder", "evaluator": "evaluator",
     "designReviewers": ["review-a", "review-b"], "codeReviewers": ["review-a", "review-b"]
   },
-  "setup": [{ "id": "dependencies", "allowUnpinned": true, "argv": ["bun", "install", "--frozen-lockfile", "--ignore-scripts"] }],
+  "setup": [{ "id": "dependencies", "allowUnpinned": ["bun"], "argv": ["bun", "install", "--frozen-lockfile", "--ignore-scripts"] }],
   "checks": [
-    { "id": "typecheck", "allowUnpinned": true, "argv": ["bun", "run", "typecheck"] },
-    { "id": "tests", "allowUnpinned": true, "argv": ["bun", "run", "test"], "timeoutMs": 300000 }
+    { "id": "typecheck", "allowUnpinned": ["bun"], "argv": ["bun", "run", "typecheck"] },
+    { "id": "tests", "allowUnpinned": ["bun"], "argv": ["bun", "run", "test"], "timeoutMs": 300000 }
   ],
   "limits": { "timeoutMs": 900000, "maxCalls": 60, "maxRepairs": 3, "maxDesignRevisions": 2, "maxOutputBytes": 2000000 },
   "publish": { "enabled": false, "remote": "origin", "repository": "phao1/opencode-1.0old-branch", "baseBranch": "dev" },
