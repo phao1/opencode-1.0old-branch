@@ -1,0 +1,12 @@
+Any suggestion to improve this design?
+
+只读评审，不修改任何文件，不运行会改变仓库的命令。
+仓库：/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+设计：/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/DESIGN.md
+原始需求：/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/REQUIREMENT.md
+需求分析：/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/BRAINSTORM.md
+上一轮 SUMMARY.md：无（上一轮汇总不存在）
+run：/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21；轮次：1
+阅读原始需求、需求分析、设计、上一轮汇总（若存在）、仓库 AGENTS.md 与相关实现。
+对照需求判断设计是否满足验收、是否遗漏或越界。按 P0/P1/P2 列出建议，给出理由、影响和可定位证据（path:line）。
+说明可选方案与取舍，不凭空扩展范围；无建议时说明检查范围。只输出评审意见。

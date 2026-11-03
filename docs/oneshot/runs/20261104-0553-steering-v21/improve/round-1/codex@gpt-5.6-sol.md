@@ -1,0 +1,11 @@
+未发现 P0。设计方向符合 fail-open 与请求作用域原则，但建议实施前补齐以下契约：
+
+- [P1] 明确定义“有效插话”谓词 — 设计多处使用“有效输入/有效用户内容”，但未规定空白文本、file-only、ignored、synthetic、agent/subtask part 的行为；重写时可能丢失现有 file-only 插话或误把内部 part 当成插话。建议把谓词写入 DESIGN，并为每类 part 建表测试。现实现可作为语义基线：只接受非 ignored、非 synthetic 的非空文本或有效文件（evidence: `docs/oneshot/runs/20261104-0553-steering-v21/DESIGN.md:21`, `docs/oneshot/runs/20261104-0553-steering-v21/DESIGN.md:45`, `docs/oneshot/runs/20261104-0553-steering-v21/DESIGN.md:47`, `external-plugins/steering/src/state.ts:21`）。
+
+- [P1] 固化 G2 的“新于”比较算法 — DESIGN 要求最新用户消息新于最新成功 assistant，却没有说明按历史数组位置、创建时间还是 ID 比较。公开 PromptInput 允许调用方指定 `messageID`，因此词法 ID 比较并不可靠；错误实现可能重复 continuation，或漏掉完成边界恢复。建议明确以 `session.messages` 返回的时间顺序和数组位置判断，并要求候选 ID 确实出现在历史中；增加自定义非单调 messageID 回归（evidence: `docs/oneshot/runs/20261104-0553-steering-v21/DESIGN.md:24`, `docs/oneshot/runs/20261104-0553-steering-v21/DESIGN.md:51`, `agent-kernel/packages/opencode/src/session/prompt.ts:1742`, `agent-kernel/packages/opencode/src/session/index.ts:595`）。
+
+- [P2] 明确 idle 双事件的合并与唯一恢复读取时机 — 内核依次发布 `session.status(idle)` 和 `session.idle`，随后才从状态表删除 session；插件 event Promise 又不会被 loader 等待。设计虽写“只处理一次”，但应规定先同步摘取候选、合并双事件、延迟到 hook 返回后再执行唯一一次 SDK 检查，并把 status 表中“无此 session”解释为 idle。否则实现可能在过早读到 busy 后永久放弃 G2，或重复调度（evidence: `docs/oneshot/runs/20261104-0553-steering-v21/DESIGN.md:50`, `agent-kernel/packages/opencode/src/session/status.ts:73`, `agent-kernel/packages/opencode/src/plugin/index.ts:227`）。
+
+- [P2] 把 `noReply` 限制纳入自洽设计和 A10 — 该限制只出现在 BRAINSTORM 和现有 README，DESIGN 没有明确要求保留。公开 hook 无法辨别活动 `noReply` 输入，因此可能错误触发 continuation；文档同步时容易被遗漏。建议在 G2 风险、A10 和回归矩阵中明确：使用活动 `noReply` 的调用方应设置 `autoResume:false`（evidence: `docs/oneshot/runs/20261104-0553-steering-v21/BRAINSTORM.md:15`, `docs/oneshot/runs/20261104-0553-steering-v21/DESIGN.md:30`, `external-plugins/steering/README.md:46`, `agent-kernel/packages/opencode/src/session/prompt.ts:1321`）。
+
+- [P2] 将 ≤200 有效行变成可执行验收 — A8 只要求 Generator 在报告中说明统计方法，而验证命令没有实际检查，容易出现统计口径漂移。建议提供固定脚本，明确空行、纯注释、多行类型声明和混合代码行的计数规则，并登记为 check；保留“不压成长行规避”的人工复核（evidence: `docs/oneshot/runs/20261104-0553-steering-v21/DESIGN.md:28`, `docs/oneshot/runs/20261104-0553-steering-v21/DESIGN.md:62`）。
