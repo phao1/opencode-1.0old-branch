@@ -1,6 +1,6 @@
 # One-shot Skill v2 设计（Codex 宿主）
 
-版本 v1.0 · 2026-11-04 · Planner：Claude（总规划/验收）· Generator：Codex
+版本 v1.1 · 2026-11-04 · Planner：Claude（总规划/验收）· Generator：Codex
 依据：`/Users/penghao/Documents/code/oneshot/reference/chencheng-oneshot-reference.md`（下称"参考文档"，§ 号指它的章节）
 
 ## 1. 目标与非目标
@@ -49,7 +49,7 @@ docs/oneshot/runs/<run-id>/         # 每次运行的全部留档（随 commit �
 
 run 目录：
 ```
-state.json                 # 机器可读进度（原子写：tmp+rename；.lock 防并发宿主）
+state.json                 # 机器可读进度、初始化 baseCommit（原子写：tmp+rename；.lock 防并发宿主）
 REQUIREMENT.md             # 原始需求原文
 BRAINSTORM.md  DESIGN.md   # design 带版本号与变更记录
 improve/round-1/<agent>.prompt.md <agent>.md <agent>.log SUMMARY.md
@@ -58,6 +58,9 @@ verify/<n>-<check>.log  verify/RESULT.md
 review/round-1/<agent>.md … SUMMARY.md
 README.md                  # 运行索引：时间线、使用/降级的 agent、关键决策、证据链接
 ```
+
+run id 使用本地时间 `YYYYMMDD-HHMM`，state 的 ISO 时间保持 UTC。
+init 用 `git rev-parse HEAD` 记录 `baseCommit`；非 Git 仓库或无可用 HEAD 时为 null。
 
 ## 4. 尺寸裁剪（宿主在 brainstorm 末尾判定，可被 `--size` 覆盖）
 
@@ -91,6 +94,13 @@ agent 调用约定（config.json，可在仓库 `oneshot.config.json` 覆盖）�
 统一把完整 prompt 写到文件，再给 agent 一句"读取并执行 <prompt_file> 中的指令，把答案输出到 stdout"，避免 argv 长度问题。
 默认池：`codex@gpt-6.1-sol`、`codex@gpt-6-astra`、`codex@gpt-6.1-terra`、`codex@gpt-5.6-sol`、`claude`、`qodercli`、`agy`、`gemini`、`dsh`、`codebuddy`。
 同一 CLI 换模型算不同 Evaluator 视角，但报告中必须如实标注"同一 agent、不同模型"，不得冒充不同厂商。
+默认 `agentTimeoutSeconds=1500`、`generatorTimeoutSeconds=3600`。report 的 Evaluator 列表逐个打印模型与
+`durationMs`，未定义的模型或耗时用 `-`，保留 0ms。
+
+improve/review prompt 必须提供 REQUIREMENT.md、BRAINSTORM.md、DESIGN.md 和上一轮同类评审的 SUMMARY.md
+（若存在），要求对照需求检查设计是否满足验收、是否越界。review 另用 `{base}` 渲染初始化基准，明确评审
+`git diff {base}`（包含已提交与未提交累计改动），以及 `git status --short --untracked-files=all` 找出的未跟踪新文件。
+impl prompt 同样告知 base。base 为 null 时不执行 `git diff null`，检查工作区并记录缺少基准的局限，不用当前 HEAD 替代。
 
 ## 6. SKILL.md 宿主流程（要点）
 
@@ -103,9 +113,16 @@ agent 调用约定（config.json，可在仓库 `oneshot.config.json` 覆盖）�
 7. review（L 或显式要求）：`fanout review --round N` → 分诊 SUMMARY.md → 采纳项 `impl --fix` → verify → 下一轮/停止。
 8. deliver：`report`；commit（message 含 `Design: <path>`）；不 push/merge，除非用户要求。
 
+fanout/impl/verify 可能运行 10–60 分钟，宿主调用 shell 工具时应设置足够长的执行超时（例如 ≥3600000 ms）；
+若工具提前返回会话或进程仍在运行，必须持续等待直到退出后再继续。中断后重跑同一命令，fanout 复用成功 agent、
+impl 复用成功报告并为未完成尝试另开轮次，verify 重新运行全部检查。
+CLI 收到 SIGINT/SIGTERM 会 kill 活动子进程组；进行中的 agent 会丢失，属预期，已落盘的成功结果保留。
+设计校验允许标题带数字加 `.`/`、` 的编号前缀和括号等后缀，去前缀与空白后以必备章节名开头即可；
+前 10 行出现 `v\d+(\.\d+)*` 即满足版本号要求。
+
 ## 7. 验收标准（本 skill 自身）
 
-- A1 `node --test test/oneshot-skill/` 全过，覆盖：尺寸→节点表；状态原子写与锁；fan-out 真并发（3 个各 sleep 2s 的假 agent 总耗时 <4s）；单 agent 超时被 kill 且其他成功；全部失败→DEGRADED 记录；中断后重跑 fan-out 跳过已成功 agent；`done` 产物校验；`impl --fix` 记录与 resume 参数。
+- A1 `node --test test/oneshot-skill/*.test.mjs` 全过，覆盖：尺寸→节点表；状态原子写与锁；fan-out 真并发（3 个各 sleep 2s 的假 agent 总耗时 <4s）；单 agent 超时被 kill 且其他成功；全部失败→DEGRADED 记录；中断后重跑 fan-out 跳过已成功 agent；`done` 产物校验；`impl --fix` 记录与 resume 参数；baseCommit、评审上下文与模板渲染、本地时间、宽松章节/版本号、模型与耗时缺省值。
 - A2 `oneshot.mjs agents` 在本机真实输出：codex 各模型可用，claude/dsh/codebuddy 等因未登录/不存在被标为不可用，流程不阻塞。
 - A3 在 Codex 里用 `$one-shot` 真实跑完 steering 需求的 M/L 全流程（含并行 improve 与并行 review），run 目录留档完整并提交。
 - A4 SKILL.md ≤250 行，宿主能只靠它 + flow.md 完成流程；`install.sh` 可把 skill 装到用户级目录。
@@ -113,3 +130,4 @@ agent 调用约定（config.json，可在仓库 `oneshot.config.json` 覆盖）�
 ## 8. 变更记录
 
 - v1.0 2026-11-04 初版。
+- v1.1 2026-11-04 返工：记录并传递初始化 diff 基准，补全评审需求与上一轮汇总；明确长命令等待、SIGTERM 清理与恢复；run id 改用本地时间；放宽设计章节/版本号校验；Evaluator 默认超时改为 1500 秒；测试统一使用 glob 并删除入口；验收记录改为 Planner 审查后提交；report 展示模型、耗时及缺省值。

@@ -1,0 +1,232 @@
+{
+  "probeTimeoutSeconds": 90,
+  "cacheTTLHours": 6,
+  "agentTimeoutSeconds": 1500,
+  "generatorTimeoutSeconds": 3600,
+  "maxImproveRounds": 2,
+  "maxReviewRounds": 2,
+  "agents": [
+    {
+      "id": "codex@gpt-6.1-sol",
+      "bin": [
+        "codex",
+        "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex",
+        "/Applications/Codex.app/Contents/Resources/codex"
+      ],
+      "model": "gpt-6.1-sol",
+      "readonly": true,
+      "stdin": true,
+      "output": "file",
+      "args": [
+        "exec",
+        "--skip-git-repo-check",
+        "-s",
+        "read-only",
+        "-C",
+        "{cwd}",
+        "-m",
+        "{model}",
+        "-c",
+        "model_reasoning_effort=\"high\"",
+        "-o",
+        "{out_file}",
+        "-"
+      ]
+    },
+    {
+      "id": "codex@gpt-6-astra",
+      "bin": [
+        "codex",
+        "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex",
+        "/Applications/Codex.app/Contents/Resources/codex"
+      ],
+      "model": "gpt-6-astra",
+      "readonly": true,
+      "stdin": true,
+      "output": "file",
+      "args": [
+        "exec",
+        "--skip-git-repo-check",
+        "-s",
+        "read-only",
+        "-C",
+        "{cwd}",
+        "-m",
+        "{model}",
+        "-c",
+        "model_reasoning_effort=\"high\"",
+        "-o",
+        "{out_file}",
+        "-"
+      ]
+    },
+    {
+      "id": "codex@gpt-6.1-terra",
+      "bin": [
+        "codex",
+        "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex",
+        "/Applications/Codex.app/Contents/Resources/codex"
+      ],
+      "model": "gpt-6.1-terra",
+      "readonly": true,
+      "stdin": true,
+      "output": "file",
+      "args": [
+        "exec",
+        "--skip-git-repo-check",
+        "-s",
+        "read-only",
+        "-C",
+        "{cwd}",
+        "-m",
+        "{model}",
+        "-c",
+        "model_reasoning_effort=\"high\"",
+        "-o",
+        "{out_file}",
+        "-"
+      ]
+    },
+    {
+      "id": "codex@gpt-5.6-sol",
+      "bin": [
+        "codex",
+        "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex",
+        "/Applications/Codex.app/Contents/Resources/codex"
+      ],
+      "model": "gpt-5.6-sol",
+      "readonly": true,
+      "stdin": true,
+      "output": "file",
+      "args": [
+        "exec",
+        "--skip-git-repo-check",
+        "-s",
+        "read-only",
+        "-C",
+        "{cwd}",
+        "-m",
+        "{model}",
+        "-c",
+        "model_reasoning_effort=\"high\"",
+        "-o",
+        "{out_file}",
+        "-"
+      ]
+    },
+    {
+      "id": "claude",
+      "bin": [
+        "claude"
+      ],
+      "readonly": true,
+      "stdin": false,
+      "output": "stdout",
+      "args": [
+        "-p",
+        "{instruction}",
+        "--permission-mode",
+        "plan"
+      ]
+    },
+    {
+      "id": "qodercli",
+      "bin": [
+        "qodercli"
+      ],
+      "readonly": true,
+      "stdin": false,
+      "output": "stdout",
+      "args": [
+        "-p",
+        "{instruction}",
+        "--permission-mode",
+        "plan"
+      ]
+    },
+    {
+      "id": "agy",
+      "bin": [
+        "agy"
+      ],
+      "readonly": true,
+      "stdin": false,
+      "output": "stdout",
+      "args": [
+        "-p",
+        "{instruction}"
+      ]
+    },
+    {
+      "id": "gemini",
+      "bin": [
+        "gemini"
+      ],
+      "readonly": true,
+      "stdin": false,
+      "output": "stdout",
+      "args": [
+        "-p",
+        "{instruction}",
+        "--approval-mode",
+        "plan"
+      ]
+    },
+    {
+      "id": "dsh",
+      "bin": [
+        "dsh"
+      ],
+      "readonly": true,
+      "stdin": false,
+      "output": "stdout",
+      "args": [
+        "headless",
+        "{instruction}"
+      ]
+    },
+    {
+      "id": "codebuddy",
+      "bin": [
+        "codebuddy"
+      ],
+      "readonly": true,
+      "stdin": false,
+      "output": "stdout",
+      "args": [
+        "-p",
+        "{instruction}",
+        "--permission-mode",
+        "plan"
+      ]
+    },
+    {
+      "id": "opencode",
+      "bin": [
+        "opencode"
+      ],
+      "readonly": true,
+      "stdin": false,
+      "output": "stdout",
+      "args": [
+        "run",
+        "{instruction}"
+      ]
+    }
+  ],
+  "generator": {
+    "bin": [
+      "codex",
+      "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex",
+      "/Applications/Codex.app/Contents/Resources/codex"
+    ],
+    "model": "gpt-6.1-sol"
+  },
+  "host": {
+    "bin": [
+      "codex",
+      "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex",
+      "/Applications/Codex.app/Contents/Resources/codex"
+    ]
+  }
+}

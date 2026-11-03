@@ -10,7 +10,7 @@
   "scripts": {
     "check:kernel": "node scripts/check-kernel.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "node --test test/custom-hw/extension/*.test.mjs test/capability-watch/*.test.mjs test/one-shot/*.test.mjs test/steering/*.test.mjs test/packaging/*.test.mjs",
+    "test": "node --test test/custom-hw/extension/*.test.mjs test/capability-watch/*.test.mjs test/one-shot/*.test.mjs test/steering/*.test.mjs test/packaging/*.test.mjs test/oneshot-skill/*.test.mjs",
     "one-shot": "node scripts/one-shot.ts",
     "smoke:kernel": "node scripts/smoke-one-shot.mjs",
     "package:test": "node scripts/build-test-package.mjs",
