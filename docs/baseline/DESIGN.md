@@ -52,7 +52,7 @@ Independent stage invocations use prompt version and persisted role/model/sessio
 
 变更记录：v0.6 补全研发技能与来源追溯；验证记录见下。
 
-## Steering v0.3 设计（历史，当前为 v2）
+## Steering v0.3 设计（历史，当前为 v2.1）
 
 本版由真实 one-shot run 保存设计，并经两名独立 agent 并行评审；完整阶段记录由 worker 负责，不手工填写完成状态。核心生产模块位于 external-plugins/src/，内核 gitlink 不变。
 
@@ -93,7 +93,19 @@ steering_status 查询当前会话的逐消息状态。saved、prepared、provid
 
 `npm run debug:steering` 启动固定内核、安装后的独立包、固定版本 Vite Web app 与真实 Codex 中继，目录、状态、模型请求和工具动作均隔离保存。它只提供可观察的动作工具和模型协议转换，不替模型选择目标；不更改内核源码或用户全局配置。原生前端首次打开项目可能发生 `worktree` 初始化竞态，页面重启后继续验证，未修改固定前端。
 
-## Steering v2 / 0.4.0（2026-11-04）
+## Steering v2.1 / 0.5.0（2026-11-04，当前）
+
+以 [本轮 DESIGN v1.3](../oneshot/runs/20261104-0553-steering-v21/DESIGN.md) 和 [STEERING.md](STEERING.md) 为准。最小请求作用域 state：最近普通或摘要 transform 后的有效 user ID/part ID；普通工具有 pending 才拒绝，未知/native prt_/status 放行。每次 transform 消费全部旧 pending；只在有效同 ID 普通请求附加一次提醒，摘要及换 ID 不传递此前提醒；摘要 transform 后的新输入仍登记，供后续普通 transform/成功 idle 使用。歧义清全部关联；常态 observe/transform/gate/streaming/status 零 history。公开 transform 共享输出，Steering 应在变换用户消息插件之后加载，G1/G3 只覆盖本 hook 检查点。
+
+status-idle 后75ms 单次 history，用最后一个 assistant（含 summary，须成功且不跳过失败/未完成者）的 parentID 对应 user 在数组中的位置作边界，最新有效 user 必须属于忙碌 pending 且晚于 parent。summary 的 parent 是 compaction trigger，trigger 之前的指导不恢复，避免引用原生已过滤内容。失败/不确定/慢保存放弃；status/get 及保存前许可复核，每次 await 校验 identity，5秒过期。第二次 status-idle 视为取消，deprecated idle 忽略。恢复候选的 part 更新在 active 删除后也失效许可，任何同会话消息/part 删除保守放弃恢复（含无关删除），不增加 history 查询。只识别本进程按会话签发的控制 key，派发30秒后回收；未知/缺失/跨会话/过期key按普通synthetic放行。自家失效控制使用随机错误 token，迟到错误不清新真实请求。继承 model/agent/system/variant/format，省略 tools。autoResume:false 不读恢复历史；活动 noReply 必须关闭恢复。
+
+G2 控制保存原指导 ID 及简短重新读取继续要求。首个明确普通 transform 同步捕获现有恢复候选并失效许可，与 active.pending 一起按有效 user ID 检查后临时加一次 G3，随后消费全部候选。下一工具轮 G3 数为零。缺席/编辑无效、取消/过期的候选不能在后续请求补发提醒，摘要保持仅消费。原始已保存消息由原生存储保留。
+
+取消/结束/错误/删除/revert/压缩清理，内存随当前活动及输入量增长，没有拒绝普通输入的128/256上限。故意放弃 v2.0 指纹、快照、压缩覆盖、overflow replay、反复提醒和未知持续阻断。保存失败/过滤/编辑/重启/压缩可漏拦；不承诺原子取消、provider/adopted（始终unknown）、语义采纳或已开始工具回滚。回归、安装和真实暂扣/自然TUI证据见 [本run索引](../oneshot/runs/20261104-0553-steering-v21/README.md)。
+
+变更记录：2026-11-04，Steering v2.1 fail-open 重写；DESIGN v1.2评审修复摘要观察/最后assistant、恢复编辑与控制签发身份。DESIGN v1.3 将恢复 G3 改为首个普通 transform 的临时单次注入，官方 provider 验证 1→0。one-shot 框架沿用原规格。以下 v2.0 各轮说明仅历史。
+
+## 历史：Steering v2.0 / 0.4.0（2026-11-04）
 
 独立包 index.ts 只导出 SteeringPlugin；state.ts 管理有界进程内状态，不复制 inbox、不写 disk ledger、不依赖 extension 或内核私有模块。聚合桥接相对导入独立包源码，由 Bun 一并构建。旧 ledger 与默认插件测试在新内核/真实模型对照验证后退役。
 
@@ -105,7 +117,7 @@ chat.message 记录候选的全部有效 part 签名；message/part 保存事件
 
 变更记录：2026-11-04，新增 Steering v2 当前设计说明；以上 v0.3/0.3.2 段落保留为历史，不表示当前仍持久化 ledger。
 
-### Steering v2 round 2 修复（2026-11-04）
+### 历史：Steering v2.0 round 2 修复（2026-11-04）
 
 按 run DESIGN v1.3 修复：仅 info/空 parts/长时间历史缺席不清退已观察候选，保留原预期 part 指纹及后续保存确认能力，无法确认时在 status 给出未知/人工检查诊断；不再按 1.5 秒年龄删除。所有并发 gate 等待同一 in-flight history，fallback 标记不再让普通 task 提前套用 native 豁免。
 
@@ -113,7 +125,7 @@ chat.message 记录候选的全部有效 part 签名；message/part 保存事件
 
 变更记录：2026-11-04，第二轮实现及回归；[本 run 索引](../oneshot/runs/20261104-0426-steering-v2/README.md) 保存结果，旧轮报告/原始评审证据不改写。本轮未重新运行真实模型演示，正式全量验证由宿主执行。
 
-### Steering v2 round 3 / DESIGN v1.4（2026-11-04）
+### 历史：Steering v2.0 round 3 / DESIGN v1.4（2026-11-04）
 
 连续摘要只在输入包含旧 covering summary 且当前内容版本未变时继承覆盖，成功后替换为新 summaryID；失败/未包含/编辑/晚到版本不继承，不建无限 lineage graph。摘要请求、覆盖摘要后的普通请求及 native replay 请求均带静态最新优先/保留完成结果/报告跳过动作提示；安全 idle 后仅保留一个最新 summary 提示标记，不宣称摘要语义完整。
 

@@ -1,0 +1,48 @@
+✔ A3 late-save native-ID double barrier; plugin=false (4801.893875ms)
+✖ A3 late-save native-ID double barrier; plugin=true (3790.317125ms)
+✔ R3-P1/A3/A4 summary-period late save uses summary parent boundary; plugin=false (3779.16525ms)
+✖ R3-P1/A3/A4 summary-period late save uses summary parent boundary; plugin=true (3945.305625ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16420.338834
+
+✖ failing tests:
+
+test at external-plugins/steering/test/kernel.test.mjs:90:38
+✖ A3 late-save native-ID double barrier; plugin=true (3790.317125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/kernel.test.mjs:114:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at external-plugins/steering/test/kernel.test.mjs:312:38
+✖ R3-P1/A3/A4 summary-period late save uses summary parent boundary; plugin=true (3945.305625ms)
+  AssertionError [ERR_ASSERTION]: Following ordinary request has no G3 reminder
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/kernel.test.mjs:344:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

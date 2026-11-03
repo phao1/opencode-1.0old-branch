@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1a29a-c11a-72c0-a414-6480500702c9"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"kind\":\"tool\",\"text\":null,\"tool_name\":\"work_action\",\"arguments\":\"{\\\"name\\\":\\\"checkpoint.md\\\",\\\"content\\\":\\\"completed first step\\\"}\"}"}}
+{"type":"turn.completed","usage":{"input_tokens":25923,"cached_input_tokens":14592,"cache_write_input_tokens":0,"output_tokens":41,"reasoning_output_tokens":0}}

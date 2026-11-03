@@ -1,4 +1,4 @@
-# One-shot 自动化开发框架 Spec v0.7 / Steering v2 (0.4.0)
+# One-shot 自动化开发框架 Spec v0.7 / Steering v2.1 (0.5.0)
 
 Steering 的当前规范为 [STEERING.md](STEERING.md)，公开 API 证据见 [STEERING-FEASIBILITY.md](STEERING-FEASIBILITY.md)。旧 v0.1 的提示包装不满足本版行为验收。
 
@@ -61,7 +61,7 @@ Steering 的当前规范为 [STEERING.md](STEERING.md)，公开 API 证据见 [S
 
 F2：验收标准必须绑定全部对应 checks 或明确 manual:true，原始描述/绑定不可被 planner 改写；人工项只能 MANUAL/PENDING。F6：空/未绑定候选不入队，同源内容变化必须显式报冲突；只允许显式更新未入队 candidate。F1：受信脚本和 skill 基于 baseCommit 或操作员 SHA256 固定，执行与交付前后重验，不能改写检查来通过验收。具体标准 H2/H6/H1/HM/HE、设计及验证记录见 [ONE-SHOT-HARDENING.md](ONE-SHOT-HARDENING.md)。
 
-## Steering 外置插件 v0.3（历史，当前为 v2）
+## Steering 外置插件 v0.3（历史，当前为 v2.1）
 
 目标是在同一运行任务中接收方向修正，保留既有消息和已完成工作，并阻止尚未通过公开检查点的旧计划工具。验收 ID 及原文集中在 STEERING.md 的 ST-01 至 ST-08，避免维护两套含义不同的标准。
 
@@ -73,7 +73,19 @@ F2：验收标准必须绑定全部对应 checks 或明确 manual:true，原始�
 
 Undo 后继续任务和公开消息删除不得永久阻断同一会话。只有收到公开 `message.removed` 并通过 SDK 确认有效输入已不存在，才将原证据标为 `pendingReason: removed`，保留原准备与未知采纳记录。无删除确认的 SDK 缺失仍拒绝工具；附件删除不视为整条消息删除。同 ID 输入重新出现时重新检查，不继承删除豁免。验证汇总见 [STEERING-DELIVERY.md](STEERING-DELIVERY.md)。
 
-## Steering v2 / 0.4.0（2026-11-04）
+## Steering v2.1 / 0.5.0（2026-11-04，当前）
+
+以 [本轮 DESIGN v1.3](../oneshot/runs/20261104-0553-steering-v21/DESIGN.md) 和 [STEERING.md](STEERING.md) 为准。最小请求作用域 state：最近普通或摘要 transform 后的有效 user ID/part ID；普通工具有 pending 才拒绝，未知/native prt_/status 放行。每次 transform 消费全部旧 pending；只在有效同 ID 普通请求附加一次提醒，摘要及换 ID 不传递此前提醒；摘要 transform 后的新输入仍登记，供后续普通 transform/成功 idle 使用。歧义清全部关联；常态 observe/transform/gate/streaming/status 零 history。公开 transform 共享输出，Steering 应在变换用户消息插件之后加载，G1/G3 只覆盖本 hook 检查点。
+
+status-idle 后75ms 单次 history，用最后一个 assistant（含 summary，须成功且不跳过失败/未完成者）的 parentID 对应 user 在数组中的位置作边界，最新有效 user 必须属于忙碌 pending 且晚于 parent。summary 的 parent 是 compaction trigger，trigger 之前的指导不恢复，避免引用原生已过滤内容。失败/不确定/慢保存放弃；status/get 及保存前许可复核，每次 await 校验 identity，5秒过期。第二次 status-idle 视为取消，deprecated idle 忽略。恢复候选的 part 更新在 active 删除后也失效许可，任何同会话消息/part 删除保守放弃恢复（含无关删除），不增加 history 查询。只识别本进程按会话签发的控制 key，派发30秒后回收；未知/缺失/跨会话/过期key按普通synthetic放行。自家失效控制使用随机错误 token，迟到错误不清新真实请求。继承 model/agent/system/variant/format，省略 tools。autoResume:false 不读恢复历史；活动 noReply 必须关闭恢复。
+
+G2 控制保存原指导 ID 及简短重新读取继续要求。首个明确普通 transform 同步捕获现有恢复候选并失效许可，与 active.pending 一起按有效 user ID 检查后临时加一次 G3，随后消费全部候选。下一工具轮 G3 数为零。缺席/编辑无效、取消/过期的候选不能在后续请求补发提醒，摘要保持仅消费。原始已保存消息由原生存储保留。
+
+取消/结束/错误/删除/revert/压缩清理，内存随当前活动及输入量增长，没有拒绝普通输入的128/256上限。故意放弃 v2.0 指纹、快照、压缩覆盖、overflow replay、反复提醒和未知持续阻断。保存失败/过滤/编辑/重启/压缩可漏拦；不承诺原子取消、provider/adopted（始终unknown）、语义采纳或已开始工具回滚。回归、安装和真实暂扣/自然TUI证据见 [本run索引](../oneshot/runs/20261104-0553-steering-v21/README.md)。
+
+变更记录：2026-11-04，Steering v2.1 fail-open 重写；DESIGN v1.2评审修复摘要观察/最后assistant、恢复编辑与控制签发身份。DESIGN v1.3 将恢复 G3 改为首个普通 transform 的临时单次注入，官方 provider 验证 1→0。one-shot 框架沿用原规格。以下 v2.0 各轮说明仅历史。
+
+## 历史：Steering v2.0 / 0.4.0（2026-11-04）
 
 当前独立实现位于 external-plugins/steering/src，使用 @opencode-ai/plugin@1.3.17 的公开 hooks/SDK。验收以 [本轮设计 A1–A10](../oneshot/runs/20261104-0426-steering-v2/DESIGN.md) 为准。旧 ST 标准与 ledger 记录保持历史身份。普通输入原文/附件由原生内核保存；插件只保留有界进程内证据。prepared、provider、adopted 分离，后两者 unknown。
 
@@ -83,7 +95,7 @@ Undo 后继续任务和公开消息删除不得永久阻断同一会话。只有
 
 变更记录：2026-11-04，Steering v2 取代磁盘 ledger 默认实现，更新公开 API 契约与 A1–A10 验证入口；one-shot 框架规格未改。
 
-### Steering v2 round 2 修复（2026-11-04）
+### 历史：Steering v2.0 round 2 修复（2026-11-04）
 
 按 run DESIGN v1.3 修复：仅 info/空 parts/长时间历史缺席不清退已观察候选，保留原预期 part 指纹及后续保存确认能力，无法确认时在 status 给出未知/人工检查诊断；不再按 1.5 秒年龄删除。所有并发 gate 等待同一 in-flight history，fallback 标记不再让普通 task 提前套用 native 豁免。
 
@@ -91,7 +103,7 @@ Undo 后继续任务和公开消息删除不得永久阻断同一会话。只有
 
 变更记录：2026-11-04，第二轮实现及回归；[本 run 索引](../oneshot/runs/20261104-0426-steering-v2/README.md) 保存结果，旧轮报告/原始评审证据不改写。本轮未重新运行真实模型演示，正式全量验证由宿主执行。
 
-### Steering v2 round 3 / DESIGN v1.4（2026-11-04）
+### 历史：Steering v2.0 round 3 / DESIGN v1.4（2026-11-04）
 
 连续摘要只在输入包含旧 covering summary 且当前内容版本未变时继承覆盖，成功后替换为新 summaryID；失败/未包含/编辑/晚到版本不继承，不建无限 lineage graph。摘要请求、覆盖摘要后的普通请求及 native replay 请求均带静态最新优先/保留完成结果/报告跳过动作提示；安全 idle 后仅保留一个最新 summary 提示标记，不宣称摘要语义完整。
 

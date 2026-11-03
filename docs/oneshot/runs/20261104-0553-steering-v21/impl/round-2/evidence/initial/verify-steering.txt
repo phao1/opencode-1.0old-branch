@@ -1,0 +1,65 @@
+{
+  "package": "@oneshot/opencode-steering",
+  "version": "0.5.0",
+  "artifact": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/dist/oneshot-opencode-steering-0.5.0.tgz",
+  "sha256": "65050819928f6ebabbb0d8cbe9407b08e758469823c646cb6044adf4b02f883b",
+  "integrity": "sha512-RVWxLF9CrdWkYcSwh9Y7Rv+6ciGKt37hmV448enFwW3XlHa6hHf25DsLQWfK61xFbm1+/x+cNzu2mRXCgHfHqw==",
+  "fixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-XqWjcd",
+  "installedPluginPath": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-XqWjcd/install/node_modules/@oneshot/opencode-steering/dist/index.js",
+  "installedBundleSHA256": "f8c9cf265505fc71dcd77e66615c6f948ab4efafc092e30b396f5419222d0dbb",
+  "files": [
+    "README.md",
+    "dist/index.js",
+    "package.json"
+  ],
+  "offlineInstallation": "passed",
+  "npmCache": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-XqWjcd/empty-npm-cache",
+  "offlineCacheWasEmpty": true,
+  "optionalPeerNotInstalled": true,
+  "importedEntry": "passed",
+  "kernelEndToEnd": "not checked by packaging; run verify-steering",
+  "passed": true
+}
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=false (4392.022166ms)
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=true (4091.849542ms)
+✔ A3 late-save native-ID double barrier; plugin=false (3622.854042ms)
+✔ A3 late-save native-ID double barrier; plugin=true (3941.880792ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=false (3780.498958ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=true (3849.160208ms)
+✔ A6 native SubtaskPart completes with mixed input; ordinary task is gated (3850.619167ms)
+✔ A6 abort suppresses continuation of saved guidance (3589.630458ms)
+✔ A6 revert before late-save completion preserves undo and supports redo (3993.247875ms)
+✔ A2/A3/A6 slow save gates current request, next transform drops missing guide and never permanently blocks (6066.507375ms)
+✔ A5/A6 manual summarize permits first ordinary tool and subsequent normal requests (4395.048375ms)
+✔ A4/A6 real overflow compaction replays guidance under new IDs and admits its ordinary tool (4023.764833ms)
+✔ A3/A6 three manual summaries and summary-only continuation never retain old gate or reminder (4367.10875ms)
+✔ A1/A5 idle input >300 and 129 cancelled sessions never create retained state or SDK reads (111.049292ms)
+✔ A1/A2/A5 empty, ignored, synthetic and other-session input do not gate; file-only does (0.811292ms)
+✔ A2 concurrent bash/task are gated without history; status, native prt_, unknown/cross session pass (0.315209ms)
+✔ A3 reminder exactly once at matching effective user ID; attachments untouched, subsequent gates reset (0.61125ms)
+✔ A3/A6 preceding-plugin removal/insertion, ID rewrite and invalid edits consume all pending (1.022333ms)
+✔ A2/A3 empty, missing-session and mixed-session transforms invalidate all gates and recovery (307.59775ms)
+✔ A3/A6 single and consecutive compactions never gate summaries or carry reminder lineage (0.497792ms)
+✔ A1/A5 streaming, idle, restart and failing history never affect ordinary traffic (102.079583ms)
+✔ A4 successful idle uses parent position even when guide ID precedes assistant, inherits fields but not tools (189.523458ms)
+✔ A4 latest non-summary assistant must succeed and latest valid user must be a pending candidate after parent (1236.036084ms)
+✔ A4 structured success and file-only guidance recover; repeated idle does not retry (196.621583ms)
+✔ A4/A6 SDK failure or slow save abandons recovery; new transform and tools always proceed (711.2735ms)
+✔ A4 invalidation during each await prevents continuation, including a second status-idle cancellation (2184.344041ms)
+✔ A4 status busy or persisted revert suppress dispatch and controls recheck status/get (326.867ms)
+✔ A4 stale own control errors do not clear a new genuine request; ordinary errors do (79.749458ms)
+✔ A4 timeout expires hung query and rejects late controls without rejecting user input (5153.632166ms)
+✔ A6 empty/ignored edits and removals release pending without history; info-only and partial saves are dropped at next request (1.040125ms)
+✔ A6 aggregate autoResume:false forwards option and performs zero recovery reads (122.639833ms)
+✔ A7 status is compact, unknown provider/adoption; offline toast never changes behavior (0.360917ms)
+state.ts: 145 effective lines
+index.ts: 17 effective lines
+✔ A8 production effective lines <=200 using TypeScript AST type removal and comment scanner (138.257667ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 54055.203334

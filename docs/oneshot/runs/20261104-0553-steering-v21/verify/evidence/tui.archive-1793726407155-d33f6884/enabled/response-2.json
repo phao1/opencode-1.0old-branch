@@ -1,0 +1,15 @@
+{
+  "decision": {
+    "kind": "tool",
+    "text": null,
+    "tool_name": "work_action",
+    "arguments": "{\"name\":\"SUMMARY.md\",\"content\":\"Retained checkpoint.md containing \\\"completed first step\\\". Skipped obsolete.md because the latest user guidance cancelled the pending second step.\"}"
+  },
+  "usage": {
+    "input_tokens": 26327,
+    "cached_input_tokens": 14592,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 65,
+    "reasoning_output_tokens": 0
+  }
+}

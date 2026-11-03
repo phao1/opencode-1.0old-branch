@@ -1,0 +1,22 @@
+{
+  "package": "@oneshot/opencode-steering",
+  "version": "0.5.0",
+  "artifact": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/dist/oneshot-opencode-steering-0.5.0.tgz",
+  "sha256": "a11da7ffb5d897bd14592d24ab180db30325ed4902034749dd666216119d4521",
+  "integrity": "sha512-+91/ypeGQ49Iq2hktJypZuADAhMixNJrt0FrZbGjG/8RDpWMxib/at2DwrvVhlFVRowK6LRuNrzcxuphbtlKog==",
+  "fixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-umUVko",
+  "installedPluginPath": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-umUVko/install/node_modules/@oneshot/opencode-steering/dist/index.js",
+  "installedBundleSHA256": "edd339c696a117036b8983711336f8b7ecfc439ebb397f619fb381bff46f97ab",
+  "files": [
+    "README.md",
+    "dist/index.js",
+    "package.json"
+  ],
+  "offlineInstallation": "passed",
+  "npmCache": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-umUVko/empty-npm-cache",
+  "offlineCacheWasEmpty": true,
+  "optionalPeerNotInstalled": true,
+  "importedEntry": "passed",
+  "kernelEndToEnd": "not checked by packaging; run verify-steering",
+  "passed": true
+}

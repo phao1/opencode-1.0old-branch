@@ -1,0 +1,752 @@
+{
+  "version": 2,
+  "id": "20261104-0553-steering-v21",
+  "title": "steering v2.1：按验收意见返工为 fail-open 请求作用域语义",
+  "size": "L",
+  "sizeExplicit": true,
+  "baseCommit": "586505b2160b7428300ae5df4efb40d3e67dbce1",
+  "createdAt": "2026-11-03T16:53:16.409Z",
+  "updatedAt": "2026-11-03T18:12:36.262Z",
+  "nodes": {
+    "brainstorm": {
+      "status": "done",
+      "startedAt": "2026-11-03T16:54:17.944Z",
+      "finishedAt": "2026-11-03T16:54:18.024Z",
+      "note": ""
+    },
+    "design": {
+      "status": "done",
+      "startedAt": "2026-11-03T16:54:18.125Z",
+      "finishedAt": "2026-11-03T16:55:56.442Z",
+      "note": ""
+    },
+    "improve": {
+      "status": "done",
+      "round": 1,
+      "startedAt": "2026-11-03T16:55:59.996Z",
+      "finishedAt": "2026-11-03T16:59:50.658Z",
+      "note": ""
+    },
+    "impl": {
+      "status": "done",
+      "finishedAt": "2026-11-03T18:06:41.483Z",
+      "note": "宿主核对DESIGN v1.3修复、report与实际diff；G2控制不持久化G3、首个transform临时1次后归零；174有效行，进入最终全量复验"
+    },
+    "verify": {
+      "status": "done",
+      "finishedAt": "2026-11-03T18:12:07.912Z"
+    },
+    "review": {
+      "status": "done",
+      "round": 2,
+      "startedAt": "2026-11-03T17:50:19.186Z",
+      "finishedAt": "2026-11-03T18:12:36.161Z",
+      "note": "两轮独立评审四个Codex模型；采纳项经Generator r3/r4修复，v1.3最终8项验证全过，无残余发现"
+    },
+    "deliver": {
+      "status": "running",
+      "startedAt": "2026-11-03T18:12:36.262Z"
+    }
+  },
+  "checks": [
+    {
+      "command": "node_modules/.bin/tsc --noEmit -p .",
+      "name": "root-types"
+    },
+    {
+      "command": "node_modules/.bin/tsc --noEmit -p external-plugins/steering",
+      "name": "steering-types"
+    },
+    {
+      "command": "npm test",
+      "name": "root-tests"
+    },
+    {
+      "command": "node scripts/check-kernel.mjs",
+      "name": "kernel-boundary"
+    },
+    {
+      "command": "node scripts/verify-steering.mjs",
+      "name": "installed-steering"
+    },
+    {
+      "command": "node scripts/steering-v2-demo.mjs --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless",
+      "name": "real-headless"
+    },
+    {
+      "command": "node scripts/steering-v2-demo.mjs --tui --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui",
+      "name": "real-tui"
+    },
+    {
+      "command": "node scripts/steering-v2-demo.mjs --natural --tui --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/natural-tui",
+      "name": "real-natural-tui"
+    }
+  ],
+  "rounds": {
+    "improve": {
+      "1": {
+        "agents": {
+          "codex@gpt-6.1-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 37873,
+            "durationMs": 143518,
+            "at": "2026-11-03T16:58:23.517Z",
+            "model": "gpt-6.1-sol"
+          },
+          "codex@gpt-6-astra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 37874,
+            "durationMs": 122942,
+            "at": "2026-11-03T16:58:02.944Z",
+            "model": "gpt-6-astra"
+          },
+          "codex@gpt-6.1-terra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 37875,
+            "durationMs": 39167,
+            "at": "2026-11-03T16:56:39.171Z",
+            "model": "gpt-6.1-terra"
+          },
+          "codex@gpt-5.6-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 37878,
+            "durationMs": 162074,
+            "at": "2026-11-03T16:58:42.079Z",
+            "model": "gpt-5.6-sol"
+          },
+          "claude": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T16:56:00.005Z",
+            "model": null
+          },
+          "qodercli": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T16:56:00.005Z",
+            "model": null
+          },
+          "agy": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T16:56:00.006Z",
+            "model": null
+          },
+          "gemini": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T16:56:00.006Z",
+            "model": null
+          },
+          "dsh": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T16:56:00.007Z",
+            "model": null
+          },
+          "codebuddy": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T16:56:00.007Z",
+            "model": null
+          },
+          "opencode": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T16:56:00.007Z",
+            "model": null
+          }
+        },
+        "startedAt": "2026-11-03T16:55:59.996Z",
+        "degraded": false,
+        "finishedAt": "2026-11-03T16:58:42.080Z"
+      }
+    },
+    "review": {
+      "1": {
+        "agents": {
+          "codex@gpt-6.1-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 68782,
+            "durationMs": 355453,
+            "at": "2026-11-03T17:29:20.128Z",
+            "model": "gpt-6.1-sol"
+          },
+          "codex@gpt-6-astra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 68783,
+            "durationMs": 183766,
+            "at": "2026-11-03T17:26:28.442Z",
+            "model": "gpt-6-astra"
+          },
+          "codex@gpt-6.1-terra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 68784,
+            "durationMs": 52516,
+            "at": "2026-11-03T17:24:17.193Z",
+            "model": "gpt-6.1-terra"
+          },
+          "codex@gpt-5.6-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 68788,
+            "durationMs": 240098,
+            "at": "2026-11-03T17:27:24.778Z",
+            "model": "gpt-5.6-sol"
+          },
+          "claude": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T17:23:24.679Z",
+            "model": null
+          },
+          "qodercli": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T17:23:24.680Z",
+            "model": null
+          },
+          "agy": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T17:23:24.680Z",
+            "model": null
+          },
+          "gemini": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T17:23:24.680Z",
+            "model": null
+          },
+          "dsh": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T17:23:24.681Z",
+            "model": null
+          },
+          "codebuddy": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T17:23:24.681Z",
+            "model": null
+          },
+          "opencode": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T17:23:24.681Z",
+            "model": null
+          }
+        },
+        "startedAt": "2026-11-03T17:23:24.672Z",
+        "degraded": false,
+        "finishedAt": "2026-11-03T17:29:20.129Z"
+      },
+      "2": {
+        "agents": {
+          "codex@gpt-6.1-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 88871,
+            "durationMs": 172590,
+            "at": "2026-11-03T17:53:11.778Z",
+            "model": "gpt-6.1-sol"
+          },
+          "codex@gpt-6-astra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 88872,
+            "durationMs": 115888,
+            "at": "2026-11-03T17:52:15.079Z",
+            "model": "gpt-6-astra"
+          },
+          "codex@gpt-6.1-terra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 88875,
+            "durationMs": 40866,
+            "at": "2026-11-03T17:51:00.058Z",
+            "model": "gpt-6.1-terra"
+          },
+          "codex@gpt-5.6-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 88877,
+            "durationMs": 205150,
+            "at": "2026-11-03T17:53:44.344Z",
+            "model": "gpt-5.6-sol"
+          },
+          "claude": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T17:50:19.194Z",
+            "model": null
+          },
+          "qodercli": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T17:50:19.194Z",
+            "model": null
+          },
+          "agy": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T17:50:19.194Z",
+            "model": null
+          },
+          "gemini": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T17:50:19.195Z",
+            "model": null
+          },
+          "dsh": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T17:50:19.195Z",
+            "model": null
+          },
+          "codebuddy": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T17:50:19.195Z",
+            "model": null
+          },
+          "opencode": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T17:50:19.196Z",
+            "model": null
+          }
+        },
+        "startedAt": "2026-11-03T17:50:19.186Z",
+        "degraded": false,
+        "finishedAt": "2026-11-03T17:53:44.345Z"
+      }
+    }
+  },
+  "impl": {
+    "attempts": [
+      {
+        "round": 1,
+        "startedAt": "2026-11-03T16:59:50.837Z",
+        "fix": null,
+        "resumedFrom": null,
+        "status": "running",
+        "args": [
+          "exec",
+          "--dangerously-bypass-approvals-and-sandbox",
+          "-C",
+          "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch",
+          "-m",
+          "gpt-6.1-sol",
+          "--json",
+          "-o",
+          "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/impl/round-1/report.md",
+          "-"
+        ],
+        "threadId": "01a1a25a-53c5-7b01-9a0e-5f4c51a0975a"
+      },
+      {
+        "round": 2,
+        "startedAt": "2026-11-03T17:00:42.733Z",
+        "fix": null,
+        "resumedFrom": null,
+        "status": "ok",
+        "args": [
+          "exec",
+          "--dangerously-bypass-approvals-and-sandbox",
+          "-C",
+          "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch",
+          "-m",
+          "gpt-6.1-sol",
+          "--json",
+          "-o",
+          "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/report.md",
+          "-"
+        ],
+        "threadId": "01a1a25b-1e0c-7b81-a72f-e37145fcb024",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 39865,
+        "durationMs": 991086,
+        "finishedAt": "2026-11-03T17:17:13.819Z"
+      },
+      {
+        "round": 3,
+        "startedAt": "2026-11-03T17:31:42.357Z",
+        "fix": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/review/round-1/findings.md",
+        "resumedFrom": "01a1a25b-1e0c-7b81-a72f-e37145fcb024",
+        "status": "ok",
+        "args": [
+          "exec",
+          "resume",
+          "01a1a25b-1e0c-7b81-a72f-e37145fcb024",
+          "--dangerously-bypass-approvals-and-sandbox",
+          "-m",
+          "gpt-6.1-sol",
+          "--json",
+          "-o",
+          "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/impl/round-3/report.md",
+          "-"
+        ],
+        "threadId": "01a1a25b-1e0c-7b81-a72f-e37145fcb024",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 72748,
+        "durationMs": 577638,
+        "finishedAt": "2026-11-03T17:41:19.996Z"
+      },
+      {
+        "round": 4,
+        "startedAt": "2026-11-03T17:55:42.713Z",
+        "fix": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/review/round-2/findings.md",
+        "resumedFrom": "01a1a25b-1e0c-7b81-a72f-e37145fcb024",
+        "status": "ok",
+        "args": [
+          "exec",
+          "resume",
+          "01a1a25b-1e0c-7b81-a72f-e37145fcb024",
+          "--dangerously-bypass-approvals-and-sandbox",
+          "-m",
+          "gpt-6.1-sol",
+          "--json",
+          "-o",
+          "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/report.md",
+          "-"
+        ],
+        "threadId": "01a1a25b-1e0c-7b81-a72f-e37145fcb024",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 90895,
+        "durationMs": 635112,
+        "finishedAt": "2026-11-03T18:06:17.827Z"
+      }
+    ],
+    "inline": false,
+    "threadId": "01a1a25b-1e0c-7b81-a72f-e37145fcb024"
+  },
+  "timeline": [
+    {
+      "at": "2026-11-03T16:53:16.412Z",
+      "action": "init",
+      "detail": "L"
+    },
+    {
+      "at": "2026-11-03T16:53:16.416Z",
+      "action": "run-host",
+      "detail": "pid=37316"
+    },
+    {
+      "at": "2026-11-03T16:54:17.944Z",
+      "action": "start",
+      "detail": "brainstorm "
+    },
+    {
+      "at": "2026-11-03T16:54:18.024Z",
+      "action": "done",
+      "detail": "brainstorm "
+    },
+    {
+      "at": "2026-11-03T16:54:18.125Z",
+      "action": "start",
+      "detail": "design "
+    },
+    {
+      "at": "2026-11-03T16:55:55.550Z",
+      "action": "checks-add",
+      "detail": "node_modules/.bin/tsc --noEmit -p ."
+    },
+    {
+      "at": "2026-11-03T16:55:55.632Z",
+      "action": "checks-add",
+      "detail": "node_modules/.bin/tsc --noEmit -p external-plugins/steering"
+    },
+    {
+      "at": "2026-11-03T16:55:55.730Z",
+      "action": "checks-add",
+      "detail": "npm test"
+    },
+    {
+      "at": "2026-11-03T16:55:55.833Z",
+      "action": "checks-add",
+      "detail": "node scripts/check-kernel.mjs"
+    },
+    {
+      "at": "2026-11-03T16:55:55.933Z",
+      "action": "checks-add",
+      "detail": "node scripts/verify-steering.mjs"
+    },
+    {
+      "at": "2026-11-03T16:55:56.036Z",
+      "action": "checks-add",
+      "detail": "node scripts/steering-v2-demo.mjs --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless"
+    },
+    {
+      "at": "2026-11-03T16:55:56.136Z",
+      "action": "checks-add",
+      "detail": "node scripts/steering-v2-demo.mjs --tui --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui"
+    },
+    {
+      "at": "2026-11-03T16:55:56.239Z",
+      "action": "checks-add",
+      "detail": "node scripts/steering-v2-demo.mjs --natural --tui --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/natural-tui"
+    },
+    {
+      "at": "2026-11-03T16:55:56.442Z",
+      "action": "done",
+      "detail": "design "
+    },
+    {
+      "at": "2026-11-03T16:58:42.082Z",
+      "action": "fanout",
+      "detail": "improve round 1"
+    },
+    {
+      "at": "2026-11-03T16:59:50.658Z",
+      "action": "done",
+      "detail": "improve "
+    },
+    {
+      "at": "2026-11-03T17:17:13.819Z",
+      "action": "impl",
+      "detail": "round 2: ok"
+    },
+    {
+      "at": "2026-11-03T17:17:21.626Z",
+      "action": "done",
+      "detail": "impl 宿主已核对round-2报告、累计diff与范围；固定内核tracked干净，按DESIGN v1.1进入正式verify"
+    },
+    {
+      "at": "2026-11-03T17:22:27.521Z",
+      "action": "verify",
+      "detail": "PASS"
+    },
+    {
+      "at": "2026-11-03T17:29:20.130Z",
+      "action": "fanout",
+      "detail": "review round 1"
+    },
+    {
+      "at": "2026-11-03T17:41:19.996Z",
+      "action": "impl",
+      "detail": "round 3: ok resumed"
+    },
+    {
+      "at": "2026-11-03T17:41:26.699Z",
+      "action": "done",
+      "detail": "impl 宿主核对v1.2三项修复与报告；摘要G2官方开关正例、26单测、110根回归、41安装入口通过，进入正式复验"
+    },
+    {
+      "at": "2026-11-03T17:44:15.828Z",
+      "action": "resume-host",
+      "detail": "pid=45151"
+    },
+    {
+      "at": "2026-11-03T17:49:54.658Z",
+      "action": "verify",
+      "detail": "PASS"
+    },
+    {
+      "at": "2026-11-03T17:53:44.346Z",
+      "action": "fanout",
+      "detail": "review round 2"
+    },
+    {
+      "at": "2026-11-03T18:06:17.827Z",
+      "action": "impl",
+      "detail": "round 4: ok resumed"
+    },
+    {
+      "at": "2026-11-03T18:06:41.483Z",
+      "action": "done",
+      "detail": "impl 宿主核对DESIGN v1.3修复、report与实际diff；G2控制不持久化G3、首个transform临时1次后归零；174有效行，进入最终全量复验"
+    },
+    {
+      "at": "2026-11-03T18:12:07.913Z",
+      "action": "verify",
+      "detail": "PASS"
+    },
+    {
+      "at": "2026-11-03T18:12:36.161Z",
+      "action": "done",
+      "detail": "review 两轮独立评审四个Codex模型；采纳项经Generator r3/r4修复，v1.3最终8项验证全过，无残余发现"
+    },
+    {
+      "at": "2026-11-03T18:12:36.262Z",
+      "action": "start",
+      "detail": "deliver "
+    }
+  ],
+  "host": {
+    "pid": 45151,
+    "startedAt": "2026-11-03T17:44:15.828Z",
+    "background": true,
+    "args": [
+      "exec",
+      "--dangerously-bypass-approvals-and-sandbox",
+      "-C",
+      "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch",
+      "--json",
+      "-o",
+      "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/host.last.md",
+      "-"
+    ]
+  },
+  "verification": {
+    "results": [
+      {
+        "command": "node_modules/.bin/tsc --noEmit -p .",
+        "name": "root-types",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 29551,
+        "durationMs": 209,
+        "log": "verify/1-root-types.log",
+        "at": "2026-11-03T18:06:41.773Z"
+      },
+      {
+        "command": "node_modules/.bin/tsc --noEmit -p external-plugins/steering",
+        "name": "steering-types",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 29552,
+        "durationMs": 124,
+        "log": "verify/2-steering-types.log",
+        "at": "2026-11-03T18:06:41.898Z"
+      },
+      {
+        "command": "npm test",
+        "name": "root-tests",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 29553,
+        "durationMs": 64355,
+        "log": "verify/3-root-tests.log",
+        "at": "2026-11-03T18:07:46.254Z"
+      },
+      {
+        "command": "node scripts/check-kernel.mjs",
+        "name": "kernel-boundary",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 63550,
+        "durationMs": 109,
+        "log": "verify/4-kernel-boundary.log",
+        "at": "2026-11-03T18:07:46.365Z"
+      },
+      {
+        "command": "node scripts/verify-steering.mjs",
+        "name": "installed-steering",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 63561,
+        "durationMs": 63267,
+        "log": "verify/5-installed-steering.log",
+        "at": "2026-11-03T18:08:49.633Z"
+      },
+      {
+        "command": "node scripts/steering-v2-demo.mjs --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless",
+        "name": "real-headless",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 64904,
+        "durationMs": 50031,
+        "log": "verify/6-real-headless.log",
+        "at": "2026-11-03T18:09:39.665Z"
+      },
+      {
+        "command": "node scripts/steering-v2-demo.mjs --tui --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui",
+        "name": "real-tui",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 65788,
+        "durationMs": 58784,
+        "log": "verify/7-real-tui.log",
+        "at": "2026-11-03T18:10:38.450Z"
+      },
+      {
+        "command": "node scripts/steering-v2-demo.mjs --natural --tui --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/natural-tui",
+        "name": "real-natural-tui",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 69647,
+        "durationMs": 89460,
+        "log": "verify/8-real-natural-tui.log",
+        "at": "2026-11-03T18:12:07.911Z"
+      }
+    ],
+    "at": "2026-11-03T18:12:07.911Z",
+    "ok": true
+  }
+}

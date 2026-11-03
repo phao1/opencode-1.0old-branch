@@ -1,0 +1,39 @@
+{
+  "design": "v1.2",
+  "review": "round-1/findings.md",
+  "implementation": "round-3",
+  "productionEffectiveLines": {
+    "state.ts": 155,
+    "index.ts": 17,
+    "total": 172
+  },
+  "before": {
+    "newUnitCases": 6,
+    "failed": 1,
+    "newOfficialKernelCases": 2,
+    "expectedReproduction": true
+  },
+  "after": {
+    "unitCases": 26,
+    "passed": 26,
+    "rootCases": 110,
+    "rootPassed": 110,
+    "installedCases": 41,
+    "installedPassed": 41,
+    "officialKernelCases": 15
+  },
+  "typechecks": "both passed",
+  "kernelBoundary": "passed",
+  "standaloneBuildPackOfflineInstall": "passed",
+  "aggregateBuild": "passed",
+  "realModelDemos": "not rerun, as explicitly instructed in review findings; host formal verification owns rerun",
+  "reviewFindings": {
+    "summary-period input and last assistant": "fixed with official kernel on/off regression",
+    "recovery waiting/control candidate edits": "fixed without more history queries",
+    "unknown/expired/cross-session control identity": "fixed with session-associated 30s issued-key records",
+    "unrelated deletion": "accepted conservative limitation, documented"
+  },
+  "deviations": [],
+  "blockers": [],
+  "commitPushMergePublish": false
+}

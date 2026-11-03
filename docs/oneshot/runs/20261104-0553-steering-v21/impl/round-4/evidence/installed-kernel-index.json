@@ -1,0 +1,217 @@
+[
+  {
+    "case": 1,
+    "enabled": false,
+    "requests": 3,
+    "reminderCounts": [
+      0,
+      0,
+      0
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-WnyOyG/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-01"
+  },
+  {
+    "case": 2,
+    "enabled": true,
+    "requests": 3,
+    "reminderCounts": [
+      0,
+      3,
+      2
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-uPobz7/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-02"
+  },
+  {
+    "case": 3,
+    "enabled": false,
+    "requests": 3,
+    "reminderCounts": [
+      0,
+      0,
+      0
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-g966BH/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-03"
+  },
+  {
+    "case": 4,
+    "enabled": true,
+    "requests": 5,
+    "reminderCounts": [
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "controls": 1,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-mzFtDE/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-04"
+  },
+  {
+    "case": 5,
+    "enabled": false,
+    "requests": 2,
+    "reminderCounts": [
+      0,
+      0
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-2VL0vc/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-05"
+  },
+  {
+    "case": 6,
+    "enabled": true,
+    "requests": 2,
+    "reminderCounts": [
+      0,
+      0
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-zx4ZNB/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-06"
+  },
+  {
+    "case": 7,
+    "enabled": true,
+    "requests": 4,
+    "reminderCounts": [
+      0,
+      0,
+      0,
+      2
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-XEOO99/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-07"
+  },
+  {
+    "case": 8,
+    "enabled": true,
+    "requests": 1,
+    "reminderCounts": [
+      0
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-e5y9Iy/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-08"
+  },
+  {
+    "case": 9,
+    "enabled": true,
+    "requests": 1,
+    "reminderCounts": [
+      0
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-ubmJ5P/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-09"
+  },
+  {
+    "case": 10,
+    "enabled": true,
+    "requests": 3,
+    "reminderCounts": [
+      0,
+      2,
+      2
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-bYlMcU/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-10"
+  },
+  {
+    "case": 11,
+    "enabled": true,
+    "requests": 6,
+    "reminderCounts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-o7xrVv/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-11"
+  },
+  {
+    "case": 12,
+    "enabled": true,
+    "requests": 5,
+    "reminderCounts": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-Jg3Qio/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-12"
+  },
+  {
+    "case": 13,
+    "enabled": true,
+    "requests": 6,
+    "reminderCounts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-ErDtEl/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-13"
+  },
+  {
+    "case": 14,
+    "enabled": false,
+    "requests": 2,
+    "reminderCounts": [
+      0,
+      0
+    ],
+    "controls": 0,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-KIXgrS/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-14"
+  },
+  {
+    "case": 15,
+    "enabled": true,
+    "requests": 4,
+    "reminderCounts": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "controls": 1,
+    "controlContainsReminder": false,
+    "original": ".codeagent/steering-v2-case-31rBPC/evidence.json",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-4/evidence/installed-kernel/case-15"
+  }
+]

@@ -1,0 +1,45 @@
+                                                                                               █
+  ┃                                                                                            █    Real steering true
+  ┃  Each action must sleep 8 seconds before writing; work_action implements that delay. Use   █
+  ┃  work_action to perform these separate steps in order, exactly one artifact per tool call: █    Context
+  ┃   (1) write checkpoint.md with "completed first step"; (2) write obsolete.md with          █    0 tokens
+  ┃  "original second step"; (3) write SUMMARY.md summarizing what you completed. Then give a  █    0% used
+  ┃  brief final answer.                                                                       █    $0.00 spent
+  ┃                                                                                            █
+     ⚙ work_action [name=checkpoint.md, content=completed first step]                          █    LSP
+                                                                                               █    LSPs will activate as files are read
+     ▣  Build · Real Codex CLI                                                                 █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+
+  ┃
+  ┃  Change direction now: keep checkpoint.md. Skip the pending obsolete.md action. Write           /Users/penghao/Documents/code/oneshot/
+  ┃  SUMMARY.md explaining that obsolete.md was skipped because of this latest guidance, and        one-show-code/opencode-1.0old-branch/
+  ┃  retain the completed first step. Do not perform obsolete actions.                              docs/oneshot/runs/20261104-0553-
+  ┃                                                                                                 steering-v21/verify/evidence/natural-
+  ┃  Build  Real Codex CLI real                                                                     tui/enabled:dev1104-oneshot-steering
+  ╹▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+   ⬝⬝⬝⬝⬝⬝⬝⬝  esc interrupt                                           tab agents  ctrl+p commands    • OpenCode 1.3.17
+

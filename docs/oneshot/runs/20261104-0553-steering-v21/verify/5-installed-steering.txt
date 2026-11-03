@@ -1,0 +1,76 @@
+{
+  "package": "@oneshot/opencode-steering",
+  "version": "0.5.0",
+  "artifact": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/dist/oneshot-opencode-steering-0.5.0.tgz",
+  "sha256": "922cbc87163629975ea3c5cc53b702ef15753949a651f24250dc794d9eae6168",
+  "integrity": "sha512-B7ZvEAMQvJ3s9FG/q1tz/XvTqH3gwsCRzTbDdJIHMYSROKfTaixI6afwMbJUoScKAxmY8fSt0oznqjvVHqV4Uw==",
+  "fixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-oOTdLp",
+  "installedPluginPath": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-oOTdLp/install/node_modules/@oneshot/opencode-steering/dist/index.js",
+  "installedBundleSHA256": "fb79f3ca0330326fab1e37b3d2af64c477d390aa6fa62cf0e18e594a9a48683c",
+  "files": [
+    "README.md",
+    "dist/index.js",
+    "package.json"
+  ],
+  "offlineInstallation": "passed",
+  "npmCache": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-oOTdLp/empty-npm-cache",
+  "offlineCacheWasEmpty": true,
+  "optionalPeerNotInstalled": true,
+  "importedEntry": "passed",
+  "kernelEndToEnd": "not checked by packaging; run verify-steering",
+  "passed": true
+}
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=false (4224.365833ms)
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=true (4027.350375ms)
+✔ A3 late-save native-ID double barrier; plugin=false (4060.861375ms)
+✔ A3 late-save native-ID double barrier; plugin=true (4569.945125ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=false (3732.765333ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=true (3754.767ms)
+✔ A6 native SubtaskPart completes with mixed input; ordinary task is gated (3990.81475ms)
+✔ A6 abort suppresses continuation of saved guidance (3495.759209ms)
+✔ A6 revert before late-save completion preserves undo and supports redo (3954.658042ms)
+✔ A2/A3/A6 slow save gates current request, next transform drops missing guide and never permanently blocks (5771.407ms)
+✔ A5/A6 manual summarize permits first ordinary tool and subsequent normal requests (4420.641334ms)
+✔ A4/A6 real overflow compaction replays guidance under new IDs and admits its ordinary tool (4014.010042ms)
+✔ A3/A6 three manual summaries and summary-only continuation never retain old gate or reminder (4294.112666ms)
+✔ R3-P1/A3/A4 summary-period late save uses summary parent boundary; plugin=false (3867.134625ms)
+✔ R3-P1/A3/A4 summary-period late save uses summary parent boundary; plugin=true (4287.289959ms)
+✔ A1/A5 idle input >300 and 129 cancelled sessions never create retained state or SDK reads (115.878584ms)
+✔ A1/A2/A5 empty, ignored, synthetic and other-session input do not gate; file-only does (0.786625ms)
+✔ A2 concurrent bash/task are gated without history; status, native prt_, unknown/cross session pass (0.317791ms)
+✔ A3 reminder exactly once at matching effective user ID; attachments untouched, subsequent gates reset (0.352541ms)
+✔ A3/A6 preceding-plugin removal/insertion, ID rewrite and invalid edits consume all pending (0.828917ms)
+✔ A2/A3 empty, missing-session and mixed-session transforms invalidate all gates and recovery (306.281125ms)
+✔ A3/A6 single and consecutive compactions never gate summaries or carry reminder lineage (1.166916ms)
+✔ A1/A5 streaming, idle, restart and failing history never affect ordinary traffic (104.177666ms)
+✔ A4 successful idle uses parent position even when guide ID precedes assistant, inherits fields but not tools (187.206333ms)
+✔ A4 latest assistant must succeed and latest valid user must be a pending candidate after parent (1240.722166ms)
+✔ A4 structured success and file-only guidance recover; repeated idle does not retry (194.7405ms)
+✔ A4/A6 SDK failure or slow save abandons recovery; new transform and tools always proceed (712.705833ms)
+✔ A4 invalidation during each await prevents continuation, including a second status-idle cancellation (2204.048208ms)
+✔ A4 status busy or persisted revert suppress dispatch and controls recheck status/get (326.057834ms)
+✔ A4 stale own control errors do not clear a new genuine request; ordinary errors do (80.457167ms)
+✔ A4 timeout expires hung query and rejects late controls without rejecting user input (5157.598291ms)
+✔ A6 empty/ignored edits and removals release pending without history; info-only and partial saves are dropped at next request (0.987ms)
+✔ A6 aggregate autoResume:false forwards option and performs zero recovery reads (122.66575ms)
+✔ A7 status is compact, unknown provider/adoption; offline toast never changes behavior (0.418417ms)
+✔ R3-P1/A1/A3/A4 summary observes guidance and recovers only after the last summary parent (448.928541ms)
+✔ R3-P1/A3 summary-period guidance gets one ordinary reminder when native loop consumes it (0.389792ms)
+✔ R3-P2/A4 candidate part edits invalidate recovery during messages/status/get without extra queries (1266.143708ms)
+✔ R3-P2/A4 candidate edits during control save checks reject own control only (575.326792ms)
+✔ R3-P3/A1/A4 unknown, missing and cross-session control keys pass without SDK calls or blocking input (82.814209ms)
+✔ R3-P3/A4 expired signed keys become unknown; signed stale keys still reject before expiry (1.054583ms)
+✔ R4/A3/A4 recovery control stores only the guidance reference and first transform gets one temporary reminder (83.844083ms)
+✔ R4/A3 recovery candidates absent or ineffective at the first transform are consumed without later reminders (508.272667ms)
+✔ R4/A3 cancelled, expired, edited, unknown and summary candidates cannot transfer a reminder (3.309584ms)
+state.ts: 157 effective lines
+index.ts: 17 effective lines
+✔ A8 production effective lines <=200 using TypeScript AST type removal and comment scanner (139.053208ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 44
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62558.177792

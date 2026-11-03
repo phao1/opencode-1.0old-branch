@@ -1,0 +1,10 @@
+#!/bin/sh
+export XDG_CONFIG_HOME='/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui/disabled/kernel/config'
+export XDG_DATA_HOME='/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui/disabled/kernel/data'
+export XDG_CACHE_HOME='/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui/disabled/kernel/cache'
+export XDG_STATE_HOME='/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui/disabled/kernel/state'
+export OPENCODE_TEST_HOME='/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui/disabled/kernel/home'
+export OPENCODE_CONFIG_DIR='/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui/disabled/kernel/config/opencode'
+export OPENCODE_DISABLE_PROJECT_CONFIG='true'
+export OPENCODE_DISABLE_MODELS_FETCH='true'
+exec '/Users/penghao/.local/opencode-1.3.17/opencode' 'attach' 'http://127.0.0.1:4096' '--dir' '/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui/disabled' '--session' 'ses_e5d99ee7affe590lbuAIMYjq4P'

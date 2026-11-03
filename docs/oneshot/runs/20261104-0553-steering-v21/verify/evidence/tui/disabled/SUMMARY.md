@@ -1,0 +1,1 @@
+Retained checkpoint.md containing "completed first step". The latest guidance cancels the obsolete.md step, so no further obsolete actions were performed. The earlier tool result reports that obsolete.md had already been written before this guidance arrived; it was therefore not actually skipped.

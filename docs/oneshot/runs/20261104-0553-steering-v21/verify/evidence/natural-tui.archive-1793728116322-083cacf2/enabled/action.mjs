@@ -1,0 +1,4 @@
+import {z} from "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/node_modules/zod/index.js"; import {writeFile} from 'node:fs/promises'; import path from 'node:path'; import {setTimeout as delay} from 'node:timers/promises';
+      export default async () => ({tool:{work_action:{description:'Write one task artifact. Use once for each requested step. Each action sleeps 8 seconds before writing.',
+      args:{name:z.enum(['checkpoint.md','obsolete.md','SUMMARY.md']),content:z.string()},
+      async execute(args){if (true) await delay(8000); await writeFile(path.join("/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/natural-tui/enabled",args.name),args.content);return 'Wrote '+args.name}}}})

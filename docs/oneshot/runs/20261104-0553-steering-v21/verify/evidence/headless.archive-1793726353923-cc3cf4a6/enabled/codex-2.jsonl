@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1a265-adb5-7331-8169-0046ac0f5f20"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"kind\":\"tool\",\"text\":null,\"tool_name\":\"work_action\",\"arguments\":\"{\\\"name\\\":\\\"SUMMARY.md\\\",\\\"content\\\":\\\"Retained checkpoint.md containing \\\\\\\"completed first step\\\\\\\". Skipped obsolete.md because the latest user guidance explicitly cancelled the pending second step.\\\"}\"}"}}
+{"type":"turn.completed","usage":{"input_tokens":25107,"cached_input_tokens":12288,"cache_write_input_tokens":0,"output_tokens":66,"reasoning_output_tokens":0}}

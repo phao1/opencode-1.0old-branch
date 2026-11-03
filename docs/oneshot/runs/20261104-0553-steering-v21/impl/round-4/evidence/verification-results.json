@@ -1,0 +1,49 @@
+{
+  "design": "v1.3",
+  "reviewFindings": "review/round-2/findings.md",
+  "implementation": "round-4",
+  "productionEffectiveLines": {
+    "state.ts": 157,
+    "index.ts": 17,
+    "total": 174
+  },
+  "before": {
+    "newUnitTests": 3,
+    "failed": 2,
+    "focusedOfficialKernelTests": 4,
+    "expectedReproduction": true
+  },
+  "after": {
+    "unitTests": 29,
+    "unitPassed": 29,
+    "rootTests": 113,
+    "rootPassed": 113,
+    "installedValidationTests": 44,
+    "installedPassed": 44,
+    "officialInstalledKernelTests": 15
+  },
+  "typechecks": "both passed",
+  "boundary": "pinned kernel tracked files clean",
+  "aggregateBuild": "passed",
+  "emptyCacheOfflineInstall": "passed",
+  "packagedReadmeMatchesSource": true,
+  "focusedReminderCounts": {
+    "ordinary": [
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "summary": [
+      0,
+      0,
+      1,
+      0
+    ]
+  },
+  "savedControlsContainG3": false,
+  "realModelDemos": "assigned to host formal verify by round-2 findings",
+  "deviations": [],
+  "blockers": []
+}

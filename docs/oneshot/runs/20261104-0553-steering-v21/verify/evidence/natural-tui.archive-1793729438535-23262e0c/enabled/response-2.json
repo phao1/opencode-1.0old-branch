@@ -1,0 +1,15 @@
+{
+  "decision": {
+    "kind": "text",
+    "text": "Kept checkpoint.md, skipped obsolete.md, and wrote SUMMARY.md explaining the change.",
+    "tool_name": null,
+    "arguments": null
+  },
+  "usage": {
+    "input_tokens": 26249,
+    "cached_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 43,
+    "reasoning_output_tokens": 0
+  }
+}

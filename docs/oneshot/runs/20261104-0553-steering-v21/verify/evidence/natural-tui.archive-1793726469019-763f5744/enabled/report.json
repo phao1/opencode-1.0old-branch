@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "source": "real",
+  "tui": true,
+  "natural": true,
+  "timing": "unheld-tool-running",
+  "passed": true,
+  "out": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/natural-tui/enabled",
+  "obsoleteWritten": false,
+  "summary": "Completed the first step: checkpoint.md contains \"completed first step\" and has been retained. Skipped writing obsolete.md because the latest user guidance explicitly canceled that pending action.",
+  "requests": 3,
+  "usage": {
+    "input_tokens": 78406,
+    "cached_input_tokens": 14592,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 155,
+    "reasoning_output_tokens": 0
+  }
+}

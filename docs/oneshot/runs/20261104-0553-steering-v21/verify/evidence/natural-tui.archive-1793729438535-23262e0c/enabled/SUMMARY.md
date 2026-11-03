@@ -1,0 +1,1 @@
+Retained checkpoint.md containing "completed first step". Skipped the pending obsolete.md action because the latest user guidance changed direction and explicitly instructed that obsolete actions must not be performed.

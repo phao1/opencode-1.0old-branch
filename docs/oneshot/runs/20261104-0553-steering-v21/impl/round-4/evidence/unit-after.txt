@@ -1,0 +1,39 @@
+✔ A1/A5 idle input >300 and 129 cancelled sessions never create retained state or SDK reads (116.455791ms)
+✔ A1/A2/A5 empty, ignored, synthetic and other-session input do not gate; file-only does (1.226333ms)
+✔ A2 concurrent bash/task are gated without history; status, native prt_, unknown/cross session pass (0.511709ms)
+✔ A3 reminder exactly once at matching effective user ID; attachments untouched, subsequent gates reset (0.614875ms)
+✔ A3/A6 preceding-plugin removal/insertion, ID rewrite and invalid edits consume all pending (1.326208ms)
+✔ A2/A3 empty, missing-session and mixed-session transforms invalidate all gates and recovery (307.757042ms)
+✔ A3/A6 single and consecutive compactions never gate summaries or carry reminder lineage (2.568375ms)
+✔ A1/A5 streaming, idle, restart and failing history never affect ordinary traffic (104.897875ms)
+✔ A4 successful idle uses parent position even when guide ID precedes assistant, inherits fields but not tools (190.172792ms)
+✔ A4 latest assistant must succeed and latest valid user must be a pending candidate after parent (1239.216ms)
+✔ A4 structured success and file-only guidance recover; repeated idle does not retry (195.349208ms)
+✔ A4/A6 SDK failure or slow save abandons recovery; new transform and tools always proceed (715.115583ms)
+✔ A4 invalidation during each await prevents continuation, including a second status-idle cancellation (2192.391458ms)
+✔ A4 status busy or persisted revert suppress dispatch and controls recheck status/get (327.771ms)
+✔ A4 stale own control errors do not clear a new genuine request; ordinary errors do (83.552792ms)
+✔ A4 timeout expires hung query and rejects late controls without rejecting user input (5154.023458ms)
+✔ A6 empty/ignored edits and removals release pending without history; info-only and partial saves are dropped at next request (0.955541ms)
+✔ A6 aggregate autoResume:false forwards option and performs zero recovery reads (122.456167ms)
+✔ A7 status is compact, unknown provider/adoption; offline toast never changes behavior (0.416833ms)
+✔ R3-P1/A1/A3/A4 summary observes guidance and recovers only after the last summary parent (451.379833ms)
+✔ R3-P1/A3 summary-period guidance gets one ordinary reminder when native loop consumes it (1.00025ms)
+✔ R3-P2/A4 candidate part edits invalidate recovery during messages/status/get without extra queries (1249.631875ms)
+✔ R3-P2/A4 candidate edits during control save checks reject own control only (566.697458ms)
+✔ R3-P3/A1/A4 unknown, missing and cross-session control keys pass without SDK calls or blocking input (83.028667ms)
+✔ R3-P3/A4 expired signed keys become unknown; signed stale keys still reject before expiry (1.208166ms)
+✔ R4/A3/A4 recovery control stores only the guidance reference and first transform gets one temporary reminder (83.687541ms)
+✔ R4/A3 recovery candidates absent or ineffective at the first transform are consumed without later reminders (496.413458ms)
+✔ R4/A3 cancelled, expired, edited, unknown and summary candidates cannot transfer a reminder (1.209458ms)
+state.ts: 157 effective lines
+index.ts: 17 effective lines
+✔ A8 production effective lines <=200 using TypeScript AST type removal and comment scanner (161.9235ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13982.306042

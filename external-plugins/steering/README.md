@@ -1,95 +1,80 @@
-# @oneshot/opencode-steering 0.4.0 (Steering v2)
+# @oneshot/opencode-steering 0.5.0 (Steering v2.1)
 
-An independent public Hooks/SDK plugin for official OpenCode **1.3.17**. While a task runs, submit ordinary guidance in its current session. The plugin blocks obsolete ordinary tool calls that have not passed `tool.execute.before`, and prepares a reminder that latest guidance takes priority, completed results should be kept, and skipped actions should be reported. Original messages and attachments remain in native storage.
+Public Hooks/SDK plugin for official OpenCode **1.3.17**. Submit ordinary guidance in the running session. At `tool.execute.before`, Steering blocks ordinary calls belonging to the most recent ordinary request when effective input arrived after its transform checkpoint. Already started tools continue. It never aborts, rolls back, forwards to running subagents, or creates a follow-up queue.
 
-## Build and install
+The current contract follows [DESIGN v1.3](../../docs/oneshot/runs/20261104-0553-steering-v21/DESIGN.md).
 
-Requires Node 24+, npm and Bun. From the repository root:
+## Install
+
+Requires Node 24+, Bun and npm. From the repository root:
 
 ```sh
 bun run --cwd external-plugins/steering build
 node_modules/.bin/tsc --noEmit -p external-plugins/steering
 BUN_BINARY="$HOME/.bun/bin/bun" node scripts/package-steering.mjs
-npm install --prefix "$HOME/.local/share/opencode-steering" --ignore-scripts /absolute/path/dist/oneshot-opencode-steering-0.4.0.tgz
+npm install --prefix "$HOME/.local/share/opencode-steering" --ignore-scripts /absolute/path/dist/oneshot-opencode-steering-0.5.0.tgz
 ```
 
-The package bundles runtime dependencies into one `dist/index.js`. It declares exact public plugin peer/dev version 1.3.17. The peer is optional: it describes type and host API compatibility, while its type-only import is erased and all runtime dependencies remain bundled. Installing the artifact does not fetch this peer. Packaging verifies npm pack contents, offline installation using a newly created empty npm cache, absence of the optional type-only peer, byte identity, private import boundaries, and the sole function export `SteeringPlugin`. Root typecheck and `bun run --cwd external-plugins build` also cover the aggregate bridge.
-
-Add the installed absolute entry once to your OpenCode config and restart:
+Configure the installed entry once, then restart OpenCode:
 
 ```json
 {"plugin":["/absolute/path/node_modules/@oneshot/opencode-steering/dist/index.js"]}
 ```
 
-Install either the standalone package or the aggregate CodeAgent bridge. The single export prevents repeated invocation within one module by the old loader; it does not deduplicate separate configuration entries.
+Use either this standalone entry or the aggregate CodeAgent bridge. Separate configuration entries are not deduplicated. The sole function export is `SteeringPlugin`. Runtime dependencies are bundled. Exact public plugin peer/dev version is 1.3.17; the optional type-only peer is not needed at runtime. Packaging tests an actual offline installation with a newly created empty npm cache, matching archive/installed bytes, exports and private import boundaries.
 
-## Input and evidence
+## Request scope and fail-open behavior
 
-Use ordinary input, for example: `Keep completed work. Skip the pending export. Write a summary instead.` No queue command or prefix is required. Rapid inputs are ordered by native message ID. Ignored, synthetic and empty parts do not create guidance; generated attachment text stays in the model context. Received candidates become saved only when all expected effective parts match. A request snapshot belongs to its particular current assistant; later requests cannot admit that assistant's old tools.
+Only effective user input observed during a known ordinary or summary request becomes pending. Effective means a non-ignored, non-synthetic nonblank text part (including native system-reminder normalization) or a file part with a nonempty URL. File-only input qualifies. Ordinary idle input is not retained. Sessions are isolated; no history is scanned during observation, transform, tool gates, streaming or status queries.
 
-`steering_status` is a read-only, always gate-exempt tool. It shows process-local saved/prepared/compacted observations, recovery attempts and short diagnostics. Compacted means that exact version was included directly, or through its previously covering summary, in a successful summary request, rather than prepared in an ordinary request; it does not prove that the summary retained its meaning. Provider receipt and semantic adoption remain `unknown`. Toasts are best effort, limited to one per 500ms, and may appear in another session's TUI. Toast failures never change steering behavior.
+Each transform synchronously consumes **all** previous pending IDs. An ordinary transform containing an effective matching user ID gets one synthetic reminder: latest guidance takes priority, preserve completed results, report skipped obsolete actions. Original input and attachment content is unchanged. Subsequent requests do not repeat it. Missing IDs, filtered/empty edits and native overflow copies with new IDs are dropped. Compaction clears earlier pending and disables gates; summary requests get no reminder. Effective input arriving after the summary transform is still observed and can be consumed by the next ordinary request or become an idle recovery candidate. Empty, mixed-session or missing-session transforms invalidate all current associations and recovery candidates. Unknown requests, `steering_status` and all `prt_` call IDs pass. Ordinary model `task` calls still gate.
 
-There is no disk ledger or second inbox. Restart drops observations and never replays historical pending input. Limits: 128 cached sessions, 256 unresolved or still needed user inputs per session, 128 assistant snapshots, 1024 call/native-part mappings, 1024 running-part IDs, 32 diagnostics and 256 recovery attempts. Successful completed idle boundaries remove settled/compacted guidance and obsolete assistant snapshots; pending/unknown inputs remain, with latest request metadata retained when recovery needs it. More than 300 ordinary serial turns do not exhaust the input cap. Cancelled/failed sessions release observations only after an explicit idle boundary with no running work or recovery permit; then they can be evicted without replaying old input. Active sessions and terminal sessions lacking that safe boundary remain protected. A running-part tracking overflow conservatively retains state until restart/delete. Idle sessions with no retained guidance can be evicted. If 256 unresolved inputs remain, capacity diagnostics require checking/removing those native inputs; errors occur before saving an additional input; unknown/evicted call or snapshot ownership cannot admit stale ordinary tools. Status does not scan history; each real request calibrates once, with one shared fallback query for unknown ownership or incomplete saves. All concurrent gates await the in-flight query before an unresolved task can use the native safety exception. Events update caches without reading history per token/tool. For a new, never-confirmed candidate, info-only history, empty parts and absent rows do not prove failure: no age-based eviction is used. Such inputs remain unknown and block stale ordinary tools; status diagnostics ask you to inspect the native save or explicitly remove the input. Later parts can still confirm the input. Already saved guidance edited to whitespace/ignored/synthetic content is confirmed empty by a current public history read and stops blocking/recovery. While its observation is retained, editing it back to effective content invalidates the empty exemption. A restart drops these process-local observations without replaying them.
+The request association relies on the pinned kernel's serial per-session loop. The shared mutable transform output may be changed by later plugins: load Steering **after plugins that transform user messages**. G1/G3 cover this hook's checkpoint, and do not prove the final provider payload. A later plugin can remove or reinsert content beyond Steering's observation.
 
-## Completion recovery
+There are no rejecting 128/256 capacity thresholds, fingerprints, call/assistant snapshots or compaction lineage. State grows with active sessions and current-request inputs, and clears at idle/error/cancel/delete/revert or the next transform. It is not a fixed byte bound. Restart discards observations. Failed/partial/slow native saves may cause brief gate rejection for the current request; the next transform consumes them and cannot leave a permanent gate. Save failure, filtering, edits, compaction, restart and plugin ordering may cause missed interception. No guarantee of never missing a stale call is made.
 
-After successful completion leaves saved, unprepared guidance observed during this process's active task, an idle debounce rechecks history, status and `session.get` revert state. Each guidance content version has at most one recovery attempt. A single-use permit is invalidated by cancellation/error/deletion/compaction/revert, new real input, or normal preparation. The synthetic control re-enters `chat.message` and rechecks the permit before save. A 204 acknowledgement means dispatch only; `control-accepted` means the hook accepted it, not proof of persistence or provider delivery. Unknown outcomes require manual retry; the plugin does not retry them.
+## One conditional continuation
 
-The control references original guidance IDs without copying their contents. It inherits model, agent, system, variant and format from latest effective guidance. It omits tools and leaves session permissions intact. Unrecoverable fields suppress automatic recovery with diagnostics.
+Only `session.status(type=idle)` ends an active request. Deprecated `session.idle` is ignored. If unabsorbed busy-period input remains, after 75ms Steering makes one public `session.messages` read with a short timeout. The latest effective saved user must be a candidate, and appear in the returned history after the user referenced by the **last assistant's parentID, including a summary assistant**. For summaries, the parent is the native compaction trigger: guidance before that trigger is not recovered because native compaction filtering may have removed it. That assistant must have completed successfully; a last failed or unfinished assistant cannot be skipped. Unknown parent/order, missing parts, late saves, SDK failures or timeouts abandon recovery without retry.
 
-Both the standalone and aggregate CodeAgent entry forward plugin options unchanged to Steering. Disable recovery when desired:
+Public status/get must confirm idle and no revert. A synthetic `promptAsync` references the original guidance ID without copying its contents, inheriting model, agent, system, variant and format, and omitting tools. Permissions stay native. Every await checks candidate identity. New input, transforms, another status-idle cancellation, errors, deletion, revert and compaction invalidate the permit. Any part update to a recovering candidate also invalidates it, even while history/status/get or control-save checks await SDK results; uncertain edits conservatively abandon recovery without another history query. Any same-session message/part deletion can abandon recovery because history order and the parent boundary may change, even when the deleted item is unrelated. The control rechecks status/get before save. Rejection recognizes only keys issued by this process for that session. Issued-key records expire 30 seconds after dispatch, separately from the 5-second permit; signed stale replays can be rejected within that window. Unknown, missing, cross-session or expired keys are treated as ordinary synthetic input and pass without validation SDK calls. Public plugin metadata alone cannot authorize rejection. A random token identifies their delayed errors so those errors cannot clear a new genuine request. Permits expire after 5 seconds. A 204 response acknowledges dispatch, without proving persistence or semantic adoption.
+
+The saved continuation carries the original guidance ID and a short request to re-read and continue. At the first clear ordinary transform, Steering captures the current recovery candidate before invalidating its permit and matches effective user IDs together with active pending input. A match adds G3 temporarily to that request output. The checkpoint consumes these candidates once, including absent or ineffective IDs. The tool-result request receives zero G3 reminders. Cancelled, expired or otherwise invalidated candidates provide no reminder, and summary transforms consume candidates without adding G3.
+
+Both standalone and aggregate entries forward this option:
 
 ```json
 {"plugin":[["/absolute/path/dist/index.js",{"autoResume":false}]]}
 ```
 
-Active `noReply` input cannot be distinguished by these hooks and may be recovered; applications using it should set `autoResume:false`. Public APIs offer no atomic cancel/dispatch/save transaction. Idle cancellation has no dedicated event; cancellation or revert still in progress but not yet observed, or cancellation after the last check, can race with control save. Revert is never cleaned up automatically by this plugin.
+**Active `noReply` input requires `autoResume:false`** because the public hook cannot distinguish it. This option also suppresses recovery history reads. There is no atomic cancel/dispatch/save transaction: cancellation not yet observed or after the last check can race with save. Late save after the single check requires manual continuation. The plugin never cleans up native revert.
 
-## G1–G7 boundaries
+`steering_status` shows request type, pending IDs and whether recovery is active, with provider/adopted always `unknown`. Best-effort observed/absorbed/blocked/continuing toasts may appear in another session's TUI; offline failures are ignored.
 
-- G1: Ordinary stale calls are blocked, including multiple calls from one response. Already passed gates, MCP permission waits after the gate, batch internals and StructuredOutput are outside this guarantee.
-- G2: Compaction records versions actually present in its transform and inherits unchanged versions only when their covering summary is included. A successful new summary replaces the prior summary ID, without an unbounded lineage graph. Successful completion retires those versions for future ordinary snapshots that contain that summary; it does not set ordinary prepared. Later inputs/edits and failed summaries are not retired. Completion clears the summary marker so the first ordinary request is prepared normally. Successful-idle recovery is bounded and non-atomic. Cancelled/error/deleted/compacted/reverted sessions do not automatically revive once observed.
-- G3: Summary requests, ordinary requests containing a covering summary, and native replay requests carry an explicit latest-priority/preserve-results/report-skipped-actions reminder. A single latest-summary marker retains that static prompt across safe idle pruning. Request-only reminder and tool errors make the priority explicit. Preparation does not prove semantic adoption.
-- G4: Toast and process-local status provide minimal feedback; native QUEUED display is unchanged.
-- G5: Running subagents receive no forwarding. Native SubtaskPart uses a special unguarded hook path: confirmed part.id and unknown task ownership are safely exempted to avoid a hanging running part. An ordinary model task with confirmed callID ownership is gated. Native task exemptions do not claim G1 coverage or preparation of parent attachments.
-- G6: Running tools continue; use native Esc for cancellation. No emergency abort or rollback.
-- G7: No separate follow-up queue, copied message store or cross-session message relay.
-
-## Native overflow replay
-
-The fixed kernel may exclude the latest original input from an overflow summary, then copy it under new user/part IDs. One bounded current compaction window recognizes only an observed original, a public `auto:true, overflow:true` compaction trigger, a successful summary, adjacent native replay IDs, and strict request/history payload plus model/agent/system/variant/format/tools equality. New real input, cancellation/failure, another compaction or the first subsequent real request closes the window. Missing, ambiguous or incomplete evidence keeps the old version pending; arbitrary same-text history cannot grant coverage.
-
-Only an actual request containing the confirmed native replay marks the original version prepared for that assistant. Text files and their generated synthetic attachment text are matched. As in the pinned source, image/* and application/pdf become `[Attached <mime>: <filename>]` text placeholders: **their original media content is absent from the replay request**. Status exposes `replayedAs` and `mediaStripped`; prepared here means the native rendered representation was included, without claiming full attachment delivery or semantic adoption. The plugin does not re-inject full media or create its own replay message.
-
-## Deterministic CI
-
-Install an exact official binary in a disposable prefix; retain the generated npm lock for integrity/platform subpackage verification. npm verifies its registry integrity. Never use `@latest`:
+## Verification and evidence
 
 ```sh
-npm install --prefix .codeagent/steering-ci --save-exact --ignore-scripts opencode-ai@1.3.17
-export OPENCODE_BINARY="$PWD/.codeagent/steering-ci/node_modules/opencode-ai/bin/opencode"
-test "$("$OPENCODE_BINARY" --version)" = 1.3.17
 export BUN_BINARY="$HOME/.bun/bin/bun"
 node scripts/verify-steering.mjs
 npm test
 node scripts/check-kernel.mjs
+node scripts/steering-v2-demo.mjs --out .codeagent/demo-headless
+node scripts/steering-v2-demo.mjs --tui --out .codeagent/demo-tui
+node scripts/steering-v2-demo.mjs --natural --tui --out .codeagent/demo-natural
 ```
 
-`verify-steering` builds/packs/installs the independent artifact and runs all new tests against the installed entry. The root default `npm test` includes the same deterministic integration using the source entry. The tests run an actual official server with isolated XDG paths, no project config, disabled title/summary/models fetch, and local OpenAI SSE fixtures. They fail when the binary is missing or the version differs. No paid model/login is needed. A3 uses native-ID allocation barriers, and its disabled control actually stalls. Revert testing delays only the public SDK get to ensure revert has persisted before dispatch; no kernel code or SDK response is changed. Raw integration evidence and kernel logs remain under `.codeagent/steering-v2-*`.
+Provide an official 1.3.17 binary at `~/.local/opencode-1.3.17/opencode` or via `OPENCODE_BINARY`; tests fail on missing/wrong versions. Deterministic tests run the real isolated server and local SSE fixtures, require no paid model and also run against the installed artifact. The AST/scanner effective-line assertion runs in `npm test` (pure type declarations/imports and comments excluded; mixed lines count).
 
-## Real Codex demos
+Real demos require logged-in Codex CLI and tmux. Headless and ordinary TUI hold an unchanged real model tool decision before its gate. `--natural --tui` holds no response: the first tool sleeps 8 seconds before writing checkpoint.md, guidance is submitted directly in TUI while that native tool is running, and the next model response is natural. Both controls may correctly adopt the guidance; this is reported without claiming a difference. Demos retain screens, raw model requests/responses/JSONL, native messages, files, logs and per-case results. Existing output directories are archived on rerun, preventing stale artifact passes. `CODEX_BINARY`/`BUN_BINARY` select alternative executables.
 
-A logged-in Codex CLI and tmux (for TUI) are required:
+The G1 boundary excludes tools that already passed the checkpoint, batch internals, StructuredOutput and native `prt_` subtask calls. Model semantic adoption is never guaranteed.
 
-```sh
-node scripts/steering-v2-demo.mjs --out .codeagent/steering-v2-demo-headless
-node scripts/steering-v2-demo.mjs --tui --out .codeagent/steering-v2-demo-tui
-```
+## Historical v2.0 guarantees intentionally removed
 
-Use a fresh output directory for each run. `CODEX_BINARY`, `OPENCODE_BINARY` and `BUN_BINARY` can select executables. Both demos run enabled/disabled controls. They hold a real Codex tool decision after it is chosen, save the correction, then forward the unchanged decision. They retain native messages, HTTP request bodies, original Codex JSONL, final decisions/usage, artifacts and kernel logs, plus tmux capture-pane output. No scripted model fallback is used. tmux owns a unique socket/session and cleans up only that server. The API key is ephemeral and excluded from model evidence.
+Version 0.4.0 used saved fingerprints, assistant/call snapshots, summary lineage and overflow replay association, repeated reminders, hard capacities and unknown-evidence blocking. Those guarantees no longer apply. v2.1 favors eventual ordinary-input/tool availability, deliberately accepting missed gates for uncertain evidence. Prior evidence remains historical; current design and results are indexed in [this run](../../docs/oneshot/runs/20261104-0553-steering-v21/README.md).
 
-Current implementation evidence is indexed in [the implementation run](../../docs/oneshot/runs/20261104-0426-steering-v2/README.md). Legacy v0.3 ledger probes and documents describe historical results, not v2 behavior.
+Change log: 2026-11-04 — v2.1/0.5.0, fail-open rewrite, parent-boundary continuation, natural TUI evidence and executable size check.
 
-Change log (2026-11-04, round 2): retain info-only/slow-save candidates; await shared gate queries; track successful summary coverage and clear its marker; prune settled evidence at safe idle; forward aggregate options. Implementation-side regressions are indexed in the run README; formal verification remains with the host.
+Change log: 2026-11-04 — DESIGN v1.2 review fixes: observe summary-period guidance, use the last assistant including summaries, invalidate edited recovery candidates after idle, and bound session-associated issued-control identity. Real-model demos are rerun by host formal verification.
 
-Change log (2026-11-04, round 3): transfer successive summary coverage; bind strictly confirmed native overflow replay; preserve explicit compaction-chain reminders; distinguish saved empty edits; release safely idle cancelled/failed sessions; verify optional exact peer with a fresh empty offline cache.
+Change log 2026-11-04 — DESIGN v1.3 moves recovered G3 into the first ordinary transform and keeps the saved continuation to its ID reference and short re-read request. Ordinary and summary G2 fixtures verify provider reminder counts of one then zero.

@@ -1,0 +1,108 @@
+✖ R3-P1/A1/A3/A4 summary observes guidance and recovers only after the last summary parent (3.172208ms)
+✖ R3-P1/A3 summary-period guidance gets one ordinary reminder when native loop consumes it (0.366417ms)
+✖ R3-P2/A4 candidate part edits invalidate recovery during messages/status/get without extra queries (109.274292ms)
+✖ R3-P2/A4 candidate edits during control save checks reject own control only (96.847583ms)
+✖ R3-P3/A1/A4 unknown, missing and cross-session control keys pass without SDK calls or blocking input (1.401125ms)
+✖ R3-P3/A4 expired signed keys become unknown; signed stale keys still reject before expiry (3.219917ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 0
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 377.337292
+
+✖ failing tests:
+
+test at external-plugins/steering/test/state.test.mjs:300:1
+✖ R3-P1/A1/A3/A4 summary observes guidance and recovers only after the last summary parent (3.172208ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'late-guide'
+  - ]
+  
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:314:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'late-guide' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at external-plugins/steering/test/state.test.mjs:327:1
+✖ R3-P1/A3 summary-period guidance gets one ordinary reminder when native loop consumes it (0.366417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:334:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at external-plugins/steering/test/state.test.mjs:339:1
+✖ R3-P2/A4 candidate part edits invalidate recovery during messages/status/get without extra queries (109.274292ms)
+  AssertionError [ERR_ASSERTION]: messagesempty
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:352:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at external-plugins/steering/test/state.test.mjs:358:1
+✖ R3-P2/A4 candidate edits during control save checks reject own control only (96.847583ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:372:16)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /STEERING_RECOVERY_SUPPRESSED/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at external-plugins/steering/test/state.test.mjs:378:1
+✖ R3-P3/A1/A4 unknown, missing and cross-session control keys pass without SDK calls or blocking input (1.401125ms)
+  Error: STEERING_RECOVERY_SUPPRESSED (9166914b-514d-4a22-ac40-4b7cc9be0920)
+      at SteeringState.control (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:122:11)
+      at SteeringState.observe (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:43:30)
+      at chat.message (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/index.ts:14:46)
+      at observe (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:21:45)
+      at Object.save (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:30:35)
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:383:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at external-plugins/steering/test/state.test.mjs:396:1
+✖ R3-P3/A4 expired signed keys become unknown; signed stale keys still reject before expiry (3.219917ms)
+  Error: STEERING_RECOVERY_SUPPRESSED (4ca4bede-3346-42fe-8c39-f79db69eb870)
+      at SteeringState.control (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:122:11)
+      at SteeringState.observe (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:43:30)
+      at chat.message (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/index.ts:14:46)
+      at Object.observe (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:21:45)
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:409:39)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

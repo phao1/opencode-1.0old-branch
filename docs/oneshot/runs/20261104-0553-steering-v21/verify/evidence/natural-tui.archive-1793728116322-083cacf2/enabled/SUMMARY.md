@@ -1,0 +1,1 @@
+Completed the first step: checkpoint.md contains "completed first step" and was retained unchanged. Skipped writing obsolete.md because the latest user guidance explicitly cancelled that action. Created SUMMARY.md to record the completed step and the skipped action.

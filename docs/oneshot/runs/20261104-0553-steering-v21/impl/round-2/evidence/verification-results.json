@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-04",
+  "design": "v1.1",
+  "package": "0.5.0",
+  "productionEffectiveLines": {
+    "state.ts": 146,
+    "index.ts": 17,
+    "total": 163
+  },
+  "checks": [
+    {
+      "command": "node_modules/.bin/tsc --noEmit -p .",
+      "exitCode": 0
+    },
+    {
+      "command": "node_modules/.bin/tsc --noEmit -p external-plugins/steering",
+      "exitCode": 0
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "passed": 102,
+      "failed": 0
+    },
+    {
+      "command": "node scripts/check-kernel.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node scripts/verify-steering.mjs",
+      "exitCode": 0,
+      "passed": 33,
+      "failed": 0
+    },
+    {
+      "command": "node scripts/steering-v2-demo.mjs  --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless",
+      "exitCode": 0,
+      "report": "docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/report.json"
+    },
+    {
+      "command": "node scripts/steering-v2-demo.mjs --tui --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui",
+      "exitCode": 0,
+      "report": "docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/tui/report.json"
+    },
+    {
+      "command": "node scripts/steering-v2-demo.mjs --natural --tui --out docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/natural-tui",
+      "exitCode": 0,
+      "report": "docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/natural-tui/report.json"
+    }
+  ],
+  "naturalObservation": "Both controls adopted guidance; no stale-tool difference claimed.",
+  "acceptance": {
+    "A1": "implementation checks passed; see REPORT.md for evidence and limitations",
+    "A2": "implementation checks passed; see REPORT.md for evidence and limitations",
+    "A3": "implementation checks passed; see REPORT.md for evidence and limitations",
+    "A4": "implementation checks passed; see REPORT.md for evidence and limitations",
+    "A5": "implementation checks passed; see REPORT.md for evidence and limitations",
+    "A6": "implementation checks passed; see REPORT.md for evidence and limitations",
+    "A7": "implementation checks passed; see REPORT.md for evidence and limitations",
+    "A8": "implementation checks passed; see REPORT.md for evidence and limitations",
+    "A9": "implementation checks passed; see REPORT.md for evidence and limitations",
+    "A10": "implementation checks passed; see REPORT.md for evidence and limitations"
+  },
+  "independentReview": "Not performed by Generator; host/Evaluator responsibility",
+  "commitPushMergePublish": false
+}

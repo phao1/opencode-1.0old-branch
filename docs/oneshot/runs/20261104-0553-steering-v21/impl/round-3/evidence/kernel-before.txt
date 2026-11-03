@@ -1,0 +1,20 @@
+✔ R3-P1/A3/A4 summary-period late save uses summary parent boundary; plugin=false (4578.30875ms)
+✖ R3-P1/A3/A4 summary-period late save uses summary parent boundary; plugin=true (23551.358458ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 28244.761125
+
+✖ failing tests:
+
+test at external-plugins/steering/test/kernel.test.mjs:297:38
+✖ R3-P1/A3/A4 summary-period late save uses summary parent boundary; plugin=true (23551.358458ms)
+  Error: Timed out: one automatic continuation after summary idle
+      at until (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/kernel.mjs:12:9)
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/kernel.test.mjs:322:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

@@ -1,6 +1,6 @@
 # Steering v2.1 — fail-open 请求作用域设计
 
-版本：v1.1；更新日期：2026-11-04。
+版本：v1.3；更新日期：2026-11-04。
 
 ## 目标与范围
 
@@ -21,7 +21,7 @@ chat.message（prompt.ts:1263–1305）在消息保存前执行，所以观察�
 | A1 | 只有本进程已见普通 transform 且未结束才登记有效插话；普通空闲输入不留历史状态，不抛容量错误 | 单测 >300 普通输入、129 取消会话、不同 session、ignored/empty/synthetic、重启；SDK 调用计数为零 |
 | A2 | G1 只拦最近普通请求构造后到达的有效插话；无已知请求/compaction/不确定一律放行；status/native prt_ 放行，普通 task 仍检查 | 单测并发 bash/task、missing/cross-session；真实官方内核一次响应多工具开/关对照及原生 subtask |
 | A3 | transform 同步移除开始前全部 pending；包含 ID 的有效插话只在这一次加 G3，不含的丢弃；摘要请求不 gate、不加提示 | 单测提醒次数、编辑为空/ignored、overflow 新 ID、单次及连续压缩；真实官方 summarize/overflow fixture |
-| A4 | G2 仅成功 idle 且仍有本进程忙碌期间未吸收 pending 时，一次公开 messages 读取确认最新有效用户比最新成功非摘要 assistant 新，然后最多一次 synthetic continuation | 单测调用次数、失败/超时/慢保存、重复 idle、控制失效、metadata/agent/model/system/variant/format 继承、tools 不继承；真实官方 G2 保存时序开/关对照 |
+| A4 | G2 仅成功 idle 且仍有本进程忙碌期间未吸收 pending 时，一次公开 messages 读取确认最新有效用户在最后成功 assistant（含 summary）的 parent 用户之后，然后最多一次 synthetic continuation | 单测调用次数、失败/超时/慢保存、重复 idle、控制失效、metadata/agent/model/system/variant/format 继承、tools 不继承；真实官方 G2 保存时序开/关对照 |
 | A5 | 没插话不改请求、不调 session.messages，常态 transform/gate/streaming 不读历史；查询失败不阻止普通输入或任何新请求工具 | SDK spy，真实内核无插话开关对照，历史异常回归 |
 | A6 | 前 run review 每场景有对应回归，统一证明不会永久拦截/阻止发消息 | 单次与连续压缩、overflow 换 ID、empty/ignored 编辑、info-only/部分保存/慢保存、并发 task、取消129会话、>300普通输入、历史失败、聚合autoResume:false、空cache离线安装；可官方复现的走确定性内核测试，余者单测 |
 | A7 | G4 toast observed/absorbed/blocked/continuing 尽力，失败忽略；status 简洁且 provider/adopted unknown | 单测离线 toast、status 不读历史，实际 TUI 屏幕/消息证据 |
@@ -42,7 +42,24 @@ chat.message（prompt.ts:1263–1305）在消息保存前执行，所以观察�
 
 ### 最小状态与过渡
 
-### improve round 1 的明确裁决（v1.1，以下规则优先）
+### review round 2 裁决（v1.3，优先于下方历史规则）
+
+- **G2 不持久化 G3**：采纳 terra / 5.6-sol 的 P2。synthetic continuation 仅保留原指导 ID 的最小“重新读取并继续”控制文本，不拼接完整 reminder，也不改写/删除已保存消息。恢复候选在首次明确普通 transform 的同步检查点用于一次性的 pending 匹配：先捕获候选，再失效恢复许可，与当前 active.pending 一起按有效 user ID 查找包含的指导；命中才临时附加一次 G3，随后消费。无需新增历史映射或持久化标记。未知/过期/被新输入取消的候选不继承。摘要仍不附加提示。
+- **回归证明**：原普通 G2 和摘要 G2 官方开关正例继续通过；开启时保存的控制消息不含 `[Steering reminder]`，首次恢复 provider 请求含一次，工具后的下一请求为零；普通 G3 的单次注入也继续通过。单测覆盖恢复候选的首次消费、缺席/编辑无效和后续不重复，保留取消/异步失效矩阵。不得仅改文档把重复永久提醒解释为合规。总生产有效行仍 ≤200。
+- 修复后完整 verify；本轮无采纳 P0/P1，不开启第三轮 review。v1.2 官方测试中连续请求各一次的旧断言是此问题的历史证据，由新回归替换。
+
+### review round 1 裁决（v1.2，优先于下方 v1.1 初版规则）
+
+- **摘要期间的新插话仍须观察**：ordinary 标记只控制 gate 和本次 reminder，不控制 observe/idle 候选资格。compacting 开始及摘要 transform 仍消费此前 pending；摘要 transform 之后到达的有效输入登记 pending，摘要工具始终放行、不加提示。随后普通 transform 仍按包含/缺席规则消费。
+- **G2 最后 assistant 包括 summary**：恢复确认取 history 中最后一个 assistant，要求其成功完成（不跳过末尾失败/未完成者），以该 assistant.parentID 对应 user 的数组位置为边界。普通请求继续满足原 G2 正例；摘要结束用 summary.parentID（原生 compaction trigger）作为边界。候选若早于 trigger 则不恢复，避免原生 filterCompacted 已过滤的旧指导仅凭 ID 引用触发空恢复；候选位于 trigger 之后且晚保存时，才可一次恢复。无新增摘要谱系或历史热路径。必须用官方内核确定性测试构造 trigger 已分配 → compacting hook 暂停 → 分配并暂扣 guide 保存 → summary transform/assistant 分配 → 保存 guide → summary 成功 idle，开插件续接、关插件停住；本次 summary 无 G3/gate，续接普通请求才有一次 G3。若该路径不能按公开 API 复现，留证据和阻塞，不能用单测替代。
+- **恢复等待期间编辑**：message.part.updated 将候选消息的内容编辑为空/ignored/synthetic 时，无论 active 是否已删除，都必须失效对应 recovering 许可；对无法判断的候选 part 编辑可保守放弃恢复。不读历史校准、不阻止用户输入。补齐 messages/status/get 等待期间与控制保存检查期间的编辑回归。
+- **控制身份只认本进程签发**：不能仅凭公开 metadata.plugin 标记拒绝输入。对本进程没有签发过的 recoveryKey，按普通 synthetic 输入放行（不登记有效插话）；仅已签发的自家控制可以因失效许可拒绝。允许短期签发 key 集合/会话关联及超时释放，不增加全历史 ledger；已签发旧控制的重放仍属自家失效控制，按已评审取消规则拒绝，不能用这个例外拒绝伪造未知 key 的普通公开输入。补充 unknown marker/key、跨会话及真实失效控制回归。签发记录超时后的未知 key 放行，文档明确取消仍非原子且记录有限。
+- **无关删除**：保留任何同会话消息/part 删除使正在等待的 G2 放弃的保守规则，因历史排序/parent 边界可能变化；这不阻止后续输入/工具，不承诺删除期间必然自动续接。记录为接受的 best-effort 边界，不增加无关删除分类状态。
+- RESULT.md 的错误日志相对路径由宿主已修正为本目录 .txt 副本；不修改 skill。修复后正式 verify 会重写结果，宿主交付时再校正索引。
+
+v1.2 修复仅限以上规则、必要回归和文档同步；保持总生产有效行 ≤200，不复刻原摘要覆盖状态机。
+
+### improve round 1 的历史裁决（v1.1；摘要资格以后续 v1.2 为准）
 
 1. **G2 明确偏离“用户 ID 大于 assistant ID”的字面排序，保留既有 G2 正例。** 四个 Evaluator 指出排序不明确；sol 提出以最后 assistant.parentID 为处理边界，astra 提出放弃旧正例作为备选。宿主选择前者：候选须在本进程忙碌且本次 transform 后观察、未被任何 transform 消费；唯一 history 返回中，取最后非摘要 assistant，要求成功完成无 error（不能跳过末尾失败/运行中 assistant），取最新有效 user，必须是候选之一，且其**历史数组位置晚于该 assistant.parentID 对应 user**。parent 找不到或顺序不确定不恢复；不比较用户/assistant ID 大小，也不使用用户创建时间与 assistant 完成时间。理由：prompt.ts:970 的 ID 先分配，前 run kernel.test.mjs:87–104 的双屏障指导 ID 小于 assistant 却晚于 parent，字面比较会抹掉原 G2；仅增加一个公开 parentID 边界，无历史状态机。session/index.ts:595 按官方历史顺序返回，支持自定义非单调 messageID。此项是已由 improve 提出并评审的设计偏离，其他 fail-open 原则不变。原正例须保留，不得通过删除正例伪称继续覆盖 G2。
 2. **有效谓词固定**：user 的 part 非 ignored、非 synthetic，并且 text 为非空白字符串（识别原生 system-reminder 包裹后判断）或 file 有非空 url。file-only 有效；agent/subtask/compaction、空文本、内部 synthetic 无效。transform 匹配要求 role=user、ID 命中且此谓词有效；附件不复制/改写。
@@ -60,7 +77,7 @@ chat.message（prompt.ts:1263–1305）在消息保存前执行，所以观察�
 - gate：status/native prt_ 或无已知普通请求放行；当前 pending 非空证明在其 transform 后收到插话，抛 STEERING_STALE_CONTEXT（原生工具错误，含最新优先提示），不查询 history。多个工具均按检查当时状态决定，已过 gate 不撤回。
 - compact：清空当前 pending、使普通 gate 失效、标下一个 transform 为摘要，同时失效恢复许可。摘要后普通 transform 正常重置，不因 session.compacted 事件重复设 compacting。
 - event：idle只处理一次（内核可能同时 idle/status idle），立刻从 active Map 删除；若有 pending且未见取消/错误/revert，复制为一个恢复候选并调度一次。message.updated assistant error / session.error / session.deleted / revert 清理active/compaction/恢复许可，不能因异步事件抛出。session.status busy不创建假 transform 关联。
-- G2 recover：候选 identity/generation 用于每次 await 后失效判断；messages仅一次（带短超时）确认候选最新有效用户已保存且新于最新非摘要成功完成assistant（无error、有completed和有效finish；structured成功兼容），不确定返回。必须检验最后assistant并非失败/未完成而不能跳过它选更早成功。status/get确认idle且无revert；从最新有效用户继承model/agent/system/variant/format但不继承tools。promptAsync仅一次，metadata标自家control+随机permit；observe控制保存前再次核对许可/取消/revert/status。拒绝仅限自家失效控制，不得拒绝真实用户消息；该错误不得清理别的新轮状态。候选定时过期/任何失败清理；重复idle不重派。
+- G2 recover：候选 identity/generation 用于每次 await 后失效判断；messages仅一次（带短超时）确认候选最新有效用户已保存且在最后成功完成assistant（含summary）的parent用户之后（无error、有completed和有效finish；structured成功兼容），不确定返回。必须检验最后assistant并非失败/未完成而不能跳过它选更早成功。status/get确认idle且无revert；从最新有效用户继承model/agent/system/variant/format但不继承tools。promptAsync仅一次，metadata标自家control+随机permit；observe控制保存前再次核对许可/取消/revert/status。拒绝仅限自家失效控制，不得拒绝真实用户消息；该错误不得清理别的新轮状态。候选定时过期/任何失败清理；重复idle不重派。
 - 真实用户新输入、正常transform、取消/错误/删除/revert/压缩使旧恢复候选失效；SDK无法保证观察之前的取消或派发后取消原子性。autoResume:false完全不做恢复 history 查询。
 
 ## 实施计划
@@ -90,5 +107,7 @@ chat.message（prompt.ts:1263–1305）在消息保存前执行，所以观察�
 
 | 版本 | 日期 | 改动与理由 |
 | --- | --- | --- |
+| v1.3 | 2026-11-04 | review round 2：移除持久化 G2 控制中的完整 G3；恢复候选在首个普通 transform 临时注入一次，官方 provider 请求验证 1→0 |
+| v1.2 | 2026-11-04 | review：区分摘要不 gate 与摘要忙碌输入观察；G2 以最后 assistant（含 summary）的 parent 边界确认；空编辑失效 recovering；未知公开控制标记放行；保留删除时保守放弃 |
 | v1.1 | 2026-11-04 | improve 裁决：G2 改 parent 边界保留原正例，明确有效谓词、歧义清理、双 idle/新取消、自家错误 token、插件顺序与可执行行数检查 |
 | v1.0 | 2026-11-04 | 初版，核对固定串行loop，按验收人要求采用fail-open请求作用域；明确放弃历史版本/摘要覆盖保证与一次性G2边界，新增自然TUI演示 |

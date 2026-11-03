@@ -1,0 +1,30 @@
+[
+  {
+    "case": "focused-case-01",
+    "enabled": false,
+    "requests": 2,
+    "original": ".codeagent/steering-v2-case-pBC2aA/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-ajviun"
+  },
+  {
+    "case": "focused-case-02",
+    "enabled": true,
+    "requests": 2,
+    "original": ".codeagent/steering-v2-case-7QjtTB/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-L0zunZ"
+  },
+  {
+    "case": "focused-case-03",
+    "enabled": false,
+    "requests": 2,
+    "original": ".codeagent/steering-v2-case-GdNP7S/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-w7PVoP"
+  },
+  {
+    "case": "focused-case-04",
+    "enabled": true,
+    "requests": 4,
+    "original": ".codeagent/steering-v2-case-KalYGQ/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-vcVkmg"
+  }
+]

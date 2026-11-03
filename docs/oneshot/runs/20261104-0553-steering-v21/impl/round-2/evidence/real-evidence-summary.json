@@ -1,0 +1,74 @@
+[
+  {
+    "mode": "headless",
+    "plugin": "disabled",
+    "firstToolStart": 1793725890140,
+    "guidanceCreated": 1793725896856,
+    "firstToolEnd": 1793725890142,
+    "guidanceDuringFirstTool": false,
+    "durationMs": 2,
+    "blockedTools": 0,
+    "providerRequests": 4,
+    "obsoleteWritten": true
+  },
+  {
+    "mode": "headless",
+    "plugin": "enabled",
+    "firstToolStart": 1793725928253,
+    "guidanceCreated": 1793725932810,
+    "firstToolEnd": 1793725928256,
+    "guidanceDuringFirstTool": false,
+    "durationMs": 3,
+    "blockedTools": 1,
+    "providerRequests": 4,
+    "obsoleteWritten": false
+  },
+  {
+    "mode": "tui",
+    "plugin": "disabled",
+    "firstToolStart": 1793725968231,
+    "guidanceCreated": 1793725973894,
+    "firstToolEnd": 1793725968234,
+    "guidanceDuringFirstTool": false,
+    "durationMs": 3,
+    "blockedTools": 0,
+    "providerRequests": 4,
+    "obsoleteWritten": true
+  },
+  {
+    "mode": "tui",
+    "plugin": "enabled",
+    "firstToolStart": 1793725995799,
+    "guidanceCreated": 1793726000155,
+    "firstToolEnd": 1793725995803,
+    "guidanceDuringFirstTool": false,
+    "durationMs": 4,
+    "blockedTools": 1,
+    "providerRequests": 4,
+    "obsoleteWritten": false
+  },
+  {
+    "mode": "natural-tui",
+    "plugin": "disabled",
+    "firstToolStart": 1793726044465,
+    "guidanceCreated": 1793726044538,
+    "firstToolEnd": 1793726052473,
+    "guidanceDuringFirstTool": true,
+    "durationMs": 8008,
+    "blockedTools": 0,
+    "providerRequests": 3,
+    "obsoleteWritten": false
+  },
+  {
+    "mode": "natural-tui",
+    "plugin": "enabled",
+    "firstToolStart": 1793726084940,
+    "guidanceCreated": 1793726084997,
+    "firstToolEnd": 1793726092945,
+    "guidanceDuringFirstTool": true,
+    "durationMs": 8005,
+    "blockedTools": 0,
+    "providerRequests": 3,
+    "obsoleteWritten": false
+  }
+]

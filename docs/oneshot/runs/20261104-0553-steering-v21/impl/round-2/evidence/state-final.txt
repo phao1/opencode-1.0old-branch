@@ -1,0 +1,30 @@
+✔ A1/A5 idle input >300 and 129 cancelled sessions never create retained state or SDK reads (114.999292ms)
+✔ A1/A2/A5 empty, ignored, synthetic and other-session input do not gate; file-only does (1.121ms)
+✔ A2 concurrent bash/task are gated without history; status, native prt_, unknown/cross session pass (0.457792ms)
+✔ A3 reminder exactly once at matching effective user ID; attachments untouched, subsequent gates reset (0.601333ms)
+✔ A3/A6 preceding-plugin removal/insertion, ID rewrite and invalid edits consume all pending (1.367542ms)
+✔ A2/A3 empty, missing-session and mixed-session transforms invalidate all gates and recovery (307.807958ms)
+✔ A3/A6 single and consecutive compactions never gate summaries or carry reminder lineage (2.618459ms)
+✔ A1/A5 streaming, idle, restart and failing history never affect ordinary traffic (104.98625ms)
+✔ A4 successful idle uses parent position even when guide ID precedes assistant, inherits fields but not tools (193.726333ms)
+✔ A4 latest non-summary assistant must succeed and latest valid user must be a pending candidate after parent (1237.545ms)
+✔ A4 structured success and file-only guidance recover; repeated idle does not retry (188.85025ms)
+✔ A4/A6 SDK failure or slow save abandons recovery; new transform and tools always proceed (720.059667ms)
+✔ A4 invalidation during each await prevents continuation, including a second status-idle cancellation (2182.527083ms)
+✔ A4 status busy or persisted revert suppress dispatch and controls recheck status/get (329.524417ms)
+✔ A4 stale own control errors do not clear a new genuine request; ordinary errors do (83.064125ms)
+✔ A4 timeout expires hung query and rejects late controls without rejecting user input (5157.611583ms)
+✔ A6 empty/ignored edits and removals release pending without history; info-only and partial saves are dropped at next request (2.164458ms)
+✔ A6 aggregate autoResume:false forwards option and performs zero recovery reads (122.6115ms)
+✔ A7 status is compact, unknown provider/adoption; offline toast never changes behavior (0.474584ms)
+state.ts: 146 effective lines
+index.ts: 17 effective lines
+✔ A8 production effective lines <=200 using TypeScript AST type removal and comment scanner (153.316042ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11047.306625

@@ -1,0 +1,1660 @@
+INFO  2026-11-03T17:11:24 +553ms service=default version=1.3.17 args=["serve","--port","0","--hostname","127.0.0.1","--print-logs"] opencode
+Performing one time database migration, may take a few minutes...
+INFO  2026-11-03T17:11:24 +1ms service=db path=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/opencode.db opening database
+INFO  2026-11-03T17:11:24 +3ms service=db count=10 mode=bundled applying migrations
+INFO  2026-11-03T17:11:24 +11ms service=json-migration storage directory does not exist, skipping migration
+sqlite-migration:done
+Database migration complete.
+Warning: OPENCODE_SERVER_PASSWORD is not set; server is unsecured.
+INFO  2026-11-03T17:11:24 +5ms service=config path=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/config/opencode/config.json loading
+INFO  2026-11-03T17:11:24 +1ms service=config path=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/config/opencode/opencode.json loading
+INFO  2026-11-03T17:11:24 +8ms service=config path=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/config/opencode/opencode.jsonc loading
+opencode server listening on http://127.0.0.1:4096
+INFO  2026-11-03T17:11:24 +41ms service=server method=POST path=/session request
+INFO  2026-11-03T17:11:24 +0ms service=server status=started method=POST path=/session request
+INFO  2026-11-03T17:11:24 +2ms service=default directory=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled creating instance
+INFO  2026-11-03T17:11:24 +2ms service=project directory=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled fromDirectory
+INFO  2026-11-03T17:11:24 +46ms service=default directory=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled bootstrapping
+INFO  2026-11-03T17:11:24 +5ms service=config path=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/config/opencode/opencode.json loading
+INFO  2026-11-03T17:11:24 +1ms service=config path=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/config/opencode/opencode.jsonc loading
+INFO  2026-11-03T17:11:24 +6ms service=plugin name=CodexAuthPlugin loading internal plugin
+INFO  2026-11-03T17:11:24 +1ms service=plugin name=CopilotAuthPlugin loading internal plugin
+INFO  2026-11-03T17:11:24 +0ms service=plugin name=gitlabAuthPlugin loading internal plugin
+INFO  2026-11-03T17:11:24 +0ms service=plugin name=PoeAuthPlugin loading internal plugin
+INFO  2026-11-03T17:11:24 +0ms service=plugin name=CloudflareWorkersAuthPlugin loading internal plugin
+INFO  2026-11-03T17:11:24 +0ms service=plugin name=CloudflareAIGatewayAuthPlugin loading internal plugin
+INFO  2026-11-03T17:11:24 +5ms service=npm dir=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/config/opencode checking dependencies
+INFO  2026-11-03T17:11:24 +1ms service=npm dependencies in sync
+INFO  2026-11-03T17:11:24 +1ms service=plugin path=file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/action.mjs loading plugin
+INFO  2026-11-03T17:11:24 +31ms service=bus type=* subscribing
+INFO  2026-11-03T17:11:24 +3ms service=bus type=session.updated subscribing
+INFO  2026-11-03T17:11:24 +0ms service=bus type=message.updated subscribing
+INFO  2026-11-03T17:11:24 +0ms service=bus type=message.part.updated subscribing
+INFO  2026-11-03T17:11:24 +0ms service=bus type=session.diff subscribing
+INFO  2026-11-03T17:11:24 +1ms service=format init
+INFO  2026-11-03T17:11:24 +1ms service=lsp serverIds=deno, typescript, vue, eslint, oxlint, biome, gopls, ruby-lsp, pyright, elixir-ls, zls, csharp, fsharp, sourcekit-lsp, rust, clangd, svelte, astro, jdtls, kotlin-ls, yaml-ls, lua-ls, php intelephense, prisma, dart, ocaml-lsp, bash, terraform, texlab, dockerfile, gleam, clojure-lsp, nixd, tinymist, haskell-language-server, julials enabled LSP servers
+INFO  2026-11-03T17:11:24 +0ms service=file init
+INFO  2026-11-03T17:11:24 +5ms service=file.watcher directory=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled init
+INFO  2026-11-03T17:11:24 +236ms service=file.watcher directory=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled platform=darwin backend=fs-events watcher backend
+INFO  2026-11-03T17:11:24 +6ms service=bus type=command.executed subscribing
+INFO  2026-11-03T17:11:24 +13ms service=session id=ses_e5d9b17c2ffew3JAmBXrIXUQ07 slug=proud-comet version=1.3.17 projectID=4b0ea68d7af9a6031a7ffda7ad66e0cb83315750 directory=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled title=Real steering false permission=[{"permission":"*","pattern":"*","action":"allow"}] time={"created":1793725884477,"updated":1793725884477} created
+INFO  2026-11-03T17:11:24 +2ms service=bus type=session.created publishing
+INFO  2026-11-03T17:11:24 +1ms service=bus type=session.updated publishing
+INFO  2026-11-03T17:11:24 +4ms service=server status=completed duration=373 method=POST path=/session request
+INFO  2026-11-03T17:11:24 +20ms service=server method=POST path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/prompt_async request
+INFO  2026-11-03T17:11:24 +0ms service=server status=started method=POST path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/prompt_async request
+INFO  2026-11-03T17:11:24 +6ms service=server status=completed duration=6 method=POST path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/prompt_async request
+INFO  2026-11-03T17:11:24 +28ms service=vcs branch=dev1104-oneshot-steering default_branch=version-1.3.17 initialized
+INFO  2026-11-03T17:11:24 +0ms service=bus type=file.watcher.updated subscribing
+INFO  2026-11-03T17:11:24 +15ms service=skill count=1 init
+INFO  2026-11-03T17:11:24 +9ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:24 +3ms service=provider status=started state
+INFO  2026-11-03T17:11:24 +2ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:24 +1ms service=bus type=session.updated publishing
+INFO  2026-11-03T17:11:24 +41ms service=provider init
+INFO  2026-11-03T17:11:24 +4ms service=bus type=session.status publishing
+INFO  2026-11-03T17:11:24 +0ms service=session.prompt step=0 sessionID=ses_e5d9b17c2ffew3JAmBXrIXUQ07 loop
+INFO  2026-11-03T17:11:24 +11ms service=provider providerID=opencode found
+INFO  2026-11-03T17:11:24 +0ms service=provider providerID=real found
+INFO  2026-11-03T17:11:24 +1ms service=provider status=completed duration=60 state
+INFO  2026-11-03T17:11:24 +1ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:24 +101ms service=snapshot initialized
+INFO  2026-11-03T17:11:24 +131ms service=snapshot hash=1f6ca48860bc99baa249a8074930703132bd75b8 cwd=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled git=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/snapshot/4b0ea68d7af9a6031a7ffda7ad66e0cb83315750/c40b22354076f802070bf03c3b29ef77d7a6a6c3 tracking
+INFO  2026-11-03T17:11:24 +1ms service=session.prompt status=started resolveTools
+INFO  2026-11-03T17:11:24 +3ms service=tool.registry status=started invalid
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=started question
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=started bash
+INFO  2026-11-03T17:11:24 +0ms service=bash-tool shell=/bin/zsh bash tool using shell
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=started read
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=started glob
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=started grep
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=started edit
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=started write
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=started task
+INFO  2026-11-03T17:11:24 +1ms service=tool.registry status=started webfetch
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=started todowrite
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=started skill
+INFO  2026-11-03T17:11:24 +0ms service=permission permission=skill pattern=one-shot ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=started work_action
+INFO  2026-11-03T17:11:24 +1ms service=tool.registry status=completed duration=2 invalid
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=2 question
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=2 read
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=2 glob
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=2 grep
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=2 edit
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=2 write
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=1 webfetch
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=1 todowrite
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=1 work_action
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=2 bash
+INFO  2026-11-03T17:11:24 +0ms service=permission permission=task pattern=explore ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:24 +0ms service=permission permission=task pattern=general ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=1 skill
+INFO  2026-11-03T17:11:24 +0ms service=tool.registry status=completed duration=2 task
+INFO  2026-11-03T17:11:24 +2ms service=session.prompt status=completed duration=7 resolveTools
+INFO  2026-11-03T17:11:24 +2ms service=bus type=session.updated publishing
+INFO  2026-11-03T17:11:24 +2ms service=storage index=0 running migration
+INFO  2026-11-03T17:11:24 +3ms service=session.processor process
+INFO  2026-11-03T17:11:24 +1ms service=llm providerID=real modelID=codex-cli-default sessionID=ses_e5d9b17c2ffew3JAmBXrIXUQ07 small=false agent=build mode=primary stream
+INFO  2026-11-03T17:11:24 +0ms service=provider status=started providerID=real getSDK
+INFO  2026-11-03T17:11:24 +1ms service=provider providerID=real pkg=@ai-sdk/openai-compatible using bundled provider
+INFO  2026-11-03T17:11:24 +0ms service=provider status=completed duration=1 providerID=real getSDK
+INFO  2026-11-03T17:11:24 +6ms service=bus type=session.status publishing
+INFO  2026-11-03T17:11:24 +3ms service=storage index=1 running migration
+INFO  2026-11-03T17:11:24 +8ms service=bus type=session.diff publishing
+INFO  2026-11-03T17:11:24 +1ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:30 +5245ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:30 +1ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:30 +2ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:30 +2ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:30 +202ms service=snapshot hash=de418ce5c9e776c57ddde82549f460133e5fbead cwd=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled git=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/snapshot/4b0ea68d7af9a6031a7ffda7ad66e0cb83315750/c40b22354076f802070bf03c3b29ef77d7a6a6c3 tracking
+INFO  2026-11-03T17:11:30 +1ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:30 +1ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:30 +182ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:30 +3ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:30 +0ms service=bus type=session.status publishing
+INFO  2026-11-03T17:11:30 +0ms service=session.prompt step=1 sessionID=ses_e5d9b17c2ffew3JAmBXrIXUQ07 loop
+INFO  2026-11-03T17:11:30 +1ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:30 +84ms service=bus type=session.updated publishing
+INFO  2026-11-03T17:11:30 +1ms service=bus type=session.diff publishing
+INFO  2026-11-03T17:11:30 +312ms service=snapshot hash=6180bd11a135f8852c0642df7374a1a1bfb10735 cwd=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled git=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/snapshot/4b0ea68d7af9a6031a7ffda7ad66e0cb83315750/c40b22354076f802070bf03c3b29ef77d7a6a6c3 tracking
+INFO  2026-11-03T17:11:30 +0ms service=session.prompt status=started resolveTools
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started invalid
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started question
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started bash
+INFO  2026-11-03T17:11:30 +0ms service=bash-tool shell=/bin/zsh bash tool using shell
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started read
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started glob
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started grep
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started edit
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started write
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started task
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started webfetch
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started todowrite
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started skill
+INFO  2026-11-03T17:11:30 +0ms service=permission permission=skill pattern=one-shot ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=started work_action
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=0 invalid
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=0 question
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=0 read
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=0 glob
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=0 grep
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=0 edit
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=0 write
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=0 webfetch
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=0 todowrite
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=0 work_action
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=0 bash
+INFO  2026-11-03T17:11:30 +1ms service=permission permission=task pattern=explore ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:30 +0ms service=permission permission=task pattern=general ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=1 skill
+INFO  2026-11-03T17:11:30 +0ms service=tool.registry status=completed duration=1 task
+INFO  2026-11-03T17:11:30 +0ms service=session.prompt status=completed duration=1 resolveTools
+INFO  2026-11-03T17:11:30 +2ms service=session.processor process
+INFO  2026-11-03T17:11:30 +0ms service=llm providerID=real modelID=codex-cli-default sessionID=ses_e5d9b17c2ffew3JAmBXrIXUQ07 small=false agent=build mode=primary stream
+INFO  2026-11-03T17:11:30 +2ms service=bus type=session.status publishing
+INFO  2026-11-03T17:11:30 +61ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:36 +5856ms service=server method=POST path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/prompt_async request
+INFO  2026-11-03T17:11:36 +0ms service=server status=started method=POST path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/prompt_async request
+INFO  2026-11-03T17:11:36 +6ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:36 +1ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:36 +1ms service=bus type=session.updated publishing
+INFO  2026-11-03T17:11:36 +1ms service=server status=completed duration=9 method=POST path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/prompt_async request
+INFO  2026-11-03T17:11:36 +3ms service=server method=GET path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/message request
+INFO  2026-11-03T17:11:36 +0ms service=server status=started method=GET path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/message request
+INFO  2026-11-03T17:11:36 +6ms service=server status=completed duration=6 method=GET path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/message request
+INFO  2026-11-03T17:11:36 +8ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:36 +1ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:36 +1ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:36 +1ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:37 +511ms service=snapshot hash=6116690d2ad1caed89b65faa26aff2ee2ee15184 cwd=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled git=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/snapshot/4b0ea68d7af9a6031a7ffda7ad66e0cb83315750/c40b22354076f802070bf03c3b29ef77d7a6a6c3 tracking
+INFO  2026-11-03T17:11:37 +1ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:37 +0ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:37 +494ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:37 +2ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:37 +0ms service=bus type=session.status publishing
+INFO  2026-11-03T17:11:37 +0ms service=session.prompt step=2 sessionID=ses_e5d9b17c2ffew3JAmBXrIXUQ07 loop
+INFO  2026-11-03T17:11:37 +1ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:38 +217ms service=bus type=session.updated publishing
+INFO  2026-11-03T17:11:38 +8ms service=bus type=session.diff publishing
+INFO  2026-11-03T17:11:38 +845ms service=snapshot hash=55f107f69360e96837428daaf12494c334bdd3ed cwd=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled git=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/snapshot/4b0ea68d7af9a6031a7ffda7ad66e0cb83315750/c40b22354076f802070bf03c3b29ef77d7a6a6c3 tracking
+INFO  2026-11-03T17:11:38 +0ms service=session.prompt status=started resolveTools
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started invalid
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started question
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started bash
+INFO  2026-11-03T17:11:38 +0ms service=bash-tool shell=/bin/zsh bash tool using shell
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started read
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started glob
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started grep
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started edit
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started write
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started task
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started webfetch
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started todowrite
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started skill
+INFO  2026-11-03T17:11:38 +0ms service=permission permission=skill pattern=one-shot ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=started work_action
+INFO  2026-11-03T17:11:38 +1ms service=tool.registry status=completed duration=1 invalid
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 question
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 read
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 glob
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 grep
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 edit
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 write
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 webfetch
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 todowrite
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 work_action
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 bash
+INFO  2026-11-03T17:11:38 +0ms service=permission permission=task pattern=explore ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:38 +0ms service=permission permission=task pattern=general ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 skill
+INFO  2026-11-03T17:11:38 +0ms service=tool.registry status=completed duration=1 task
+INFO  2026-11-03T17:11:38 +0ms service=session.prompt status=completed duration=1 resolveTools
+INFO  2026-11-03T17:11:38 +1ms service=session.processor process
+INFO  2026-11-03T17:11:38 +1ms service=llm providerID=real modelID=codex-cli-default sessionID=ses_e5d9b17c2ffew3JAmBXrIXUQ07 small=false agent=build mode=primary stream
+INFO  2026-11-03T17:11:38 +1ms service=bus type=session.status publishing
+INFO  2026-11-03T17:11:39 +218ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:43 +4545ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:43 +1ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:43 +2ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:43 +2ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:43 +15ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:43 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +5ms service=snapshot hash=824d137636616d57ce3183737528c818f06255e2 cwd=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled git=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/snapshot/4b0ea68d7af9a6031a7ffda7ad66e0cb83315750/c40b22354076f802070bf03c3b29ef77d7a6a6c3 tracking
+INFO  2026-11-03T17:11:44 +1ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:44 +0ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:44 +17ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +21ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:44 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +29ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +2ms service=server status=completed duration=2 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +15ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:45 +3ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:45 +0ms service=bus type=session.status publishing
+INFO  2026-11-03T17:11:45 +0ms service=session.prompt step=3 sessionID=ses_e5d9b17c2ffew3JAmBXrIXUQ07 loop
+INFO  2026-11-03T17:11:45 +2ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:45 +1ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:45 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +2ms service=bus type=session.updated publishing
+INFO  2026-11-03T17:11:46 +5ms service=bus type=session.diff publishing
+INFO  2026-11-03T17:11:46 +19ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +37ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +2ms service=server status=completed duration=2 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +31ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +21ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:46 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +21ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=snapshot hash=5e445bd54d039b0c4a7abaf95124a6267a909913 cwd=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled git=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/snapshot/4b0ea68d7af9a6031a7ffda7ad66e0cb83315750/c40b22354076f802070bf03c3b29ef77d7a6a6c3 tracking
+INFO  2026-11-03T17:11:47 +0ms service=session.prompt status=started resolveTools
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started invalid
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started question
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started bash
+INFO  2026-11-03T17:11:47 +0ms service=bash-tool shell=/bin/zsh bash tool using shell
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started read
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started glob
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started grep
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started edit
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started write
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started task
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started webfetch
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started todowrite
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started skill
+INFO  2026-11-03T17:11:47 +0ms service=permission permission=skill pattern=one-shot ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=started work_action
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=0 invalid
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=0 question
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=0 read
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=0 glob
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=0 grep
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=0 edit
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=0 write
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=0 webfetch
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=0 todowrite
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=0 work_action
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=0 bash
+INFO  2026-11-03T17:11:47 +1ms service=permission permission=task pattern=explore ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:47 +0ms service=permission permission=task pattern=general ruleset=[{"permission":"*","action":"allow","pattern":"*"},{"permission":"doom_loop","action":"ask","pattern":"*"},{"permission":"external_directory","pattern":"*","action":"ask"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.agents/skills/one-shot/*","action":"allow"},{"permission":"question","action":"deny","pattern":"*"},{"permission":"plan_enter","action":"deny","pattern":"*"},{"permission":"plan_exit","action":"deny","pattern":"*"},{"permission":"read","pattern":"*","action":"allow"},{"permission":"read","pattern":"*.env","action":"ask"},{"permission":"read","pattern":"*.env.*","action":"ask"},{"permission":"read","pattern":"*.env.example","action":"allow"},{"permission":"question","action":"allow","pattern":"*"},{"permission":"plan_enter","action":"allow","pattern":"*"},{"permission":"*","action":"deny","pattern":"*"},{"permission":"work_action","action":"allow","pattern":"*"},{"permission":"external_directory","pattern":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/tool-output/*","action":"allow"}] evaluate
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=1 skill
+INFO  2026-11-03T17:11:47 +0ms service=tool.registry status=completed duration=1 task
+INFO  2026-11-03T17:11:47 +0ms service=session.prompt status=completed duration=1 resolveTools
+INFO  2026-11-03T17:11:47 +1ms service=session.processor process
+INFO  2026-11-03T17:11:47 +0ms service=llm providerID=real modelID=codex-cli-default sessionID=ses_e5d9b17c2ffew3JAmBXrIXUQ07 small=false agent=build mode=primary stream
+INFO  2026-11-03T17:11:47 +1ms service=bus type=session.status publishing
+INFO  2026-11-03T17:11:47 +17ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +28ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +2ms service=server status=completed duration=2 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +28ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +28ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:47 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +22ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:48 +3ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +29ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +2ms service=server status=completed duration=2 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +31ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +21ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +1ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:48 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +2ms service=server status=completed duration=2 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +28ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +28ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +28ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +2ms service=server status=completed duration=2 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +29ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +29ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +28ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +28ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:49 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +29ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +30ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +28ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +21ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +29ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:50 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +21ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +29ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +29ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +29ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +8ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:51 +0ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:51 +1ms service=bus type=message.part.delta publishing
+INFO  2026-11-03T17:11:51 +0ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:51 +14ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:51 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +27ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +21ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +21ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +21ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:52 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +18ms service=snapshot hash=5e6274d403b293086aefad5e1aa0328f057ad5c7 cwd=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled git=/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled/kernel/data/opencode/snapshot/4b0ea68d7af9a6031a7ffda7ad66e0cb83315750/c40b22354076f802070bf03c3b29ef77d7a6a6c3 tracking
+INFO  2026-11-03T17:11:53 +0ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:53 +1ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:53 +3ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +28ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:53 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +26ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +25ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +24ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +23ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +22ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +1ms service=server status=completed duration=1 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +16ms service=bus type=message.part.updated publishing
+INFO  2026-11-03T17:11:54 +5ms service=bus type=message.updated publishing
+INFO  2026-11-03T17:11:54 +0ms service=bus type=session.status publishing
+INFO  2026-11-03T17:11:54 +0ms service=session.prompt step=4 sessionID=ses_e5d9b17c2ffew3JAmBXrIXUQ07 loop
+INFO  2026-11-03T17:11:54 +2ms service=session.prompt sessionID=ses_e5d9b17c2ffew3JAmBXrIXUQ07 exiting loop
+INFO  2026-11-03T17:11:54 +4ms service=bus type=session.status publishing
+INFO  2026-11-03T17:11:54 +0ms service=bus type=session.idle publishing
+INFO  2026-11-03T17:11:54 +1ms service=session.compaction pruning
+INFO  2026-11-03T17:11:54 +3ms service=session.compaction pruned=0 total=0 found
+INFO  2026-11-03T17:11:54 +1ms service=server method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +0ms service=server status=completed duration=0 method=GET path=/session/status request
+INFO  2026-11-03T17:11:54 +5ms service=server method=GET path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/message request
+INFO  2026-11-03T17:11:54 +0ms service=server status=started method=GET path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/message request
+INFO  2026-11-03T17:11:54 +9ms service=server status=completed duration=9 method=GET path=/session/ses_e5d9b17c2ffew3JAmBXrIXUQ07/message request

@@ -7,7 +7,7 @@ export const SteeringPlugin: Plugin = async (input, options = {}) => {
   const state = new SteeringState(input, options)
   return {
     tool: { steering_status: {
-      description: "Read process-local steering observations. Prepared does not prove provider receipt or adoption.",
+      description: "Read process-local request and pending guidance observations. Provider receipt and adoption remain unknown.",
       args: { messageID: z.string().optional() },
       async execute(_, context) { return JSON.stringify(state.status(context.sessionID), null, 2) },
     } },

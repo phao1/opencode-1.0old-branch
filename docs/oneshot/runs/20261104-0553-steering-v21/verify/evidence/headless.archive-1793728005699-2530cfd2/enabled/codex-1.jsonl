@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1a26c-9ebf-7a61-b10c-800771f54bd3"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"kind\":\"tool\",\"text\":null,\"tool_name\":\"work_action\",\"arguments\":\"{\\\"name\\\":\\\"obsolete.md\\\",\\\"content\\\":\\\"original second step\\\"}\"}"}}
+{"type":"turn.completed","usage":{"input_tokens":26029,"cached_input_tokens":0,"cache_write_input_tokens":0,"output_tokens":41,"reasoning_output_tokens":0}}

@@ -1,0 +1,20 @@
+{
+  "trigger": "msg_1a27a6ce7001nTSf8uoczry1ME",
+  "guide": "msg_1a27a6d01001JfM1IAAdKgh60y",
+  "summary": "msg_1a27a6d19001JY2b9kQ7nmCY48",
+  "summaryParent": "msg_1a27a6ce7001nTSf8uoczry1ME",
+  "summarySuccess": true,
+  "providerRequests": 4,
+  "reminderCounts": [
+    0,
+    0,
+    1,
+    1
+  ],
+  "providerGuidePresent": [
+    false,
+    false,
+    true,
+    true
+  ]
+}

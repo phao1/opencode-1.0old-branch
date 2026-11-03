@@ -1,0 +1,2 @@
+{
+  "$schema": "https://opencode.ai/config.json","plugin":["/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-95tlKU/companion.mjs"],"provider":{"fixture":{"npm":"@ai-sdk/openai-compatible","options":{"apiKey":"fixture","baseURL":"http://127.0.0.1:59464/v1"},"models":{"fixture":{"name":"fixture","tool_call":true,"limit":{"context":64000,"output":4000}}}}},"model":"fixture/fixture","agent":{"title":{"disable":true},"summary":{"disable":true}},"compaction":{"auto":false}}

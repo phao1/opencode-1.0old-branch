@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Steering 0.5.0 (v2.1): replace historical snapshots with fail-open request scope, one-shot successful-idle continuation and zero history reads on normal request/tool paths; add natural TUI controls and remove capacity rejection.
+
 - Create the CodeAgentPlugin wrapper on `dev` with the fixed OpenCode v1.3.17 submodule.
 - Add an initial one-shot skill and baseline architecture documentation.
 - Register a capability-watch extension through the fixed custom-hw registry and public plugin bridge.

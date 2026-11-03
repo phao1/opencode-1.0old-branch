@@ -1,0 +1,106 @@
+[
+  {
+    "case": 1,
+    "enabled": false,
+    "original": ".codeagent/steering-v2-case-LLAQDB/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-IG6q9h",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-01",
+    "requests": 3
+  },
+  {
+    "case": 2,
+    "enabled": true,
+    "original": ".codeagent/steering-v2-case-EuYXMf/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-kux4Ke",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-02",
+    "requests": 3
+  },
+  {
+    "case": 3,
+    "enabled": false,
+    "original": ".codeagent/steering-v2-case-Ey13Zf/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-4UuTGA",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-03",
+    "requests": 1
+  },
+  {
+    "case": 4,
+    "enabled": true,
+    "original": ".codeagent/steering-v2-case-woxtmV/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-aNqYpL",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-04",
+    "requests": 2
+  },
+  {
+    "case": 5,
+    "enabled": false,
+    "original": ".codeagent/steering-v2-case-95tlKU/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-RkxioB",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-05",
+    "requests": 2
+  },
+  {
+    "case": 6,
+    "enabled": true,
+    "original": ".codeagent/steering-v2-case-zqqS1G/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-Akn05X",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-06",
+    "requests": 2
+  },
+  {
+    "case": 7,
+    "enabled": true,
+    "original": ".codeagent/steering-v2-case-riGhES/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-3YFeqB",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-07",
+    "requests": 4
+  },
+  {
+    "case": 8,
+    "enabled": true,
+    "original": ".codeagent/steering-v2-case-oL6REU/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-Cz3TVX",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-08",
+    "requests": 1
+  },
+  {
+    "case": 9,
+    "enabled": true,
+    "original": ".codeagent/steering-v2-case-367BQV/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-DofCEF",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-09",
+    "requests": 1
+  },
+  {
+    "case": 10,
+    "enabled": true,
+    "original": ".codeagent/steering-v2-case-7T5C5n/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-ZfVVFo",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-10",
+    "requests": 3
+  },
+  {
+    "case": 11,
+    "enabled": true,
+    "original": ".codeagent/steering-v2-case-a4ldY7/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-65COwc",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-11",
+    "requests": 6
+  },
+  {
+    "case": 12,
+    "enabled": true,
+    "original": ".codeagent/steering-v2-case-nx4Ibn/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-Jak9LV",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-12",
+    "requests": 5
+  },
+  {
+    "case": 13,
+    "enabled": true,
+    "original": ".codeagent/steering-v2-case-BXFT3V/evidence.json",
+    "kernelFixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-kernel-3E9Igh",
+    "copied": "docs/oneshot/runs/20261104-0553-steering-v21/impl/round-2/evidence/installed-kernel/case-13",
+    "requests": 6
+  }
+]

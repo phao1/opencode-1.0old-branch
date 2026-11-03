@@ -1,0 +1,6 @@
+{
+  "scenario": "pending recovery awaits status; guidance edited empty and ignored",
+  "dispatches": 1,
+  "expectedDispatches": 0,
+  "reproduced": true
+}

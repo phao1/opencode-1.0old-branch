@@ -1,0 +1,12 @@
+✔ A3 late-save native-ID double barrier; plugin=false (4702.559375ms)
+✔ A3 late-save native-ID double barrier; plugin=true (4591.849042ms)
+✔ R3-P1/A3/A4 summary-period late save uses summary parent boundary; plugin=false (3869.984791ms)
+✔ R3-P1/A3/A4 summary-period late save uses summary parent boundary; plugin=true (4449.910958ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17711.121458

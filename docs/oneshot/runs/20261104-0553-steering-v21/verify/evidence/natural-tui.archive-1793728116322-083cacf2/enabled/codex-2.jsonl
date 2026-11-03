@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1a26e-f434-7071-9a72-40ff18699cba"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"kind\":\"text\",\"text\":\"Retained checkpoint.md, skipped obsolete.md as requested, and wrote SUMMARY.md documenting both.\",\"tool_name\":null,\"arguments\":null}"}}
+{"type":"turn.completed","usage":{"input_tokens":26245,"cached_input_tokens":0,"cache_write_input_tokens":0,"output_tokens":44,"reasoning_output_tokens":0}}

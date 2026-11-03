@@ -1,0 +1,68 @@
+[
+  {
+    "kind": "headless",
+    "mode": "disabled",
+    "passed": true,
+    "obsolete": true,
+    "blocked": 0,
+    "requests": 4,
+    "firstToolMs": 4,
+    "guideAfterStartMs": 4800,
+    "withinFirstTool": false
+  },
+  {
+    "kind": "headless",
+    "mode": "enabled",
+    "passed": true,
+    "obsolete": false,
+    "blocked": 1,
+    "requests": 4,
+    "firstToolMs": 4,
+    "guideAfterStartMs": 5822,
+    "withinFirstTool": false
+  },
+  {
+    "kind": "tui",
+    "mode": "disabled",
+    "passed": true,
+    "obsolete": true,
+    "blocked": 0,
+    "requests": 4,
+    "firstToolMs": 3,
+    "guideAfterStartMs": 4332,
+    "withinFirstTool": false
+  },
+  {
+    "kind": "tui",
+    "mode": "enabled",
+    "passed": true,
+    "obsolete": false,
+    "blocked": 1,
+    "requests": 4,
+    "firstToolMs": 4,
+    "guideAfterStartMs": 4709,
+    "withinFirstTool": false
+  },
+  {
+    "kind": "natural-tui",
+    "mode": "disabled",
+    "passed": true,
+    "obsolete": false,
+    "blocked": 0,
+    "requests": 3,
+    "firstToolMs": 8004,
+    "guideAfterStartMs": 57,
+    "withinFirstTool": true
+  },
+  {
+    "kind": "natural-tui",
+    "mode": "enabled",
+    "passed": true,
+    "obsolete": false,
+    "blocked": 0,
+    "requests": 3,
+    "firstToolMs": 8009,
+    "guideAfterStartMs": 55,
+    "withinFirstTool": true
+  }
+]

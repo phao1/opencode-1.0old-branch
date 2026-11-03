@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "source": "real",
+  "tui": false,
+  "natural": false,
+  "timing": "held-model-decision",
+  "passed": true,
+  "out": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/enabled",
+  "obsoleteWritten": false,
+  "summary": "Retained checkpoint.md containing \"completed first step\". Skipped obsolete.md because the latest user guidance explicitly cancelled the pending second step.",
+  "requests": 4,
+  "usage": {
+    "input_tokens": 103422,
+    "cached_input_tokens": 39168,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 194,
+    "reasoning_output_tokens": 0
+  }
+}

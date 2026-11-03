@@ -1,0 +1,46 @@
+{
+  "source": "real",
+  "tui": false,
+  "natural": false,
+  "cases": [
+    {
+      "enabled": false,
+      "source": "real",
+      "tui": false,
+      "natural": false,
+      "timing": "held-model-decision",
+      "passed": true,
+      "out": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/disabled",
+      "obsoleteWritten": true,
+      "summary": "Retained checkpoint.md with \"completed first step\". Per the latest guidance, skipped any further obsolete.md action. The original obsolete.md write had already completed before that guidance arrived; no additional obsolete actions were performed.",
+      "requests": 4,
+      "usage": {
+        "input_tokens": 103005,
+        "cached_input_tokens": 26880,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 233,
+        "reasoning_output_tokens": 15
+      }
+    },
+    {
+      "enabled": true,
+      "source": "real",
+      "tui": false,
+      "natural": false,
+      "timing": "held-model-decision",
+      "passed": true,
+      "out": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0553-steering-v21/verify/evidence/headless/enabled",
+      "obsoleteWritten": false,
+      "summary": "Retained checkpoint.md with \"completed first step\". Skipped the pending obsolete.md action because the latest user guidance explicitly requested skipping it. The completed first step is preserved.",
+      "requests": 4,
+      "usage": {
+        "input_tokens": 103444,
+        "cached_input_tokens": 49152,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 202,
+        "reasoning_output_tokens": 0
+      }
+    }
+  ],
+  "passed": true
+}

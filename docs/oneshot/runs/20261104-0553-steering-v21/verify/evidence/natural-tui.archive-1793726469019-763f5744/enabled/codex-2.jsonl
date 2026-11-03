@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1a268-4b44-7db1-b1e7-a5545b5cc360"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"kind\":\"text\",\"text\":\"Retained checkpoint.md and wrote SUMMARY.md documenting why obsolete.md was skipped.\",\"tool_name\":null,\"arguments\":null}"}}
+{"type":"turn.completed","usage":{"input_tokens":26255,"cached_input_tokens":0,"cache_write_input_tokens":0,"output_tokens":41,"reasoning_output_tokens":0}}

@@ -1,3 +1,25 @@
+# Steering v2.1 规范与验证索引（0.5.0）
+
+版本：v3.2；更新：2026-11-04。
+
+当前规范为 [本轮 DESIGN v1.3 / A1–A10](../oneshot/runs/20261104-0553-steering-v21/DESIGN.md)，实现和命令结果见 [本轮索引](../oneshot/runs/20261104-0553-steering-v21/README.md)，安装与完整边界见 [独立包 README](../../external-plugins/steering/README.md)。
+
+Steering 只跟踪本进程最近明确普通或摘要 transform 后观察到的有效 user 输入。工具 gate 无历史读取；已知普通请求有 pending 时拒绝普通工具，status/native prt_ 豁免。每次 transform 同步消费全部 pending，仅本次包含有效同 ID 用户的普通请求加一次提醒；缺席或 overflow 换 ID 丢弃。压缩清空此前 pending 并关闭 gate，摘要不加提醒；摘要 transform 后的新插话仍观察，供后续普通请求消费或 idle 时有条件恢复。歧义 transform 失效全部关联，未知放行。消息/附件不复制改写，后置插件可改变共享输出，故 G1/G3 仅针对本 hook 检查点；需加载在变换用户消息插件之后。
+
+只有 status-idle 摘取候选，延迟75ms 后单次 history 验证最新有效 user 属于候选且在最后一个 assistant（含 summary，须成功且不跳过失败/未完成者）的 parentID 用户之后；不比较 ID 大小。status/get 检查 idle/revert，自家 synthetic control 保存前复核许可；每次 await 核对 identity。新输入/transform/第二次 status-idle/错误/删除/revert/压缩失效，候选 part 更新也在 active 已删除后失效恢复；无关消息/part 删除同样保守放弃，失败或晚保存不重试。无插话及 autoResume:false 不读历史；正常请求/工具不因历史故障阻塞。
+
+G2 保存的控制仅含原指导 ID 和简短的重新读取并继续要求。首个明确普通 transform 先捕获现有恢复候选，再同步失效许可，结合 active.pending 按有效 user ID 匹配后仅对本次输出附加 G3。该检查点消费全部候选，缺席或编辑无效的指导也在此消费。后续工具轮 G3 为零，取消或过期候选无法继承提示，摘要请求继续仅消费候选。
+
+provider/adopted unknown；toast 尽力；活动 noReply 须 autoResume:false。内存随活动请求和期间输入增长，无拒绝输入的固定容量；idle/error 等清理，permit 5秒到期；按会话关联的本进程签发 key 记录在派发30秒后回收，只有其失效控制可拒绝，未知/过期/跨会话 key 与仅公开 metadata 标记按不确定放行。不提供永不漏拦、原子取消、运行中工具中止或回滚、运行中子代理转发、独立 follow-up queue、batch/StructuredOutput/native prt_ 覆盖或语义采纳保证。慢保存/过滤/编辑/压缩/重启/后置插件均可能漏拦。
+
+v2.0 的指纹保存确认、摘要覆盖/overflow replay 关联、每轮提醒、未知证据持续阻断与硬容量全部放弃。根测试包含真实官方确定性内核；installed verify 从空cache离线安装后跑新契约。真实 headless/TUI 暂扣响应对照与 natural TUI 不暂扣对照分别留证，两边自然采纳时如实报告。
+
+变更记录 2026-11-04，v3.2 同步 DESIGN v1.3 的 G2 控制与临时 G3 单次注入，官方 provider 验证一次后归零。v3.1 记录 DESIGN v1.2 的摘要忙碌观察、summary parent边界、恢复期间编辑失效及短期会话关联签发key。v3.0 对应 Steering v2.1/0.5.0；以下均为历史说明，不作为当前行为承诺。
+
+---
+
+## 历史：Steering v2.0 / 0.4.0（已被 v2.1 替代）
+
 # Steering v2 规范与验证索引（0.4.0）
 
 版本：v2.3；更新：2026-11-04。

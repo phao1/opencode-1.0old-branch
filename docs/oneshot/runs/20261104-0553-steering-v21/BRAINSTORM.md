@@ -9,6 +9,7 @@
 ## 默认假设
 
 - 无人值守，不提问；允许本地提交（沿用前 run 与 skill 交付默认），不 push/merge/发布。其他 run 的未跟踪 host 文件保留，不纳入本轮提交。
+- 断点恢复（2026-11-04）：复用已成功的 improve、review round 1 和 Generator round 3，不重跑；verify 中断不视为通过，顺序重跑全部八项登记检查，之后执行 review round 2。沿用 DESIGN v1.2 及既定提交范围；缺失的历史 external-plugins/CLAUDE.md 不作为可用依据，以根 AGENTS.md 与实际源码为准。
 - 不确定时放行。放弃 v2.0 对历史、编辑版本、摘要覆盖及 overflow 原文映射的保证；原生下一轮读消息承担最终可见性。
 - “忙碌”只由本进程已见 transform 且未见结束界定；session.status busy 不独立创建状态。不回收运行中的工具，也不提供 queue 或紧急中断。
 - 每个 transform 同步消费已有 pending，缺失的直接丢弃；之后到达的有效 chat.message 才能证明旧请求未包含它。chat.message 在保存前触发，允许此短暂窗口拦截；下一 transform/结束即解除，绝不等保存完整性。
