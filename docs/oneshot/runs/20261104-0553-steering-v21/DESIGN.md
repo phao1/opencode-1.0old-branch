@@ -1,6 +1,6 @@
 # Steering v2.1 — fail-open 请求作用域设计
 
-版本：v1.0；更新日期：2026-11-04。
+版本：v1.1；更新日期：2026-11-04。
 
 ## 目标与范围
 
@@ -42,6 +42,18 @@ chat.message（prompt.ts:1263–1305）在消息保存前执行，所以观察�
 
 ### 最小状态与过渡
 
+### improve round 1 的明确裁决（v1.1，以下规则优先）
+
+1. **G2 明确偏离“用户 ID 大于 assistant ID”的字面排序，保留既有 G2 正例。** 四个 Evaluator 指出排序不明确；sol 提出以最后 assistant.parentID 为处理边界，astra 提出放弃旧正例作为备选。宿主选择前者：候选须在本进程忙碌且本次 transform 后观察、未被任何 transform 消费；唯一 history 返回中，取最后非摘要 assistant，要求成功完成无 error（不能跳过末尾失败/运行中 assistant），取最新有效 user，必须是候选之一，且其**历史数组位置晚于该 assistant.parentID 对应 user**。parent 找不到或顺序不确定不恢复；不比较用户/assistant ID 大小，也不使用用户创建时间与 assistant 完成时间。理由：prompt.ts:970 的 ID 先分配，前 run kernel.test.mjs:87–104 的双屏障指导 ID 小于 assistant 却晚于 parent，字面比较会抹掉原 G2；仅增加一个公开 parentID 边界，无历史状态机。session/index.ts:595 按官方历史顺序返回，支持自定义非单调 messageID。此项是已由 improve 提出并评审的设计偏离，其他 fail-open 原则不变。原正例须保留，不得通过删除正例伪称继续覆盖 G2。
+2. **有效谓词固定**：user 的 part 非 ignored、非 synthetic，并且 text 为非空白字符串（识别原生 system-reminder 包裹后判断）或 file 有非空 url。file-only 有效；agent/subtask/compaction、空文本、内部 synthetic 无效。transform 匹配要求 role=user、ID 命中且此谓词有效；附件不复制/改写。
+3. **歧义 transform 清理**：messages 为空/混合 session/缺失 session 无法唯一归属时，同步失效全部 active gate、压缩标记和恢复候选，等待各会话下一次明确 transform 重建。此保守漏拦符合 fail-open，不能仅 return 留旧 pending。
+4. **idle 与取消**：只用 session.status(type=idle) 作为恢复边界，忽略 deprecated session.idle；有 active 时摘取删除并延迟 75ms 再做一次 SDK 检查，让 status.ts:73–80 发布完成/删除旧 busy。无 active 但有恢复候选时又收到 status-idle，视作新取消边界使候选失效（prompt.ts:144–150），不把它误当正常双通知。每次 await 后核对候选 identity。测试正常双通知可恢复、history/status/get 等待期间 idle 取消不派发。
+5. **失效自家控制**：保存前拒绝仅限自家 synthetic marker 且 permit 失效；错误带随机唯一 token，短期集合识别 routes/session.ts:853 迟到 session.error，仅忽略匹配自家 token 的错误，不能清掉新真实请求。正常错误仍清空；token 超时回收。
+6. **插件并存边界**：公开 transform 顺序共享可变 output（plugin/index.ts:243–250），本插件看到的集合不是最终 provider 集合。默认其他插件不在本 hook 之后重新注入/移除用户消息；有此需求把 Steering 加载在变换用户消息插件之后。新增前置移除/插入与空/混合变换测试；后置插件改变输出不能由本接口证明或完全检测，文档明确 G1/G3 只对本 hook 检查点负责，不能声称最终请求证明。可检测歧义全部放行，不扩大实现为历史校准。
+7. **规模与文档**：在 state.test.mjs 增加固定有效行统计断言（TypeScript AST 移除纯类型声明/import type、scanner 去注释，再按剩余非空物理行计数；混合类型与执行行仍计入），随 npm test 执行；宿主人工看 diff 防超长行规避。README/A10 保留活动 noReply 须 autoResume:false 限制。复跑演示归档旧证据而非复用产物。
+
+以下最小状态描述中的“新于 assistant”均以上述 parent 用户边界为准；idle 处理以上述 status-idle 单一事件规则为准。
+
 - Map<sessionID, Active>：普通/摘要请求标记、pending Map<messageID,必要用户信息及有效性>、toast节流可选。状态不保留历史消息、工具、快照、摘要覆盖或 attempts 数组。
 - prepare：从 messages 的 sessionID 唯一确定会话，歧义放行且不创关联；消费一次 compacting 标记（可用独立 Set 并在终止清理）。普通请求对开始前 pending 按 message ID 检查是否实际含有效用户内容，命中才 append 一次 static reminder，随后全部清空；标记当前普通请求已知。摘要则 pending清空且当前请求不可 gate。整个状态切换在任何 await 前完成，避免观察竞态。
 - observe：优先识别自家 synthetic control；普通有效输入只在已知忙碌状态中记 pending 并 toast。不抛普通消息异常，无哈希/保存确认/容量。删除/空编辑等事件可直接丢弃对应候选，证据不确定时宁可漏拦；不能保留 dirty 永久 gate。
@@ -78,4 +90,5 @@ chat.message（prompt.ts:1263–1305）在消息保存前执行，所以观察�
 
 | 版本 | 日期 | 改动与理由 |
 | --- | --- | --- |
+| v1.1 | 2026-11-04 | improve 裁决：G2 改 parent 边界保留原正例，明确有效谓词、歧义清理、双 idle/新取消、自家错误 token、插件顺序与可执行行数检查 |
 | v1.0 | 2026-11-04 | 初版，核对固定串行loop，按验收人要求采用fail-open请求作用域；明确放弃历史版本/摘要覆盖保证与一次性G2边界，新增自然TUI演示 |
