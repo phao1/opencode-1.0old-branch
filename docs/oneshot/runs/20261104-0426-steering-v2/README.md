@@ -1,5 +1,20 @@
 # OpenCode 1.0 外置插件：插话 steering v2
 
+## 最终交付（2026-11-04，Design v1.4）
+
+全部节点已完成。Steering v2 独立包 0.4.0 取代旧 ledger，固定内核 tracked 源码未改；实现与完整证据已本地提交 `4251d707f`，未 push、merge 或发布。
+
+- [最终正式验证](verify/RESULT.md)：10/10 PASS；根测试 **131/131**，新包与安装入口检查集合各 **62/62**（49 个单元/组件、13 个官方内核用例）。类型、构建、空 npm cache 离线安装、内核边界均通过。
+- [最终真实 Codex headless 启停对照](verify/evidence/headless-report.json)、[tmux TUI 对照](verify/evidence/tui-report.json) 均通过。启用组阻止旧动作，关闭组写出 obsolete.md；均保留 checkpoint.md，由真实模型撰写 SUMMARY。
+- [TUI 提交插话](verify/evidence/tui-enabled-guidance-submitted.txt)、[TUI 启用完成](verify/evidence/tui-enabled-completed.txt)、[关闭对照完成](verify/evidence/tui-disabled-completed.txt)；[原始路径与 SHA256 索引](verify/evidence/real-evidence-index.json) 包含 Codex JSONL、决策/usage、HTTP body、原生 messages 和 kernel logs。
+- [最新实现报告](impl/round-3/report.md)、[overflow 原生新 ID/provider 证据](impl/round-3/evidence/overflow-native-replay-installed-excerpt.json)、[三次摘要 G3 证据](impl/round-3/evidence/three-manual-summaries-installed-excerpt.json)、[确定性原始记录索引](impl/round-3/evidence/kernel-evidence-index.json)。
+- [第 1 轮发现关闭](review/round-1/SUMMARY.md)、[第 2 轮发现关闭](review/round-2/SUMMARY.md)：原始独立 verdict 保留 request-changes，修复后由宿主独立复现和完整 verify 关闭，无未解决 P0/P1/P2；没有伪称第三轮独立 approve。
+- [独立包安装、配置、CI 与限制](../../../../external-plugins/steering/README.md)、[本地产物 tgz](../../../../dist/oneshot-opencode-steering-0.4.0.tgz)、[最终打包报告及 SHA256](verify/evidence/package-report.json)。
+
+公开边界保持：已过 gate 的工具与运行中子代理不能撤销；native/未知 task 安全豁免；取消与派发非原子；活动 noReply 无法区分；重启不重放。prepared/摘要覆盖不证明语义采纳，provider/adopted 为 unknown；overflow 图片/PDF 的原生占位转换用 mediaStripped 标记。
+
+旧正式验证保留为 [初次验证](verify-before-review-fix/RESULT.md)、[首轮修复验证](verify-before-review2-fix/RESULT.md)，原始演示分别归档为 `.codeagent/steering-v2-verify1-*`、`steering-v2-verify2-*`；Generator 首轮演示为 `steering-v2-generator-*`，最终演示为 `steering-v2-demo-*`。原始日志和 TUI 空白格式保持，仅修正生成 RESULT 的相对日志链接。持续写入的宿主日志保留本地，未纳入提交。
+
 Run: 20261104-0426-steering-v2 · L · 2026-11-03T15:26:45.769Z
 
 | 节点 | 状态 | 备注 |
@@ -10,7 +25,7 @@ Run: 20261104-0426-steering-v2 · L · 2026-11-03T15:26:45.769Z
 | impl | done | Host checked final report/diff; transitive summaries, empty edit, terminal capacity and empty-cache offline install independently pass. Overflow and G3 have official-kernel evidence. Final formal verify follows. |
 | verify | done |  |
 | review | done | Two independent review rounds retained request-changes; all accepted findings fixed in Generator rounds 2/3 and independently checked by host. Final 10/10 verify PASS; no unresolved P0/P1. No third evaluator round claimed. |
-| deliver | running |  |
+| deliver | done | Local implementation/evidence commit 4251d707f; Design v1.4. Final 10 checks PASS (root 131, steering/installed sets 62 each, 13 official-kernel cases); real headless/TUI controls passed. All accepted review findings closed by host evidence after two evaluator rounds. No push/merge/release. |
 
 ## 需求与关键决策
 
@@ -97,3 +112,4 @@ Run: 20261104-0426-steering-v2 · L · 2026-11-03T15:26:45.769Z
 - 2026-11-03T16:49:43.917Z verify: PASS
 - 2026-11-03T16:50:30.401Z done: review Two independent review rounds retained request-changes; all accepted findings fixed in Generator rounds 2/3 and independently checked by host. Final 10/10 verify PASS; no unresolved P0/P1. No third evaluator round claimed.
 - 2026-11-03T16:50:30.467Z start: deliver
+- 2026-11-03T16:51:56.012Z done: deliver Local implementation/evidence commit 4251d707f; Design v1.4. Final 10 checks PASS (root 131, steering/installed sets 62 each, 13 official-kernel cases); real headless/TUI controls passed. All accepted review findings closed by host evidence after two evaluator rounds. No push/merge/release.

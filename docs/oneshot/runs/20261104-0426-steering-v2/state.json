@@ -6,7 +6,7 @@
   "sizeExplicit": true,
   "baseCommit": "60d42de9b35634b98a93ba37d8a273e622d56521",
   "createdAt": "2026-11-03T15:26:45.769Z",
-  "updatedAt": "2026-11-03T16:50:30.467Z",
+  "updatedAt": "2026-11-03T16:51:56.012Z",
   "nodes": {
     "brainstorm": {
       "status": "done",
@@ -44,8 +44,10 @@
       "note": "Two independent review rounds retained request-changes; all accepted findings fixed in Generator rounds 2/3 and independently checked by host. Final 10/10 verify PASS; no unresolved P0/P1. No third evaluator round claimed."
     },
     "deliver": {
-      "status": "running",
-      "startedAt": "2026-11-03T16:50:30.467Z"
+      "status": "done",
+      "startedAt": "2026-11-03T16:50:30.467Z",
+      "finishedAt": "2026-11-03T16:51:56.012Z",
+      "note": "Local implementation/evidence commit 4251d707f; Design v1.4. Final 10 checks PASS (root 131, steering/installed sets 62 each, 13 official-kernel cases); real headless/TUI controls passed. All accepted review findings closed by host evidence after two evaluator rounds. No push/merge/release."
     }
   },
   "checks": [
@@ -623,6 +625,11 @@
       "at": "2026-11-03T16:50:30.467Z",
       "action": "start",
       "detail": "deliver "
+    },
+    {
+      "at": "2026-11-03T16:51:56.012Z",
+      "action": "done",
+      "detail": "deliver Local implementation/evidence commit 4251d707f; Design v1.4. Final 10 checks PASS (root 131, steering/installed sets 62 each, 13 official-kernel cases); real headless/TUI controls passed. All accepted review findings closed by host evidence after two evaluator rounds. No push/merge/release."
     }
   ],
   "host": {
