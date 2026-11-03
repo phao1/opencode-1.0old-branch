@@ -1,0 +1,43 @@
+commit ad00b1f Archive completed one-shot delivery state
+Design: docs/oneshot/runs/20261104-0549-add-fn/BRAINSTORM.md
+
+
+ docs/oneshot/runs/20261104-0549-add-fn/README.md  | 12 +++++++-----
+ docs/oneshot/runs/20261104-0549-add-fn/state.json | 18 +++++++++++++++---
+ 2 files changed, 22 insertions(+), 8 deletions(-)
+commit fff1891 Add named addition function and verification evidence
+Design: docs/oneshot/runs/20261104-0549-add-fn/BRAINSTORM.md
+
+
+ .../runs/20261104-0549-add-fn/BRAINSTORM.md        |  29 +++++
+ docs/oneshot/runs/20261104-0549-add-fn/README.md   |  38 ++++++
+ .../runs/20261104-0549-add-fn/REQUIREMENT.md       |   1 +
+ .../20261104-0549-add-fn/impl/round-1/report.md    |  17 +++
+ docs/oneshot/runs/20261104-0549-add-fn/state.json  | 130 +++++++++++++++++++++
+ .../20261104-0549-add-fn/verify/1-node-test.log    |  10 ++
+ .../runs/20261104-0549-add-fn/verify/RESULT.md     |   7 ++
+ math.mjs                                           |   1 +
+ math.test.mjs                                      |  18 +++
+ 9 files changed, 251 insertions(+)
+commit 5edbddb init
+
+
+ .agents/skills/one-shot/SKILL.md                   | 137 ++++++++++++
+ .agents/skills/one-shot/config.json                | 232 +++++++++++++++++++++
+ .agents/skills/one-shot/references/flow.md         |  91 ++++++++
+ .../skills/one-shot/references/source-mapping.md   |  25 +++
+ .agents/skills/one-shot/scripts/install.sh         |  16 ++
+ .agents/skills/one-shot/scripts/lib/agents.mjs     |  65 ++++++
+ .agents/skills/one-shot/scripts/lib/process.mjs    |  82 ++++++++
+ .agents/skills/one-shot/scripts/lib/state.mjs      | 104 +++++++++
+ .agents/skills/one-shot/scripts/lib/workflow.mjs   | 183 ++++++++++++++++
+ .agents/skills/one-shot/scripts/oneshot.mjs        | 165 +++++++++++++++
+ .agents/skills/one-shot/templates/brainstorm.md    |  17 ++
+ .agents/skills/one-shot/templates/design.md        |  32 +++
+ .agents/skills/one-shot/templates/impl.prompt.md   |  10 +
+ .../skills/one-shot/templates/improve.prompt.md    |  12 ++
+ .agents/skills/one-shot/templates/review.prompt.md |  18 ++
+ .agents/skills/one-shot/templates/summary.md       |  20 ++
+ AGENTS.md                                          |   2 +
+ math.mjs                                           |   1 +
+ 18 files changed, 1212 insertions(+)
