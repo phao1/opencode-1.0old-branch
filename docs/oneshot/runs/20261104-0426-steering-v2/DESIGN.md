@@ -1,6 +1,6 @@
 # Steering v2 外置插件设计
 
-版本：v1.0；更新日期：2026-11-04（Pacific/Auckland）
+版本：v1.1；更新日期：2026-11-04（Pacific/Auckland）
 
 ## 目标与范围
 
@@ -28,13 +28,14 @@
 | --- | --- | --- |
 | A1 | 包独立、精确公共 API、单文件构建，导出仅 SteeringPlugin，安装后可加载，无 kernel/extension 私有 import | 包 build/typecheck，scripts/package-steering.mjs 的 npm pack + offline 安装/import，真实官方内核加载 |
 | A2 | G1 同一次模型响应的多工具调用，插话到达后尚未通过 gate 的旧调用均 error，旧文件不存在；新请求看到原指导，后续新动作成功 | 官方 OpenCode + 脚本 SSE OpenAI 模型；控制 first-call/后续调用释放屏障，至少两个 tool_calls 属同一 assistant。另测无插件对照旧动作确实执行 |
-| A3 | G2 插话在最后一次请求准备后、最终响应完成前保存，原运行结束后自动继续，指导恰好保留一次，控制不循环、普通 idle 不重启 | 脚本 HTTP 模型用 final-response 屏障，确认指导已保存后释放终止响应；assert 原生停止分支与插件 recovery 证据，不拿自然下一轮冒充 recovery |
+| A3 | G2 晚保存指导未进入请求且 ID 早于当前 assistant，原生完成后滞留；插件自动继续，指导恰好保留一次，控制不循环、普通 idle 不重启 | 公共 companion chat.message 双屏障：先分配 task、guide 原生 ID，释放 task 等 assistant 请求开始，再释放 guide 保存，最后释放模型 stop；同条件无插件确实只一请求，启用有唯一 continuation 和第二请求。参考旧 verify-steering-late-save.mjs:62-84；普通较晚 ID 输入另测原生已继续时无重复恢复 |
 | A4 | G3 插话在模型请求中带明确最新优先/跳过旧动作提示，原始保存消息/附件保持；prepared 与 received/adopted 分离 | 抓取模型 HTTP body + session messages，单测附件/ignored/synthetic/空输入；真实运行证明请求确实带入 |
 | A5 | 无插话时工具、消息与完成行为不变，插件不额外模型请求；多会话不串扰 | 确定性集成开/关插件对照 + 单测会话隔离 |
-| A6 | 取消/错误/删除/压缩后不自动继续；native subtask 特殊调用不在未捕获路径抛错；状态无磁盘文件损坏依赖 | 单测生命周期与取消-before-dispatch、重启历史不重放；至少真实内核 abort 集成证明不复活；native task 公开 callID/part.id 差别见固定源码 |
+| A6 | dispatch 前已观察取消/错误/删除/压缩/revert 时抑制恢复；native subtask 特殊调用不在未捕获路径抛错；状态无磁盘文件损坏依赖 | 单测生命周期、dispatch 后控制保存前失效、重启历史不重放；真实内核 abort、revert-before-dispatch 和 SubtaskPart 集成（无遗留 running part），另测普通模型 task gate。最后检查之后的不可原子窗口明确列限制 |
 | A7 | 不每个流式事件读全量历史，不每个正常工具重复全量读取；缓存有生命周期清理和明确上限，异步 event/toast/恢复失败不 unhandled rejection | SDK 调用次数测试（多工具、流式事件）、精简代码审查，根测试/typecheck |
 | A8 | 真实模型 headless 开/关插件对照，多步任务运行中插话，启用后阻止尚未执行的旧动作并写 SUMMARY；真实 TUI 用 tmux 输入、capture-pane 留档，同条件关插件对照 | 可复现 scripts/steering-v2-demo.mjs（可选择 --tui）真实 Codex CLI bridge；存 messages、模型请求/响应与 Codex JSONL/usage、文件副作用、进程日志和屏幕，结果报告明确 source=real；失败不得替换成脚本模型 |
 | A9 | 根默认测试包含确定性集成或文档明确 CI 命令；旧入口不再默认使用，README 与 baseline SPEC/DESIGN/STEERING 同步 | 根回归、kernel boundary、文档与引用核对；新验收成功后退役旧 ledger/旧测试与依赖 ledger 的历史探针 |
+| A10 | 快速重复/冲突插话按稳定原生消息 ID 顺序处理，已保存各条原文均保留，旧工具不借新快照放行；删改不会永久卡住 | 真内核双插话用例，单测整条/部分删除、同 ID 内容更新、延迟事件和多附件保存；steering_status 在 pending/证据缺失/恢复失败时仍可调用 |
 
 ## 关键决策
 
@@ -57,11 +58,22 @@
 
 工具 before 输入只有 tool/sessionID/callID（无 messageID）；不可编造 API。原生 native subtask 用 part.id 的路径要通过实际 part 映射确认或用明确的安全豁免，不得让拒绝异常逃到未捕获路径。普通模型 task 仍经正常 tool-error 路径。MCP 过 gate 后的权限等待与 batch 内部子工具属于限制。
 
+### v1.1 固定实现契约（独立评审后的裁决）
+
+1. **快照关联**：transform 的 msgs 不含刚创建的当前 assistant，不能取数组末尾 assistant。由历史推导 session、最新 user parent；合并一次 SDK session.messages（或已确认同等新鲜的事件缓存）定位唯一“未完成、parentID 匹配、非 summary、且不在 transform 输入”的当前 assistant。候选不唯一不建快照，普通有 pending 的调用 fail closed。压缩期间不建普通快照，compaction transform 不得覆盖真实 assistant 快照。每个真实请求至多一次校准，不在每个 gate 重新全史扫描。
+2. **输入状态**：chat.message 记录候选及全部有效 part 内容版本；message.updated 仅证明 info 保存，全部预期有效 part 匹配才 saved。指导集合按原生 message ID 排序，与 SDK 原生消息顺序一致；不按异步事件完成顺序。候选不完整时 gate 合并有时限的 message 查询；失败拒绝本次普通调用并报告未知，不能无限永久待定。失败候选在后续完整校准确认缺失后退出，删改按新版本重算。附件生成的 synthetic 文本保留给模型，签名只算有效用户 part，归一化原生 system-reminder。
+3. **恢复 permit**：串行区内预留一次性 permit（session/epoch、指导有序版本、成功终止 assistant），区外 promptAsync，避免重入死锁。控制重新进入 chat.message 时校验 permit 与当前 epoch/版本；取消、新真实输入、已被正常请求准备、删除/压缩/revert 都使旧 permit 失效并拒绝控制保存。超时结果记 unknown，不盲重试。promptAsync 204 不等于控制已保存。dispatch 前已观察取消可保证抑制；idle cancel 没专用事件、最后检查后取消无法保证原子拒绝，文档必须直说。
+4. **恢复约束**：从最新有效指导继承 model、agent、system、variant、format（后者在 SDK v1 声明缺失，做局部窄适配），不发送 tools，沿用当前 session permission 而非重写它。字段无法安全还原时不自动恢复并报告原因。真实/单元测试核对控制与权限保持。
+5. **revert**：session.updated 出现 revert 立即抑制资格；派发前 SDK session.get 复核，任何 revert 都停止本批恢复，等待新真实用户输入。不自动触发 revert cleanup；真内核测试验证撤销范围保留且可 redo。message/part removed 分别调整候选，不能把删除内容复活。
+6. **native subtask**：part.id 匹配特殊 before 路径，callID 匹配普通模型工具；事件缺失时一次 SDK 校准。未知 task 且查询失败采取无异常安全豁免并记诊断（不以任意 task 声称 G1），不能在该未知路径 fail closed 重现 L-09。真内核提交 SubtaskPart 并验证 assistant/tool 最终离开 running；正常模型 task 可确认归属时仍 gate。
+7. **诊断与边界**：steering_status 永远豁免 stale gate，只读不唤醒；活动 noReply 无法辨认，可能被恢复，README 提供 autoResume:false 并明确此不兼容。单一函数导出只防模块内重复调用；独立包与聚合入口二选一安装，禁止将其说成跨配置去重。
+8. **包与 CI**：聚合入口相对 import `../steering/src/index.ts`，由 Bun 聚合构建包含，不增加 workspace 发布依赖；新包独立声明公开 dev/peer 1.3.17。验证聚合构建（根 include 覆盖）与独立打包。CI 文档给出从 npm 精确安装 `opencode-ai@1.3.17` 的命令及 OPENCODE_BINARY 指向其 bin/opencode，运行 --version 必须等于 1.3.17；npm lock integrity/平台子包固定并由 npm 校验，不能使用 @latest 或宿主本机路径。也可使用只读固定源码的明确启动适配，但不得历史 serve/merge。真实模型演示单独执行，不混入离线确定性 CI。
+
 ### 确定性集成设施
 
 使用真实官方 1.3.17 server，隔离 XDG_CONFIG_HOME/DATA_HOME/CACHE_HOME/STATE_HOME、OPENCODE_TEST_HOME，禁项目配置、禁模型抓取，title/summary 禁用以避免干扰请求计数。可复用 scripts/lib/kernel-lab.mjs 的生命周期思想，但不要为了测试改只读内核；优先给新包建立小的独立 fixture，OPENCODE_BINARY 可覆盖，缺二进制时明确失败而非 silent skip。
 
-本地 HTTP 服务实现 OpenAI chat completions SSE，脚本返回真正 tool_calls（支持同一 response 多个）。工具使用真实 bash 或精简 fixture tool 作为可观察屏障；假模型不替代 OpenCode。测试按保存消息/进入 provider 请求等条件同步，不用大 sleep 猜时序。G1 的流式响应先释放一个调用或先持有全部调用，保存插话后释放至少两个未过 gate 的旧调用；一并记录 concurrency 的 gate 边界。G2 将最终响应延迟，插话保存后释放 stop，验证额外请求是插件 recovery 触发。测试均有超时与 finally kill/close，错误保存服务日志；CI 不需要登录或付费网络模型。
+本地 HTTP 服务实现 OpenAI chat completions SSE，脚本返回真正 tool_calls（支持同一 response 多个）。工具使用真实 bash 或精简 fixture tool 作为可观察屏障；假模型不替代 OpenCode。测试按保存消息/进入 provider 请求等条件同步，不用大 sleep 猜时序。G1 的流式响应先释放一个调用或先持有全部调用，保存插话后释放至少两个未过 gate 的旧调用；一并记录 concurrency 的 gate 边界。G2 使用 A3 双 chat.message 屏障，按内核自然分配 ID 制造晚保存，不伪造 ID、不改 kernel；关闭插件必须确实滞留。仅延迟普通 final response 不足以证明 G2；可额外覆盖 StructuredOutput 直接 break，但不能替代普通 late-save 对照。测试均有超时与 finally kill/close，错误保存服务日志；CI 不需要登录或付费网络模型。
 
 真实演示可复用 scripts/lib/codex-cli-bridge.mjs；已有桥接一次一个工具足以跨请求演示 stale response（在真实 Codex 作出下一工具决策后、转发给 OpenCode 前设可观察屏障，提交插话，随后释放原始决策；启停条件一致）。如扩展多工具必须向后兼容既有测试。不得把脚本决定工具冒充真实模型；记录 Codex 原始 JSONL/最终响应/usage，敏感凭据不得写入证据。headless 和 tmux TUI 均用真实模型各做启/停对照，tmux 使用唯一 socket/session、捕获屏幕、清理自己创建的会话，不干扰用户 tmux。演示命令提供输出目录参数，完整可读日志可以保留 .codeagent（ignored），在 run 保存精简可审查报告、相关关键片段/屏幕，证据索引链接到实际文件。
 
@@ -95,3 +107,4 @@
 | 版本 | 日期 | 改动与理由 |
 | --- | --- | --- |
 | v1.0 | 2026-11-04 | 原生/四参考实现调研后初版：内存状态、公开 gate、有界 continuation、确定性真内核集成与真实模型/TUI 对照。 |
+| v1.1 | 2026-11-04 | 采纳四 Codex 模型评审：真实 late-save 双屏障、完整 part 保存、快照唯一归属、控制 permit、revert/取消边界、字段继承、native subtask 真内核验收、重复/删改输入、noReply/重复安装与 CI 供给契约。 |
