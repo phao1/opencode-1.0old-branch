@@ -9,4 +9,8 @@ cd -- "$1"
 shift
 export OPENCODE_CONFIG_DIR="$bundle/.opencode"
 export OPENCODE_DISABLE_PROJECT_CONFIG=true
+export OPENCODE_DISABLE_AUTOUPDATE=true
+if [[ -f "$bundle/opencode-kernel" ]]; then
+  exec "$bundle/opencode" --project "$PWD" "$@"
+fi
 exec "$bundle/opencode" "$@"

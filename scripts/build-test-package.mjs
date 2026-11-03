@@ -47,20 +47,37 @@ try {
   const binary = readdirSync(binaryDir).find(file => file === 'opencode.exe' || file === 'opencode')
   if (!binary) throw new Error('Kernel build did not produce opencode binary')
   rmSync(output, { recursive: true, force: true }); mkdirSync(output, { recursive: true })
-  cpSync(path.join(binaryDir, binary), path.join(output, binary))
+  const packagedKernel = process.platform === 'darwin' ? 'opencode-kernel' : binary
+  cpSync(path.join(binaryDir, binary), path.join(output, packagedKernel))
+  if (process.platform === 'darwin') {
+    cpSync(path.join(root, 'scripts/mac-native-launcher.c'), path.join(output, 'mac-native-launcher.c'))
+    run('clang', ['-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', path.join(output, 'mac-native-launcher.c'), '-o', path.join(output, 'opencode')], root)
+    mkdirSync(path.join(output, 'workspace'), { recursive: true })
+    writeFileSync(path.join(output, 'workspace/README.txt'), 'OpenCode local playground. To use another project, run ./opencode /absolute/project/path.\n')
+    writeFileSync(path.join(output, '启动OpenCode.command'), '#!/usr/bin/env bash\nset -euo pipefail\nbundle=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)\nexec "$bundle/opencode" "$bundle/workspace"\n')
+    chmodSync(path.join(output, '启动OpenCode.command'), 0o755)
+    mkdirSync(path.join(output, 'codex-bridge/lib'), { recursive: true })
+    cpSync(path.join(root, 'scripts/start-with-codex.mjs'), path.join(output, 'codex-bridge/start-with-codex.mjs'))
+    cpSync(path.join(root, 'scripts/lib/codex-cli-bridge.mjs'), path.join(output, 'codex-bridge/lib/codex-cli-bridge.mjs'))
+    cpSync(path.join(root, 'scripts/start-with-codex.command'), path.join(output, '使用Codex模型启动.command'))
+    chmodSync(path.join(output, '使用Codex模型启动.command'), 0o755)
+    cpSync(path.join(root, 'docs/baseline/CODEX-USER-ENTRY-20261028.md'), path.join(output, 'Codex模型入口说明.md'))
+  }
   mkdirSync(path.join(output, '.opencode/plugins'), { recursive: true })
   // Bundle runtime dependencies as well, so the portable plugin needs no package installation.
   run(bun, ['build', 'external-plugins/src/index.ts', '--target=bun', '--outfile', path.join(output, '.opencode/plugins/codeagent.js')], root)
   run(bun, ['build', 'scripts/one-shot.ts', '--target=node', '--outfile', path.join(output, 'one-shot.mjs')], root)
   for (const directory of ['command', 'skills']) cpSync(path.join(root, '.opencode', directory), path.join(output, '.opencode', directory), { recursive: true })
-  writeFileSync(path.join(output, '.opencode/opencode.json'), JSON.stringify({ plugin: ['./plugins/codeagent.js'] }, null, 2))
+  // The kernel otherwise inserts $schema on first launch, invalidating the
+  // shipped manifest even though no user setting changed.
+  writeFileSync(path.join(output, '.opencode/opencode.json'), JSON.stringify({ $schema: 'https://opencode.ai/config.json', plugin: ['./plugins/codeagent.js'], autoupdate: false }, null, 2))
   for (const file of ['one-shot.config.example.json', 'docs/test-package.md']) cpSync(path.join(root, file), path.join(output, path.basename(file)))
   const launchers = process.platform === 'win32' ? ['start-opencode.ps1', 'start-worker.ps1'] : ['start-opencode.sh', 'start-worker.sh']
   for (const file of launchers) {
     cpSync(path.join(root, 'scripts', file), path.join(output, file))
     if (process.platform !== 'win32') chmodSync(path.join(output, file), 0o755)
   }
-  if (process.platform !== 'win32') chmodSync(path.join(output, binary), 0o755)
+  if (process.platform !== 'win32') chmodSync(path.join(output, packagedKernel), 0o755)
   cpSync(path.join(kernel, 'LICENSE'), path.join(output, 'OPENCODE-LICENSE'))
   const notices = ['This test package includes the pinned OpenCode binary and its upstream dependencies. See OPENCODE-LICENSE and the pinned upstream repository for dependency licensing.']
   for (const dependency of ['zod', '@opencode-ai/plugin']) {
@@ -73,7 +90,7 @@ try {
   }
   writeFileSync(path.join(output, 'THIRD-PARTY-NOTICES.txt'), notices.join('\n') + '\n')
   cpSync(path.join(kernel, 'bun.lock'), path.join(output, 'KERNEL-BUILD.bun.lock'))
-  writeFileSync(path.join(output, 'BUILD.json'), JSON.stringify({ version, wrapperCommit: sha, kernelCommit, platform, arch: process.arch, bunVersion, kernelBuildLockSHA256: createHash('sha256').update(readFileSync(path.join(kernel, 'bun.lock'))).digest('hex'), dependencyResolution: process.platform === 'win32' ? 'Windows dependencies resolved in disposable checkout; see KERNEL-BUILD.bun.lock' : 'Frozen upstream lock, no lifecycle scripts; see KERNEL-BUILD.bun.lock', builtAt: new Date().toISOString(), dirty: Boolean(git('status', '--porcelain', '--untracked-files=no', '--ignore-submodules=all')), embeddedWebUI: false, releasePublished: false }, null, 2))
+  writeFileSync(path.join(output, 'BUILD.json'), JSON.stringify({ version, wrapperCommit: sha, kernelCommit, platform, arch: process.arch, bunVersion, kernelBuildLockSHA256: createHash('sha256').update(readFileSync(path.join(kernel, 'bun.lock'))).digest('hex'), dependencyResolution: process.platform === 'win32' ? 'Windows dependencies resolved in disposable checkout; see KERNEL-BUILD.bun.lock' : 'Frozen upstream lock, no lifecycle scripts; see KERNEL-BUILD.bun.lock', builtAt: new Date().toISOString(), dirty: Boolean(git('status', '--porcelain', '--untracked-files=no', '--ignore-submodules=all')), sourceDiffSHA256: createHash('sha256').update(git('diff', 'HEAD')).digest('hex'), nativeLauncher: process.platform === 'darwin', kernelExecutable: packagedKernel, kernelBinarySHA256: createHash('sha256').update(readFileSync(path.join(output, packagedKernel))).digest('hex'), pluginMechanism: 'Public plugin loader -> bundled registry bridge; external JS beside unchanged kernel', embeddedWebUI: false, releasePublished: false }, null, 2))
   const files = []
   const walk = dir => { for (const item of readdirSync(dir, { withFileTypes: true })) { const file = path.join(dir, item.name); if (item.isDirectory()) walk(file); else files.push(file) } }
   walk(output)

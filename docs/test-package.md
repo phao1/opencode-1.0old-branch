@@ -2,6 +2,24 @@
 
 测试包含 macOS 原生 `opencode`、已打包的 CodeAgent 外置插件、命令/skill、独立 one-shot worker、配置示例、Bash 启动脚本及 BUILD.json/SHA256SUMS。提供 Apple Silicon arm64 和 Intel x64 两种包。不是 Desktop .app/.dmg 安装器；Web UI 未嵌入，支持 CLI/TUI/server。
 
+## Mac 直接启动入口
+
+当前 Mac 构建新增原生 Mach-O 启动入口 `opencode`。原固定内核放在 `opencode-kernel`，源码未改；外置插件仍放在 `.opencode/plugins/codeagent.js`，由公开插件加载器调用打包的 registry bridge。插件和内核一起分发，不表示插件已编进内核。
+
+如需使用本机已登录的 Codex CLI 模型，双击 **使用Codex模型启动.command**，具体依赖和桥接范围见包内 **Codex模型入口说明.md**。该入口需要 Node.js 24+；普通原生入口的模型配置保持不变。
+
+解压后可双击 `启动OpenCode.command`，它在终端打开包内的 `workspace` 练习目录。也可以直接在终端运行原生入口，不需要手动设置插件环境变量：
+
+```bash
+"/absolute/path/codeagent-opencode-darwin-arm64/opencode" "/absolute/project/path"
+```
+
+无参数时使用包内 workspace；运行服务可用 `opencode --project /absolute/project/path serve --port 4096`。不要绕过入口单独运行 opencode-kernel，否则不会自动选用包内插件配置。
+
+Mac 原生入口处理首次背景色查询的兼容问题，转发键盘和窗口尺寸，退出恢复终端；25 秒没有出现界面帧会停止本次子进程。它不依赖 Python、Node 或源码仓库来启动 TUI。模型服务仍需网络；完整 OneShot worker 和项目开发仍需要下文列出的工具。
+
+这是未签名/未公证的便携运行包，不是安装到“应用程序”的图形客户端。实际 Finder 双击及系统来源提示需要操作者检查；不能把在独立终端中执行同一入口描述为已观察过 Finder 窗口。
+
 ## 下载并解压
 
 dev push、针对 dev 的 PR 或手动触发 Actions → macOS test package 都会构建。在对应架构的检查、构建和实际二进制插件注册冒烟检查通过后，下载 `codeagent-opencode-darwin-<arch>-<commit>` artifact。需要登录 GitHub，当前保留 30 天。
