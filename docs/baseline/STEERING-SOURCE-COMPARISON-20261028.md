@@ -49,7 +49,7 @@
 
 来源：[turn_input.rs](https://github.com/openai/codex/blob/a96fa4f220700544a1202ec7ae411e432715151f/codex-rs/core/src/session/turn_input.rs#L843)、[input_queue.rs](https://github.com/openai/codex/blob/a96fa4f220700544a1202ec7ae411e432715151f/codex-rs/core/src/session/input_queue.rs#L175)。官方协议说明：[App-server — turn/steer](https://developers.openai.com/codex/app-server/)。
 
-steer_input 持有 active_turn 锁，验证活动任务、expected_turn_id、允许的任务类型、取消与输出 schema 等条件，再接收入 pending input，返回被接收的 turn 身份。文件开头也明确：接收答复不等于已经跑完 hooks、更新模型上下文、持久化或采样。
+`steer_input` 在 `active_turn` 锁内校验活动任务、`expected_turn_id`、允许的任务类型（拒绝 Review/Compact）、空输入与输出 schema 后入队，返回被接收的 turn 身份（`turn_input.rs:843–929`）。该函数本身没有显式 cancellation token 检查；`input_queue.rs:179–204` 的 mailbox 投递路径才有该条件（`:189`，位于提供 `expected_turn_id` 时的分支），不能用它证明 `steer_input` 本身验证取消。是否由外层状态转换间接保证，**未核实**。文件开头也明确：接收答复不等于已经跑完 hooks、更新模型上下文、持久化或采样。
 
 优势：客户端可以精确针对活动 turn，过期输入有明确拒收结果；接收检查与入队处于同一内核控制域。代价：协议与内核耦合，客户端需处理无活动 turn、ID 不匹配等错误。原子接收仍不保证模型语义采纳；也不等于任意在执行的外部副作用都能回滚。
 
@@ -97,3 +97,5 @@ Base Agent 分开保存 steeringQueue 和 followUpQueue。循环在开始、长�
 4. 如确实需要 Codex/DSH 级原子接收、完整持久化 inbox 和编辑队列能力，应单独评估内核升级或正式公开扩展点。当前规则下不通过私有导入或修改固定内核冒充实现。
 
 这些是本次源码审计的建议，尚未作为新功能实现；没有将建议写成已完成能力。
+
+变更记录：2026-11-04，按 `docs/review/legacy-codex-audit.md` 第 8 节（L-17）修正 Codex 取消检查归属，区分 `steer_input` 校验与 mailbox 投递条件，并标记外层间接保证未核实。

@@ -1,11 +1,11 @@
 ---
 name: one-shot
-description: 将明确的外置插件开发需求交给持久化 one-shot worker，完成设计、并行改进、实现、验证和交付；也用于查询、恢复或取消已有任务。
+description: 遗留 OpenCode issue 队列 worker（批量/编排扩展用），用于持久化任务的设计、并行改进、实现、验证、交付及查询、恢复或取消；日常一键研发请用 Codex skill `.agents/skills/one-shot`。
 ---
 
 # One-shot
 
-先读 `AGENTS.md`、`docs/baseline/SPEC.md`，确认当前 checkout 是有 `external-plugins/` 的开发仓库。内核固定在仓库记录的 commit；不要把参考仓库当作目标仓库。
+这是遗留 OpenCode issue 队列 worker（批量/编排扩展用）；日常一键研发请用 Codex skill `.agents/skills/one-shot`。使用本 worker 前，先读 `AGENTS.md`、`docs/baseline/SPEC.md`，确认当前 checkout 是有 `external-plugins/` 的开发仓库。内核固定在仓库记录的 commit；不要把参考仓库当作目标仓库。
 
 ## 明确需求并启动
 
