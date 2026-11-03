@@ -1,0 +1,565 @@
+{
+  "source": "deterministic official OpenCode 1.3.17",
+  "mode": "source",
+  "rawEvidence": ".codeagent/steering-v2-case-Qt3k8W/evidence.json",
+  "requests": [
+    {
+      "index": 0,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Complete a first history task"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Complete a first history task"
+        },
+        {
+          "role": "assistant",
+          "content": "Completed."
+        },
+        {
+          "role": "user",
+          "content": "Start the next task while waiting for updated guidance"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Complete a first history task"
+        },
+        {
+          "role": "assistant",
+          "content": "Completed."
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Start the next task while waiting for updated guidance"
+            },
+            {
+              "type": "text",
+              "text": "[Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "Provide a detailed prompt for continuing our conversation above.\nFocus on information that would be helpful for continuing the conversation, including what we did, what we're doing, which files we're working on, and what we're going to do next.\nThe summary that you construct will be used so that another agent can read it and continue the work.\nDo not call any tools. Respond only with the summary text.\nRespond in the same language as the user's messages in the conversation.\n\nWhen constructing the summary, try to stick to this template:\n---\n## Goal\n\n[What goal(s) is the user trying to accomplish?]\n\n## Instructions\n\n- [What important instructions did the user give you that are relevant]\n- [If there is a plan or spec, include information about it so next agent can continue using it]\n\n## Discoveries\n\n[What notable things were learned during this conversation that would be useful for the next agent to know when continuing the work]\n\n## Accomplished\n\n[What work has been completed, what work is still in progress, and what work is left?]\n\n## Relevant files / directories\n\n[Construct a structured list of relevant files that have been read, edited, or created that pertain to the task at hand. If all the files in a directory are relevant, include the path to the directory.]\n---"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "messages": [
+        {
+          "role": "user",
+          "content": "What did we do so far?"
+        },
+        {
+          "role": "assistant",
+          "content": "Summary: preserve completed history and follow latest user guidance."
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "<system-reminder>\nThe user sent the following message:\nOVERFLOW_GUIDE: preserve history and write the current artifact only.\n\nPlease address this message and continue with your tasks.\n</system-reminder>"
+            },
+            {
+              "type": "text",
+              "text": "Called the Read tool with the following input: {\"filePath\":\"replay.txt\"}"
+            },
+            {
+              "type": "text",
+              "text": "native replay attachment"
+            },
+            {
+              "type": "text",
+              "text": "[Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "messages": [
+        {
+          "role": "user",
+          "content": "What did we do so far?"
+        },
+        {
+          "role": "assistant",
+          "content": "Summary: preserve completed history and follow latest user guidance."
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "OVERFLOW_GUIDE: preserve history and write the current artifact only."
+            },
+            {
+              "type": "text",
+              "text": "Called the Read tool with the following input: {\"filePath\":\"replay.txt\"}"
+            },
+            {
+              "type": "text",
+              "text": "native replay attachment"
+            },
+            {
+              "type": "text",
+              "text": "[Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools."
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_0",
+              "type": "function",
+              "function": {
+                "name": "bash",
+                "arguments": "{\"command\":\"printf current > '/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-Qt3k8W/overflow-current.txt'\",\"description\":\"current action after native replay\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_0",
+          "content": ""
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1793724125380
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "fixture",
+          "modelID": "fixture"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_1a24a10c4001XadyDrh1yg9Mmu",
+        "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Complete a first history task",
+          "id": "prt_1a24a10c6001aB88A1wVtoEoTH",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a10c4001XadyDrh1yg9Mmu"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_1a24a10c4001XadyDrh1yg9Mmu",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-Qt3k8W",
+          "root": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "fixture",
+        "providerID": "fixture",
+        "time": {
+          "created": 1793724125564,
+          "completed": 1793724126096
+        },
+        "finish": "stop",
+        "id": "msg_1a24a117c0010E0N9Bum3tWoVQ",
+        "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Completed.",
+          "time": {
+            "start": 1793724125919,
+            "end": 1793724125919
+          },
+          "id": "prt_1a24a12db001U3cSYaxG1BoH7Z",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a117c0010E0N9Bum3tWoVQ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1793724126125
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "fixture",
+          "modelID": "fixture"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_1a24a13ad001TlW37zinljrTb1",
+        "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Start the next task while waiting for updated guidance",
+          "id": "prt_1a24a13ad002k6vXGg5ZcrrB2Y",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a13ad001TlW37zinljrTb1"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_1a24a13ad001TlW37zinljrTb1",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-Qt3k8W",
+          "root": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        },
+        "modelID": "fixture",
+        "providerID": "fixture",
+        "time": {
+          "created": 1793724126133,
+          "completed": 1793724126481
+        },
+        "id": "msg_1a24a13b50014PW1xTkgvn5oXW",
+        "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ"
+      },
+      "parts": []
+    },
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1793724126323
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "fixture",
+          "modelID": "fixture"
+        },
+        "system": "replay-system",
+        "variant": "chosen",
+        "id": "msg_1a24a1473001iMla2S0Rd1q3rl",
+        "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "OVERFLOW_GUIDE: preserve history and write the current artifact only.",
+          "id": "prt_1a24a14730021c6nXV3i5dTkKN",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a1473001iMla2S0Rd1q3rl"
+        },
+        {
+          "type": "text",
+          "synthetic": true,
+          "text": "Called the Read tool with the following input: {\"filePath\":\"replay.txt\"}",
+          "id": "prt_1a24a1473003dksavklqE9js96",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a1473001iMla2S0Rd1q3rl"
+        },
+        {
+          "type": "text",
+          "synthetic": true,
+          "text": "native replay attachment",
+          "id": "prt_1a24a1473004kVVMNZq9m6y9p1",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a1473001iMla2S0Rd1q3rl"
+        },
+        {
+          "type": "file",
+          "mime": "text/plain",
+          "filename": "replay.txt",
+          "url": "data:text/plain;base64,bmF0aXZlIHJlcGxheSBhdHRhY2htZW50",
+          "id": "prt_1a24a1473005Ar1i6HvRkTSCBv",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a1473001iMla2S0Rd1q3rl"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "user",
+        "model": {
+          "providerID": "fixture",
+          "modelID": "fixture"
+        },
+        "agent": "build",
+        "time": {
+          "created": 1793724126484
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_1a24a15140016F3i8JkFVGO6YC",
+        "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ"
+      },
+      "parts": [
+        {
+          "type": "compaction",
+          "auto": true,
+          "overflow": true,
+          "id": "prt_1a24a1516001MrfZJPGMRuovaj",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a15140016F3i8JkFVGO6YC"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "assistant",
+        "parentID": "msg_1a24a15140016F3i8JkFVGO6YC",
+        "mode": "compaction",
+        "agent": "compaction",
+        "summary": true,
+        "path": {
+          "cwd": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-Qt3k8W",
+          "root": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "fixture",
+        "providerID": "fixture",
+        "time": {
+          "created": 1793724126495,
+          "completed": 1793724126820
+        },
+        "finish": "stop",
+        "id": "msg_1a24a151f001vbNzkr5OtUQ1Gx",
+        "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Summary: preserve completed history and follow latest user guidance.",
+          "time": {
+            "start": 1793724126612,
+            "end": 1793724126612
+          },
+          "id": "prt_1a24a1592001QzU67GxcjQEFG6",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a151f001vbNzkr5OtUQ1Gx"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1793724126821
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "fixture",
+          "modelID": "fixture"
+        },
+        "system": "replay-system",
+        "variant": "chosen",
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_1a24a1665001Ml7w1Ixyy8JLHa",
+        "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "OVERFLOW_GUIDE: preserve history and write the current artifact only.",
+          "id": "prt_1a24a1667001gyLW7YU3CzewOx",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a1665001Ml7w1Ixyy8JLHa"
+        },
+        {
+          "type": "text",
+          "synthetic": true,
+          "text": "Called the Read tool with the following input: {\"filePath\":\"replay.txt\"}",
+          "id": "prt_1a24a1667003A16Z5pJcfD2bmT",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a1665001Ml7w1Ixyy8JLHa"
+        },
+        {
+          "type": "text",
+          "synthetic": true,
+          "text": "native replay attachment",
+          "id": "prt_1a24a16680025XXbPQnMHV9WAa",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a1665001Ml7w1Ixyy8JLHa"
+        },
+        {
+          "type": "file",
+          "mime": "text/plain",
+          "filename": "replay.txt",
+          "url": "data:text/plain;base64,bmF0aXZlIHJlcGxheSBhdHRhY2htZW50",
+          "id": "prt_1a24a1668004aDUmk4Td2xaxs7",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a1665001Ml7w1Ixyy8JLHa"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_1a24a1665001Ml7w1Ixyy8JLHa",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "chosen",
+        "path": {
+          "cwd": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-Qt3k8W",
+          "root": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "fixture",
+        "providerID": "fixture",
+        "time": {
+          "created": 1793724126826,
+          "completed": 1793724127387
+        },
+        "finish": "tool-calls",
+        "id": "msg_1a24a166a001cuLT5bfJ6ZpCvZ",
+        "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ"
+      },
+      "parts": [
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_0",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "printf current > '/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-Qt3k8W/overflow-current.txt'",
+              "description": "current action after native replay"
+            },
+            "output": "",
+            "metadata": {
+              "output": "",
+              "exit": 0,
+              "description": "current action after native replay",
+              "truncated": false
+            },
+            "title": "current action after native replay",
+            "time": {
+              "start": 1793724127021,
+              "end": 1793724127068
+            }
+          },
+          "id": "prt_1a24a1727001kpwYmGYxX6C4B4",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a166a001cuLT5bfJ6ZpCvZ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_1a24a1665001Ml7w1Ixyy8JLHa",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "chosen",
+        "path": {
+          "cwd": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-Qt3k8W",
+          "root": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "fixture",
+        "providerID": "fixture",
+        "time": {
+          "created": 1793724127390,
+          "completed": 1793724127808
+        },
+        "finish": "stop",
+        "id": "msg_1a24a189e001mv0myKrezj3pkR",
+        "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Completed.",
+          "time": {
+            "start": 1793724127594,
+            "end": 1793724127594
+          },
+          "id": "prt_1a24a1969001sYDIQevfLVkBuw",
+          "sessionID": "ses_e5db5efccffezt88FdoGW36rOZ",
+          "messageID": "msg_1a24a189e001mv0myKrezj3pkR"
+        }
+      ]
+    }
+  ]
+}

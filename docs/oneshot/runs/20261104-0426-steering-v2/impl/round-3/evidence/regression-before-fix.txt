@@ -1,0 +1,120 @@
+✖ three consecutive summaries transfer current coverage, preserve failures and exclude late edits (12.957291ms)
+✖ summary request itself carries priority guidance without duplicating original attachments (4.249125ms)
+✖ overflow native replay binds new part IDs only when the request includes exact replay content; media=false (0.629792ms)
+✖ overflow native replay binds new part IDs only when the request includes exact replay content; media=true (0.500334ms)
+✔ native replay rejects invalid association: no-overflow (0.81475ms)
+✔ native replay rejects invalid association: missing-attachment (0.387166ms)
+✔ native replay rejects invalid association: different-metadata (0.372083ms)
+✔ native replay rejects invalid association: observed-input (0.487375ms)
+✔ native replay rejects invalid association: missing-request (0.367458ms)
+✖ saved guidance edited to no effective content stops blocking, then restoration gates old snapshots: whitespace (0.343458ms)
+✖ saved guidance edited to no effective content stops blocking, then restoration gates old snapshots: ignored (0.286333ms)
+✖ saved guidance edited to no effective content stops blocking, then restoration gates old snapshots: synthetic (0.212208ms)
+✖ more than 128 safely idle terminal sessions release global capacity: MessageAbortedError (7.913875ms)
+✖ more than 128 safely idle terminal sessions release global capacity: APIError (5.841375ms)
+✔ terminated sessions with running parts or no idle boundary remain protected from eviction (3.373209ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 6
+ℹ fail 9
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 181.974125
+
+✖ failing tests:
+
+test at external-plugins/steering/test/state.test.mjs:404:1
+✖ three consecutive summaries transfer current coverage, preserve failures and exclude late edits (12.957291ms)
+  Error: STEERING_STALE_CONTEXT: request did not prepare latest guidance (m04). [Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools.
+      at SteeringState.gate (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:206:11)
+      at tool.execute.before (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/index.ts:17:43)
+      at Object.call (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:42:40)
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:412:55)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at external-plugins/steering/test/state.test.mjs:430:1
+✖ summary request itself carries priority guidance without duplicating original attachments (4.249125ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(JSON.stringify(output).includes('Latest user guidance takes priority'))
+  
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:435:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at external-plugins/steering/test/state.test.mjs:456:36
+✖ overflow native replay binds new part IDs only when the request includes exact replay content; media=false (0.629792ms)
+  Error: STEERING_STALE_CONTEXT: request did not prepare latest guidance (m04). [Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools.
+      at SteeringState.gate (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:206:11)
+      at tool.execute.before (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/index.ts:17:43)
+      at Object.call (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:42:40)
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:460:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at external-plugins/steering/test/state.test.mjs:456:36
+✖ overflow native replay binds new part IDs only when the request includes exact replay content; media=true (0.500334ms)
+  Error: STEERING_STALE_CONTEXT: request did not prepare latest guidance (m04). [Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools.
+      at SteeringState.gate (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:206:11)
+      at tool.execute.before (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/index.ts:17:43)
+      at Object.call (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:42:40)
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:460:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at external-plugins/steering/test/state.test.mjs:483:60
+✖ saved guidance edited to no effective content stops blocking, then restoration gates old snapshots: whitespace (0.343458ms)
+  Error: STEERING_STALE_CONTEXT: request did not prepare latest guidance (m04). [Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools.
+      at SteeringState.gate (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:206:11)
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:488:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at external-plugins/steering/test/state.test.mjs:483:60
+✖ saved guidance edited to no effective content stops blocking, then restoration gates old snapshots: ignored (0.286333ms)
+  Error: STEERING_STALE_CONTEXT: request did not prepare latest guidance (m04). [Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools.
+      at SteeringState.gate (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:206:11)
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:488:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at external-plugins/steering/test/state.test.mjs:483:60
+✖ saved guidance edited to no effective content stops blocking, then restoration gates old snapshots: synthetic (0.212208ms)
+  Error: STEERING_STALE_CONTEXT: request did not prepare latest guidance (m04). [Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools.
+      at SteeringState.gate (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:206:11)
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:488:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at external-plugins/steering/test/state.test.mjs:494:57
+✖ more than 128 safely idle terminal sessions release global capacity: MessageAbortedError (7.913875ms)
+  Error: STEERING_CAPACITY: 128 sessions retain pending evidence; restart or finish them
+      at SteeringState.state (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:48:23)
+      at SteeringState.observe (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:123:20)
+      at chat.message (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/index.ts:14:46)
+      at observe (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:20:45)
+      at Object.save (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:29:35)
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:497:52)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at external-plugins/steering/test/state.test.mjs:494:57
+✖ more than 128 safely idle terminal sessions release global capacity: APIError (5.841375ms)
+  Error: STEERING_CAPACITY: 128 sessions retain pending evidence; restart or finish them
+      at SteeringState.state (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:48:23)
+      at SteeringState.observe (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:123:20)
+      at chat.message (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/index.ts:14:46)
+      at observe (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:20:45)
+      at Object.save (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:29:35)
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:497:52)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

@@ -1,3 +1,5 @@
+// LEGACY v0.3 ledger evidence only; not a v2 verification command.
+// Replacement: node scripts/verify-steering.mjs (real demos: scripts/steering-v2-demo.mjs).
 // Installed-product recovery for a native message ID allocated before the
 // assistant, but persisted after that assistant's request snapshot.
 import http from 'node:http'

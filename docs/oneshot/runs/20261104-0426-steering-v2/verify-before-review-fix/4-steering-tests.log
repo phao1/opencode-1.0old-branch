@@ -1,0 +1,41 @@
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=false (4724.204042ms)
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=true (4054.378417ms)
+✔ A3 late-save native-ID double barrier; plugin=false (3587.913792ms)
+✔ A3 late-save native-ID double barrier; plugin=true (3912.476292ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=false (3732.770042ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=true (3813.929083ms)
+✔ A6 native SubtaskPart completes with mixed input; ordinary task is gated (3942.744209ms)
+✔ A6 abort suppresses continuation of saved guidance (3530.493167ms)
+✔ A6 revert before late-save completion preserves undo and supports redo (3934.096208ms)
+✔ all effective parts must save; request reminder leaves original attachments unchanged (13.221291ms)
+✔ ignored, synthetic and empty input are not guidance (0.457042ms)
+✔ one calibration per request; stream deltas and many mapped tools do not scan history (102.973625ms)
+✔ request assistant must be unique; never associate the last historical assistant (0.690042ms)
+✔ multi-session observations do not leak (0.439042ms)
+✔ native part.id path and unknown task query failure never throw; ordinary task still gates (0.355917ms)
+✔ stable native ID ordering, edits and partial/whole deletion keep useful guidance (0.606041ms)
+✔ native system reminder normalization does not turn wrapping into an edit (0.442375ms)
+✔ late save resumes at most once, preserving model/agent/system/variant/format and omitting tools (238.081625ms)
+✔ control permit invalidated before save: cancel (79.2095ms)
+✔ control permit invalidated before save: error (85.131834ms)
+✔ control permit invalidated before save: delete (82.183791ms)
+✔ control permit invalidated before save: compact (82.043834ms)
+✔ control permit invalidated before save: revert (83.9305ms)
+✔ control permit invalidated before save: new input (78.616625ms)
+✔ control permit invalidated before save: prepared (84.672792ms)
+✔ dispatch checks revert via SDK even if event absent; no retries after unknown outcome (385.526625ms)
+✔ restart history never becomes eligible, status remains callable offline, compaction transform does not invent preparation (102.885792ms)
+✔ composition preserves both tools and event handlers (0.423292ms)
+✔ SDK calibration cannot confirm a newly observed attachment set while only its text has saved (0.778333ms)
+✔ normal tool missing events receives one coalesced fallback, never another assistants snapshot (0.914875ms)
+✔ a failed candidate confirmed absent by a later full calibration does not block forever (0.448042ms)
+✔ delayed old part events cannot admit a stale assistant after an in-place edit (0.294166ms)
+✔ delayed removal events cannot retire guidance still present in native history (0.361041ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 35322.062583

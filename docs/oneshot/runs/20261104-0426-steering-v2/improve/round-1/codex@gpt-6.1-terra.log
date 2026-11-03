@@ -1,0 +1,1997 @@
+OpenAI Codex v0.166.0-alpha.5.1
+--------
+workdir: /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+model: gpt-6.1-terra
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: high
+reasoning summaries: none
+session id: 01a1a208-71ff-7f91-9e34-c23d567bd647
+--------
+user
+读取并执行 /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/improve/round-1/codex@gpt-6.1-terra.prompt.md 中的指令，把答案输出到 stdout。
+
+codex
+我会先读取指定提示文件及其引用的必要上下文，再按其中的要求执行，并将结果直接输出。
+exec
+/bin/zsh -lc 'cat docs/oneshot/runs/20261104-0426-steering-v2/improve/round-1/codex@gpt-6.1-terra.prompt.md' in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+Any suggestion to improve this design?
+
+只读评审，不修改任何文件，不运行会改变仓库的命令。
+仓库：/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+设计：/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md
+原始需求：/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/REQUIREMENT.md
+需求分析：/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/BRAINSTORM.md
+上一轮 SUMMARY.md：无（上一轮汇总不存在）
+run：/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2；轮次：1
+阅读原始需求、需求分析、设计、上一轮汇总（若存在）、仓库 AGENTS.md 与相关实现。
+对照需求判断设计是否满足验收、是否遗漏或越界。按 P0/P1/P2 列出建议，给出理由、影响和可定位证据（path:line）。
+说明可选方案与取舍，不凭空扩展范围；无建议时说明检查范围。只输出评审意见。
+
+exec
+/bin/zsh -lc 'nl -ba docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md' in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+exec
+/bin/zsh -lc 'nl -ba docs/oneshot/runs/20261104-0426-steering-v2/REQUIREMENT.md && nl -ba docs/oneshot/runs/20261104-0426-steering-v2/BRAINSTORM.md' in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+     1	# Steering v2 外置插件设计
+     2	
+     3	版本：v1.0；更新日期：2026-11-04（Pacific/Auckland）
+     4	
+     5	## 目标与范围
+     6	
+     7	需求完整来源：本目录 REQUIREMENT.md；前期源码核对、默认假设见 BRAINSTORM.md。本设计必须足以让全新 Generator 独立实现。
+     8	
+     9	在 OpenCode v1.3.17（只读 submodule `517e6c9aa`）上，用 `@opencode-ai/plugin@1.3.17` 公开 hooks 与 SDK 重写 steering。独立包 `external-plugins/steering/` 拥有自己的 src、test、package.json、构建与类型配置；单文件 dist/index.js 可直接由官方 `~/.local/opencode-1.3.17/opencode` 加载。保留唯一函数导出 SteeringPlugin，防止旧 loader 重复调用。聚合入口切换到新包；不改 kernel tracked 源码，不 import kernel 私有类型或 extension。
+    10	
+    11	用户直接在运行中的会话输入纠偏；插件在尚未通过 gate 的工具入口阻断旧上下文，在下一请求明确“最新指导优先，保留已完成结果，报告跳过动作”，成功空闲后恢复本进程已观察但尚未准备的插话。不创建第二个消息库或复制用户消息。不提供独立队列命令、紧急中止或运行中子代理转发。
+    12	
+    13	### 缺口裁决
+    14	
+    15	| 缺口 | 范围 | 行为和边界 |
+    16	| --- | --- | --- |
+    17	| G1 工具间隙 | 部分做，MVP 必需 | 普通公开 before hook 尚未通过的旧上下文工具抛可识别 STEERING_STALE_CONTEXT，错误结果交给模型；同 assistant 所有后续 stale 调用都拦。已过 gate、batch 内部、StructuredOutput、native subtask 特殊路径不能承诺。 |
+    18	| G2 完成边界 | 做，有界、非原子 | 成功 idle 后核实仍有已保存未准备指导，最多一次/指导版本发 synthetic continuation，保留原指导。取消/错误/删除/压缩后不自动复活；重启不重放旧 pending。公开 API 无原子 cancel+dispatch，剩余竞态明确记录。 |
+    19	| G3 吸收提示 | 做 | 仅在请求副本加入明确 steering reminder（最新指导优先、保留已完成动作、跳过旧工具原因）；原始文本/附件不变。不宣称语义采纳。 |
+    20	| G4 用户反馈 | 做最小提示 | showToast 尽力提示插话已观察/准备/跳过/继续，失败不改变业务；steering_status 返回简洁进程内证据，provider/adopted 为 unknown。 |
+    21	| G5 子代理 | 不做运行中转发 | 正常 task 工具若尚未过 gate 可拦；已运行 task 等返回，native subtask 不在 hook 抛异常，避免悬挂。 |
+    22	| G6 长工具 | 不做紧急 abort | 已运行工具继续；用户仍可原生 Esc，插件不得把取消恢复成自动执行。 |
+    23	| G7 queue/follow-up | 不做 | 普通有效活动输入均为 steering；不引入第二队列。 |
+    24	
+    25	## 验收标准
+    26	
+    27	| ID | 可验证行为 | 检查方法 |
+    28	| --- | --- | --- |
+    29	| A1 | 包独立、精确公共 API、单文件构建，导出仅 SteeringPlugin，安装后可加载，无 kernel/extension 私有 import | 包 build/typecheck，scripts/package-steering.mjs 的 npm pack + offline 安装/import，真实官方内核加载 |
+    30	| A2 | G1 同一次模型响应的多工具调用，插话到达后尚未通过 gate 的旧调用均 error，旧文件不存在；新请求看到原指导，后续新动作成功 | 官方 OpenCode + 脚本 SSE OpenAI 模型；控制 first-call/后续调用释放屏障，至少两个 tool_calls 属同一 assistant。另测无插件对照旧动作确实执行 |
+    31	| A3 | G2 插话在最后一次请求准备后、最终响应完成前保存，原运行结束后自动继续，指导恰好保留一次，控制不循环、普通 idle 不重启 | 脚本 HTTP 模型用 final-response 屏障，确认指导已保存后释放终止响应；assert 原生停止分支与插件 recovery 证据，不拿自然下一轮冒充 recovery |
+    32	| A4 | G3 插话在模型请求中带明确最新优先/跳过旧动作提示，原始保存消息/附件保持；prepared 与 received/adopted 分离 | 抓取模型 HTTP body + session messages，单测附件/ignored/synthetic/空输入；真实运行证明请求确实带入 |
+    33	| A5 | 无插话时工具、消息与完成行为不变，插件不额外模型请求；多会话不串扰 | 确定性集成开/关插件对照 + 单测会话隔离 |
+    34	| A6 | 取消/错误/删除/压缩后不自动继续；native subtask 特殊调用不在未捕获路径抛错；状态无磁盘文件损坏依赖 | 单测生命周期与取消-before-dispatch、重启历史不重放；至少真实内核 abort 集成证明不复活；native task 公开 callID/part.id 差别见固定源码 |
+    35	| A7 | 不每个流式事件读全量历史，不每个正常工具重复全量读取；缓存有生命周期清理和明确上限，异步 event/toast/恢复失败不 unhandled rejection | SDK 调用次数测试（多工具、流式事件）、精简代码审查，根测试/typecheck |
+    36	| A8 | 真实模型 headless 开/关插件对照，多步任务运行中插话，启用后阻止尚未执行的旧动作并写 SUMMARY；真实 TUI 用 tmux 输入、capture-pane 留档，同条件关插件对照 | 可复现 scripts/steering-v2-demo.mjs（可选择 --tui）真实 Codex CLI bridge；存 messages、模型请求/响应与 Codex JSONL/usage、文件副作用、进程日志和屏幕，结果报告明确 source=real；失败不得替换成脚本模型 |
+    37	| A9 | 根默认测试包含确定性集成或文档明确 CI 命令；旧入口不再默认使用，README 与 baseline SPEC/DESIGN/STEERING 同步 | 根回归、kernel boundary、文档与引用核对；新验收成功后退役旧 ledger/旧测试与依赖 ledger 的历史探针 |
+    38	
+    39	## 关键决策
+    40	
+    41	| 决策 | 备选 | 选择与理由 | 代价/风险 |
+    42	| --- | --- | --- | --- |
+    43	| 状态 | 旧持久化 ledger / 内存小状态 / 新 SQL inbox | 内存，消息持久化交给原生内核；不复制 inbox | 进程重启无自动续跑、状态工具不展示旧进程证据 |
+    44	| 工具归属 | 每 gate 全量读 / 事件映射+快照+有界 fallback | 请求 transform 绑定当前 assistant 与指导版本；tool part 事件映射 callID→assistant；事件缺失时合并一次必要的公开 SDK 查询，不能把另一 assistant 的快照误用于旧调用 | 事件非 await，必须测试延迟与未知归属；无法确认时对 pending 的普通工具保守拒绝，native subtask 除外 |
+    45	| 指导生效 | chat.message 即认为 saved / 等持久化 / 每 gate 查全史 | chat.message 记录候选，保存事件或有界 SDK message 验证后确认为 saved；持续增长的内存不能依赖全量历史 | hook 在保存前，避免把失败保存永久当 pending；transform 可直接从已保存 history 校准 |
+    46	| 文本版本 | 仅 ID / 文本附件签名 | 对活动指导记录稳定的有效内容版本（排除 ignored/synthetic、归一化原生 reminder）；快照绑定该版本，不把普通 transform 包装算编辑 | 必须防止删改后误拦，压缩/undo 不复活旧 pending |
+    47	| 提示 | 修改原始消息 / 请求副本追加 | 请求副本追加简洁 steering reminder，并在 blocked error 中给模型明确重读指引 | 不证明模型语义采纳，无注入用户原文至磁盘日志 |
+    48	| 恢复 | abort/replay / 空消息 / synthetic 继续 | 成功 idle 后 debounce + SDK status/messages 复核 + 单飞的 promptAsync synthetic control，带唯一 metadata 标记与指导 ID；使用最新指导 model/agent。控制不算新指导，不复制用户内容，不降低权限或 format | 公开无原子 expected-turn；autoResume:false 可关闭；SDK v1 缺 runtime synthetic 等字段需窄类型适配 |
+    49	| 反馈 | 新 TUI / toast + status | 公共 showToast，限频且失败可忽略；steering_status 为进程内只读状态 | TUI QUEUED 仍由原生处理，toast 可被其他会话显示 |
+    50	| 旧代码处理 | 留双实现 / 立即删 / 验收后退役 | 新包验收成功再移除旧 ledger 与 plugin 测试；compose 保留且单测。scripts/verify-steering.mjs 指向新确定性入口；旧专属脚本移除或顶部明确 LEGACY 且不再推荐，历史文档不重写为新事实 | 避免破坏一键打包和 smoke；所有引用需要核对 |
+    51	
+    52	### 最小实现职责
+    53	
+    54	可用 index.ts + 一个 state.ts（或同等简单结构），不要求特定类。不要重复 596 行旧 ledger；生产逻辑以几百行内可清晰审查为目标，超出应有具体原因。状态至少覆盖：当前会话 lifecycle/epoch、活动指导与其 saved/prepared 版本、assistant 请求快照、必要的 call 映射、单次恢复标记/计时器。idle/删除/压缩/错误及时释放不需要的映射；活跃会话和工具快照限额写明，不能静默丢弃 pending 后放行旧工具。不要引入通用事件框架。
+    55	
+    56	事件驱动读取流式变化，避免每个 delta 扫历史；仅在真正需要确认保存/工具归属/idle 恢复时用公开 SDK，有界 timeout、合并同会话并发查询。未观察到活动状态的历史输入不触发自动恢复。event 回调立即更新取消/删除 epoch，异步 continuation 在每个 await 后重新检查，catch 全部错误；不在网络失败时自动无限重试。恢复最多一次/指导版本，失败报告需人工重试。
+    57	
+    58	工具 before 输入只有 tool/sessionID/callID（无 messageID）；不可编造 API。原生 native subtask 用 part.id 的路径要通过实际 part 映射确认或用明确的安全豁免，不得让拒绝异常逃到未捕获路径。普通模型 task 仍经正常 tool-error 路径。MCP 过 gate 后的权限等待与 batch 内部子工具属于限制。
+    59	
+    60	### 确定性集成设施
+    61	
+    62	使用真实官方 1.3.17 server，隔离 XDG_CONFIG_HOME/DATA_HOME/CACHE_HOME/STATE_HOME、OPENCODE_TEST_HOME，禁项目配置、禁模型抓取，title/summary 禁用以避免干扰请求计数。可复用 scripts/lib/kernel-lab.mjs 的生命周期思想，但不要为了测试改只读内核；优先给新包建立小的独立 fixture，OPENCODE_BINARY 可覆盖，缺二进制时明确失败而非 silent skip。
+    63	
+    64	本地 HTTP 服务实现 OpenAI chat completions SSE，脚本返回真正 tool_calls（支持同一 response 多个）。工具使用真实 bash 或精简 fixture tool 作为可观察屏障；假模型不替代 OpenCode。测试按保存消息/进入 provider 请求等条件同步，不用大 sleep 猜时序。G1 的流式响应先释放一个调用或先持有全部调用，保存插话后释放至少两个未过 gate 的旧调用；一并记录 concurrency 的 gate 边界。G2 将最终响应延迟，插话保存后释放 stop，验证额外请求是插件 recovery 触发。测试均有超时与 finally kill/close，错误保存服务日志；CI 不需要登录或付费网络模型。
+    65	
+    66	真实演示可复用 scripts/lib/codex-cli-bridge.mjs；已有桥接一次一个工具足以跨请求演示 stale response（在真实 Codex 作出下一工具决策后、转发给 OpenCode 前设可观察屏障，提交插话，随后释放原始决策；启停条件一致）。如扩展多工具必须向后兼容既有测试。不得把脚本决定工具冒充真实模型；记录 Codex 原始 JSONL/最终响应/usage，敏感凭据不得写入证据。headless 和 tmux TUI 均用真实模型各做启/停对照，tmux 使用唯一 socket/session、捕获屏幕、清理自己创建的会话，不干扰用户 tmux。演示命令提供输出目录参数，完整可读日志可以保留 .codeagent（ignored），在 run 保存精简可审查报告、相关关键片段/屏幕，证据索引链接到实际文件。
+    67	
+    68	## 实施计划
+    69	
+    70	1. `external-plugins/steering/src/index.ts`、必要时 `state.ts`：上述 public Hooks、只读 status、提示、gate、恢复。包 `package.json` 改 v2 版本（例如 0.4.0）、固定 plugin peer/dev 1.3.17，独立 build 脚本/tsconfig；自己的 test/ 下有行为测试和真实内核集成。
+    71	2. `external-plugins/src/index.ts` 引用新包。保留 `external-plugins/src/steering/compose.ts` 合并工具与 event 能力。新包不得反向 import 聚合入口或 extension。
+    72	3. `external-plugins/steering/test/` 单元与确定性集成；测试共享设施按需放同级 fixture/helper，内核启动进程、HTTP 流、状态轮询有超时。根 package.json 纳入新测试；根 tsconfig 包含新包代码。
+    73	4. `scripts/package-steering.mjs` 改新入口并保持 npm pack / 干净安装 / 唯一导出 / 私有引用扫描；`scripts/steering-v2-demo.mjs` 提供 headless/TUI 可复现真实演示；`scripts/lib/codex-cli-bridge.mjs` 仅按演示留档需要最小扩展，不改模型选择行为。`scripts/verify-steering.mjs` 改为新集成入口或明确委托。
+    74	5. 在新实现验收成功后移除 `external-plugins/src/steering.ts`、`external-plugins/src/steering/ledger.ts` 与旧 `test/steering/plugin.test.mjs`（有价值契约迁入新测试）；依赖 ledger 的专属 probe/verify 顶部标 LEGACY 并说明替代命令，或有证据后删除。不要改无关 worker/capability-watch/one-shot 框架或其他 run。
+    75	6. 更新 `external-plugins/steering/README.md`（安装、构建、普通输入、autoResume、status、G1-G7 限制、CI/演示命令）、`external-plugins/README.md` 必要入口、`docs/baseline/STEERING.md`、`SPEC.md`、`DESIGN.md` 的 steering 段（版本与更新记录）；保留旧证据的历史身份。关键验证汇总写本 run 的实现报告及 README 索引。
+    76	
+    77	## 验证命令
+    78	
+    79	均从仓库根执行，CLI checks 逐条登记；Bun 用绝对路径避免 PATH 差异。
+    80	
+    81	1. `node_modules/.bin/tsc --noEmit -p .`
+    82	2. `node_modules/.bin/tsc --noEmit -p external-plugins/steering`
+    83	3. `/Users/penghao/.bun/bin/bun run --cwd external-plugins/steering build`
+    84	4. `node --test external-plugins/steering/test/*.test.mjs`（包括真实官方 OpenCode 确定性集成，按实现文件名安排）
+    85	5. `npm test`
+    86	6. `BUN_BINARY=/Users/penghao/.bun/bin/bun node scripts/package-steering.mjs`
+    87	7. `node scripts/check-kernel.mjs`
+    88	8. `node scripts/steering-v2-demo.mjs --out .codeagent/steering-v2-demo-headless`（真实模型 headless 开/关对照）
+    89	9. `node scripts/steering-v2-demo.mjs --tui --out .codeagent/steering-v2-demo-tui`（真实模型 tmux TUI 开/关对照）
+    90	
+    91	若演示脚本支持 --check 验证已有证据，仍必须先运行真实完整演示；不能只验一份旧 JSON。实现过程中命令如有必要更改，必须宿主回写设计和 checks，不能静默跳过验收。
+    92	
+    93	## 变更记录
+    94	
+    95	| 版本 | 日期 | 改动与理由 |
+    96	| --- | --- | --- |
+    97	| v1.0 | 2026-11-04 | 原生/四参考实现调研后初版：内存状态、公开 gate、有界 continuation、确定性真内核集成与真实模型/TUI 对照。 |
+
+ succeeded in 0ms:
+     1	# 需求：OpenCode 1.0（v1.3.17）外置插件「插话 steering」v2
+     2	
+     3	## 用户故事
+     4	agent 执行一个多步任务的过程中，用户可以随时插入新指令或纠偏（例如"别改 A 了，改 B"、"换成用 pnpm"），
+     5	agent 在合适时机吸收插话并调整方向——工具调用间隙、下一轮 LLM 调用前——而不需要用户中断（Esc）后重来。
+     6	
+     7	## 硬约束
+     8	1. 外置插件优先：放在 `external-plugins/steering/`（独立包：自己的 src/、test/、package.json、构建脚本），只使用 `@opencode-ai/plugin@1.3.17` 公开 hook 与 SDK client；不得 import `agent-kernel/` 私有模块或 `agent-kernel-extension/`。确需改内核时必须在 design 中写明理由并单独评审（默认不改）。
+     9	2. 内核是 `agent-kernel/`（OpenCode v1.3.17，commit 517e6c9aa，只读参考，禁止修改）。官方 1.3.17 二进制：`~/.local/opencode-1.3.17/opencode`。
+    10	3. 旧实现 `external-plugins/src/steering.ts`、`external-plugins/src/steering/ledger.ts`（596 行 ledger）质量问题已审计（见 `docs/review/legacy-codex-audit.md` 的 L-08/L-09/L-10 及第 3 节），本次重写。旧 `test/steering/plugin.test.mjs` 里的行为契约可作为参考用例来源，但不要照搬其复杂度。
+    11	4. 遵守仓库 AGENTS.md 的编码准则（简单优先、外科手术式修改、目标驱动验证）。
+    12	
+    13	## Brainstorm 必须先做的调研（结论写入 BRAINSTORM.md，带源码路径:行号）
+    14	对比以下四个实现的 steering / 消息队列 / 中断机制，并与 OpenCode 1.3.17 原生能力对照，择优设计：
+    15	- OpenCode 2.0：`/Users/penghao/Documents/code/CodingAgent/opencode/opencode`（SQL inbox、steer/queue 优先级等）
+    16	- pi：`/Users/penghao/Documents/code/CodingAgent/pi/pi`（steering 与 follow-up 两个队列及领取时机）
+    17	- DSH：`/Users/penghao/Documents/code/CodingAgent/DSH/deepseek-harness`（next-step / next-turn inbox）
+    18	- Codex：`/Users/penghao/Documents/code/CodingAgent/codex/codex`（active turn 中 steer 输入、expected turn、注入时机、中断）
+    19	- OpenCode 1.3.17 原生：`agent-kernel/packages/opencode/src/session/prompt.ts`（loop 每步重读消息；新用户消息被 `<system-reminder>` 包裹；`Runner.ensureRunning` 在运行中会 join 已有运行）、`effect/runner.ts`、TUI 的 QUEUED 标签、`plugin/index.ts` 的 hook 触发方式。
+    20	旧对照文档 `docs/baseline/STEERING-SOURCE-COMPARISON-20261028.md` 可参考，但其 Codex "steer_input 验证取消" 一条已被审计指出不准确，需重新核实。
+    21	
+    22	## 已知的 1.3.17 原生缺口（供 brainstorm 核实与取舍，不是既定方案）
+    23	- G1 工具间隙：同一步 LLM 输出的多个工具调用（或模型尚未看到插话时已决定的调用）在插话后仍会继续执行，可能产生已被用户否定的副作用。
+    24	- G2 完成边界竞态：插话恰好在 loop 最后一次读消息之后、运行结束之前保存时，`ensureRunning` join 已结束中的运行，插话被"孤立"，直到用户下次发消息才处理。
+    25	- G3 吸收提示：原生包裹语是通用的 "Please address this message and continue with your tasks."，没有明确"以最新插话为准、哪些旧动作被跳过"。
+    26	- G4 用户反馈：TUI 只显示 QUEUED，用户不知道插话是否/何时被吸收。（`client.tui.showToast` 等公开 API 可用性需核实）
+    27	- G5 子代理：父会话正在执行 `task` 子代理时，插话要等子代理结束才被看到。
+    28	- G6 长时间运行的单个工具（如 sleep 600 的 bash）期间插话无法生效；是否提供"紧急插话 = 中止当前工具但保留会话并立即带着插话继续"由设计决定。
+    29	- G7 steer（立即注入）与 queue/follow-up（本轮结束后再处理）是否需要区分。
+    30	设计需给出每个缺口：做/不做/部分做 + 理由；MVP 至少覆盖 G1、G2、G3，并对用户可见行为负责。
+    31	
+    32	## 验收标准（design 中细化为带 ID 的可验证条目）
+    33	- 类型检查、构建（产出可被 OpenCode 加载的单文件 JS 插件）、单元测试、**集成测试**全部通过，并接入根 `package.json` 的 test 脚本或文档写明命令。
+    34	- 集成测试必须真实启动 OpenCode（官方 1.3.17 二进制或 agent-kernel 源码）+ 插件，用**脚本化的假模型**（本地 OpenAI 兼容 HTTP 服务，按脚本返回 tool_calls/文本，可做到一次返回多个 tool_calls）做确定性测试：覆盖 G1/G2/G3 的行为，以及"无插话时行为不变"。不依赖真实模型、不花钱、可在 CI 跑。
+    35	- 端到端演示（可复现脚本 + 留档）：实际启动 opencode，用真实模型执行多步任务，运行中插话，能看到 agent 吸收插话并改变行为（例如原计划创建 step1..step5，插话后停止并改为写 SUMMARY），附运行日志；另做一个 TUI 版演示（tmux 驱动真实 TUI，`tmux capture-pane` 抓屏存档）。同条件下关闭插件做对照。
+    36	  - 真实模型通道：本机 OpenCode Zen 免费模型均 429 限流；可用的是已登录的 Codex CLI（`/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex`）。仓库已有 `scripts/lib/codex-cli-bridge.mjs`（把 codex exec 包装成 OpenAI 兼容 chat completions，目前一次只返回一个工具调用；可扩展为支持多个），作为演示的模型桥接测试设施使用。
+    37	- 文档：插件 README（安装/配置/用法/限制）；按仓库约定同步 `docs/baseline/STEERING.md`（版本号 + 变更记录）及 `docs/baseline/SPEC.md`、`docs/baseline/DESIGN.md` 中 steering 相关段落。
+    38	- 旧 steering 实现与只服务旧实现的脚本/测试在新实现验收通过后移除或标注，处理方式写入 design。
+    39	
+    40	## 环境
+    41	- node v24、bun 1.3.11（`~/.bun/bin/bun`）、tmux（`/opt/homebrew/bin/tmux`）、codex CLI（见上）。macOS 无 `timeout` 命令。
+    42	- OpenCode 运行时用隔离的 XDG_* 目录，不要污染用户 `~/.local/share/opencode`。
+    43	
+     1	# Brainstorm — steering v2
+     2	
+     3	版本：v1.0；日期：2026-11-04（Pacific/Auckland）
+     4	
+     5	## 需求与范围
+     6	
+     7	在固定 OpenCode v1.3.17 上重写独立外置 steering 包。普通活动会话输入即插话；补齐尚未经过公开检查点的旧工具拦截、完成边界的有界继续和明确提示。保留原生消息存储与调度，不复刻内核 inbox，不修改只读 submodule。执行需求见 REQUIREMENT.md。
+     8	
+     9	## 默认假设
+    10	
+    11	- 无人值守，不提问；用户已指定 L。允许本地提交（skill 的默认交付方式），不 push、merge 或发布。只提交本 run 与本功能的变更，其他 run 不纳入。
+    12	- 普通非空文本（含可选 steer: 前缀）及附件作为指导，不新造输入命令或 TUI。空输入、synthetic 控制、历史消息不主动唤醒；指令原文和附件不修改。
+    13	- 不提供 queue/follow-up 或紧急 abort。它们需要更明确的接收/取消协议，不能用外置 hook 假装内核原子调度。
+    14	- 以本进程事件与每次请求快照为依据，不持久化 ledger；重启后不自动恢复历史插话。取舍是简化状态、消除损坏文件阻断及跨实例文件竞争，代价是状态仅供当前运行查询。
+    15	- prepared 表示请求准备阶段包含了输入，不等于 provider received/adopted。提示及 toast 不宣称语义采纳。恢复只对活动期间本进程观察且已保存的指导，在成功空闲边界执行有界 continuation；取消/失败/删除/压缩抑制。保留 autoResume:false 选项。
+    16	- 公开 chat.message 不含 noReply 标记：活动中的 noReply 保存与正常输入无法完全区分；如需只保存不唤醒，应关闭自动恢复。记录这个兼容边界，不能声称原生 noReply 契约完全保留。
+    17	- 不承诺撤销已过检查点的工具、batch 内部子调用、原生 native subtask、StructuredOutput、已运行子代理或长工具。多个并发工具可能已全部通过 gate；验收区分 gate 前和 gate 后。
+    18	- 老实现及依赖 ledger 的历史脚本在新实现验收成功后删除或明确标注为历史证据，不能继续推荐为 v2 验证入口。可复用桥接、打包、公共 hook 合并器。
+    19	
+    20	## 源码与边界证据
+    21	
+    22	均是本地源码核对；不将参考项目源码 commit 当成本机二进制的精确构建身份。
+    23	
+    24	| 实现 | 接收与领取机制 | 可借鉴点与不能复制的保证 |
+    25	| --- | --- | --- |
+    26	| OpenCode 2.0 | `/Users/penghao/Documents/code/CodingAgent/opencode/opencode/packages/core/src/session/inbox.ts:21` KeyedMutex；`:318` enqueued_seq；`:421` steer 优先；`:505-537` promote 在 step/turn 区分 steer/input，控制消息形成边界 | 优先级与持久化统一归内核拥有。v1 插件没有此事务，不能复制 SQL 表就获得同等保证。 |
+    27	| pi | `/Users/penghao/Documents/code/CodingAgent/pi/pi/packages/agent/src/agent.ts:197-198,308-324` 两个队列；`agent-loop.ts:184,210-214,279-311` 开始、准备后、工具 batch 完成后取 steering，停止时取 follow-up | 借鉴边界清晰及普通消息保留。此版本在 executeToolCalls 返回后取插话，不能说 steer 会撤销当前 batch；Base Agent 内存队列不等于持久化 inbox。 |
+    28	| DSH | `/Users/penghao/Documents/code/CodingAgent/DSH/deepseek-harness/packages/core/agent-loop/src/agent.ts:156-175` next-step/next-turn 与取消后唤醒；`inbox.ts:25-50,97-112` 投影、重复 ID 检查、claim 先 next-step 再一条 next-turn | 借鉴“接收/领取/完成”分层；持久化、取消和工具信号属于驱动器，不在当前插件控制域。 |
+    29	| Codex | `/Users/penghao/Documents/code/CodingAgent/codex/codex/codex-rs/core/src/session/turn_input.rs:843-929` 在 active_turn 锁内校验活动任务、expected_turn_id、Regular/Review/Compact、空输入/schema 后入队；`input_queue.rs:179-204` mailbox 路径在提供 expected_turn_id 时才额外检查 cancellation_token | 更正旧混淆：steer_input 函数没有显式 cancellation token 检查。接收返回不证明 hook、持久化或模型调用已完成。借鉴证据分层，不声称原子 expected-turn 或取消保证。 |
+    30	
+    31	固定 OpenCode 1.3.17：
+    32	
+    33	- `agent-kernel/packages/opencode/src/session/prompt.ts:1263-1305` chat.message 在保存 user/parts 之前触发；不可把 hook 到达视为已保存。
+    34	- `prompt.ts:1338-1380` 每轮重读消息；`:1484-1499` 原生通用 system-reminder 后触发 messages.transform。`:1530-1560` 终止路径可以直接 break，最后一轮过程中保存的新输入不能只靠下一轮重读解决。
+    35	- `effect/runner.ts:111-135` Running 时 join 现有 Deferred，不能视为保证额外再跑一轮。
+    36	- `prompt.ts:449-458,487-499` 普通工具/MCP 在执行前触发 before hook；`session/processor.ts:153-212,239-256` tool part 有 callID、messageID，普通工具异常变 error 结果。native subtask `prompt.ts:604` 的 hook 在 execute 捕获区外，且传 part.id 而非 callID；v2 不从该路径抛 gate 错误，避免 L-09 的 running 悬挂。
+    37	- `packages/plugin/src/index.ts:197-282` 公开 Hooks；SDK `packages/sdk/js/src/gen/sdk.gen.ts:639,1118` promptAsync/showToast 可用。v1 SDK 部分运行时 synthetic 字段不在声明中，应局部结构扩展或明确窄类型适配，不 import 私有类型。
+    38	- `plugin/index.ts:227-235` event 回调不 await，必须自行捕获异步失败；`:245` 之后 trigger 顺序 await。
+    39	- TUI `cli/cmd/tui/routes/session/index.tsx:1300` 的 QUEUED 是原生显示。使用 toast 提示保存/准备/跳过/恢复，不声称模型已经理解。
+    40	
+    41	旧实现审计：`docs/review/legacy-codex-audit.md:56-58,133-143`，L-08 每工具多次全量查询与流式事件重写、L-09 native subtask 错误路径及损坏 ledger 阻断、L-10 跨实例文件竞态。本次避免常态每工具全量扫描、避免磁盘 ledger，明确 native subtask 例外。
+    42	
+    43	## 尺寸与理由
+    44	
+    45	L（用户显式指定）：多文件插件、并发/事件顺序与完成边界，必须经过独立 improve 和 review。先设计验收与固定公开 API，再交新 Generator；不内联实现。
+    46	
+    47	## 验收与验证命令
+    48	
+    49	在 DESIGN.md 细化 A1 等条目：独立包类型/构建/单测；真实官方 OpenCode + 脚本化 OpenAI HTTP 模型确定性覆盖 G1/G2/G3 和无插话；真实 Codex 中继 headless 与 tmux TUI 的开/关插件对照；根回归及内核边界检查；同步说明与归档旧入口。真实模型失败须留证据，不能用假模型顶替。
+
+exec
+/bin/zsh -lc "cat AGENTS.md && rg --files external-plugins | rg 'steer|test|index'" in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+# AGENT.MD
+
+This file provides guidance to CodeAgent when working with code in this repository.
+
+## Overview
+
+This is CodeAgentPlugin - an extension project that builds on top of OpenCode (agent-kernel) to provide CodeAgent functionality. The repository consists of three main components:
+
+agent-kernel - Git submodule containing the OpenCode AI coding agent (core kernel)
+agent-kernel-extension - Global extensions and built-in plugins that merge into agent-kernel
+external-plugins - External plugin system using the @opencode-ai/plugin API
+
+## 本仓库当前实际状态（2026-11-04 核实）
+
+以下是当前执行依据；后文逐字保留的原始说明（仅修正 Markdown 格式）包含尚未复刻的目标架构与历史命令，不能据此认定能力已存在或直接执行旧命令。
+
+- **底座与来源**：原文描述的三层目录在用户最初的仓库中并不存在；已决定以 OpenCode 1.3.17 源码为底座，缺的部分按需复刻补齐。`agent-kernel/` 是只读 submodule，固定在 `517e6c9aa4c61dbc125e7654fc596f1d529f20d9`（`517e6c9aa`，官方 v1.3.17 发布提交）。submodule URL 与本仓库 origin 相同，属于自引用；初始化只用 `git submodule update --init`，**不要用 `--remote`**，不要执行下方历史命令中的远端更新。
+- **现有扩展**：`agent-kernel-extension/` 包含 capability-watch、遗留 one-shot worker 两个扩展及 registry，经外置插件公开 loader 的桥接加载。没有原文中的 Init/Server/InternalPlugins/Permission/Tool 五扩展，没有 `kernel/` ACL 层，也没有 GlobalConfig。当前 merge 脚本仅在 `src/custom-hw/`、`src/codeagent/` 下新增带 generated marker 的文件或更新已有同标记文件，不覆盖内核原文件；复制本身不构成 bootstrap。
+- **外置与占位目录**：`external-plugins/` 包含 steering 等外置插件；`external-plugins/src/index.ts` 是聚合桥接入口，也是唯一允许 import `agent-kernel-extension` 的外置文件。`sdk/`、`codecov/`、`agents/` 仅占位，不代表原文所述 SDK、Jest mocks 或 agent 能力已经存在。
+- **实际可用命令**：测试使用 `node --test …`（完整参数以 `package.json` 的 `test` 脚本为准）；类型检查为 `node_modules/.bin/tsc --noEmit -p .`；内核边界检查为 `node scripts/check-kernel.mjs`。Bun 1.3.11 在 `~/.bun/bin`。原文中的 Jest、`bun run serve` 和 merge preinstall 尚未复刻，**不要执行**。
+- **one-shot 入口**：主流程是 Codex skill `.agents/skills/one-shot/`，设计见 `docs/oneshot/ONE-SHOT-SKILL-DESIGN.md`。`.opencode/skills/one-shot` 与 `agent-kernel-extension/src/codeagent/one-shot` 是遗留的 OpenCode 托管 issue 队列 worker，对应参考流程的“编排层扩展方向”，可选使用。one-shot 不自动合并或发布；PR 与验证证据交由人工评审。
+- **硬边界**：不修改 `agent-kernel/` tracked 源码，尤其是 `agent-kernel/packages/` 原文件；不从外置插件 import 内核私有模块。需要内部扩展点时，先证明固定版本确实暴露该入口，否则记录缺口并停止该实现路径。未验证实际 bootstrap，不得声称复制的代码已激活。
+- **当前工作流**：编码前写验收标准并核对 v1.3.17 的精确 API；优先在 `external-plugins/` 或项目 skill/command 中做最小实现；运行相关测试与真实 OpenCode smoke test；设计和验证证据保存在 `docs/baseline/`。
+
+## 编码准则
+
+请参考如下准则，引自：https://github.com/forrestchang/andrej-karpathy-skills/blob/main/CLAUDE.md?plain=1
+
+
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+
+## 1. Think Before Coding
+
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+Before implementing:
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+## 2. Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+## 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+## 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+[Step] → verify: [check]
+[Step] → verify: [check]
+[Step] → verify: [check]
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+---
+
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+## Development Commands
+
+```sh
+# Initial setup - sync agent-kernel submodule (required before any development)
+git submodule sync && git submodule init && git submodule update --remote
+
+# Install dependencies
+bun install                          # root level
+cd agent-kernel-extension && bun install   # also runs merge via preinstall
+cd external-plugins && bun install
+
+# Run the server (merges code, then starts opencode)
+cd agent-kernel-extension && bun run serve
+
+# Run tests — two runners exist in this repo (see Testing below)
+bun test                                                       # bun:test, from repo root
+bun test test/path/to/test.test.ts                             # single test file, from repo root
+bun run jtest                                                  # Jest with coverage (see jest.config.ts)
+
+# Type check
+cd external-plugins && bun run typecheck                    # external-plugins (standalone)
+cd agent-kernel-extension && bun tsc --noEmit               # extension only (no merge needed)
+cd agent-kernel-extension && bun run merge && cd ../agent-kernel && bun run typecheck  # full type check after merge
+```
+
+## Testing
+
+Test files are *.test.ts in each package's test/ dir, written with bun:test imports. The repo has two runners — know which you are using:
+
+bun test (root bunfig.toml): canonical for local dev. pathIgnorePatterns skips agent-kernel/** and sdk/js-agentkernel/**; concurrent = false, retry = 3. agent-kernel-extension/bunfig.toml is the per-package config for cd agent-kernel-extension && bun test — when editing coverage/ignore config, update both bunfig files if the change should apply in both contexts.
+bun run jtest (jest.config.ts): Jest via ts-jest, used for coverage reporting. Mocks Bun/vitest/@/global via codecov/test/mocks/; @/ resolves to extension or kernel src/. Note: single-file Jest runs can break on the ESM node:path mock — prefer bun test for a single file.
+Every test file sets up its own top-of-file mock.module() calls.
+
+## Architecture
+
+### Repository Structure
+
+Top-level: agent-kernel/ (submodule, DO NOT EDIT DIRECTLY), agent-kernel-extension/ (CodeAgent code under src/codeagent/), external-plugins/, codecov/ (Jest-only mocks), sdk/. Use ls for the live tree — src/codeagent/ holds many self-contained subsystems (server, internal-plugins, cron, smart-router, auto-router, checkpoint, turbocontext, sdd, evolve, …) that change often, so don't enumerate them here.
+
+### Merge Process (merge-agent-kernel.ts)
+
+agent-kernel-extension/scripts/merge-agent-kernel.ts runs on preinstall/merge/serve. It:
+
+Merges dependencies external-plugins/package.json → agent-kernel-extension/package.json → agent-kernel/packages/opencode/package.json.
+Copies agent-kernel-extension/src/ → agent-kernel/packages/opencode/src/ (CodeAgent code lands in src/codeagent/).
+Copies migration scripts → agent-kernel/packages/opencode/migration/, merges script/ → opencode/script/, and merges the js-agentkernel-luban SDK → agent-kernel/packages/sdk/js-agentkernel.
+Because the merge overwrites agent-kernel/packages/opencode/src/, never edit merged output there — edit in agent-kernel-extension/src/ and type-check in place (bun tsc --noEmit) or after a merge.
+
+### Global Extension Entry Points
+
+Extensions register in agent-kernel/packages/opencode/src/custom-hw/extension/bundled-global-extensions.ts as bundledGlobalExtensions (this path is fixed by the build; do not rename). The array wires, in order: InitExtension, ServerExtension (HTTP routes), InternalPluginsExtension (pushes built-in plugins by priority), PermissionExtension, ToolExtension. Extension points: transformServer / transformInstanceRoutes / transformInternalPlugins / transformPermissionService / transformToolDef.
+
+## Plugin Implementation Conventions
+
+### 外置插件优先 (external-first)
+
+新功能优先在 external-plugins/ 实现（@opencode-ai/plugin Hooks 模式）。外置插件通过 SDK client 与内核交互，不依赖内核内部，内核升级时几乎零成本，且可独立构建发布。
+
+仅当功能确需 SDK 无法满足的能力时，才用内置插件（agent-kernel-extension/src/codeagent/）：进程内直接调用内核服务、注册全局路由、注册内置 plugin、性能敏感的原生调用。选用内置插件必须在对应设计文档中说明理由（为何 SDK 方案不可行）。外置插件的硬性限制：只能用 SDK client，不能访问 Bus/GlobalBus、Session/SessionStatus 等原生类或任何 agent-kernel 内部 API。
+
+### 内置插件的内核依赖隔离 (ACL)
+
+原则：业务代码不直接 @/ import 内核内部（agent-kernel 子模块），一切内核依赖必须经防腐层。内核是易变上游，直接 import 会让每次升级穿透到上百个业务文件；隔离的目的是把升级破坏收口到少数适配器文件。
+
+每个内置插件模块（src/codeagent/<module>/）自建自己的 kernel/ 防腐层，业务代码只从自己的 <module>/kernel 导入;
+
+## Key Conventions
+
+Path aliases (@/, @opencode-ai/sdk/*, @opencode-ai/plugin, test mocks like @/global→mock) are declared in each package's tsconfig.json / package.json — read those for the authoritative list.
+Business logic placement: CodeAgent-specific code goes in src/codeagent/ to avoid conflicts with the opencode base.
+Configuration: GlobalConfig (src/codeagent/global/config.ts) holds global state; env vars include CODEAGENT_LANGUAGE, CODEAGENT_CURRENT_USER, CODEAGENT_ENV, SCENARIO. External-plugins config loads via loadPluginConfig(); hooks/tools can be disabled via disabled_hooks / disabled_tools.
+Style: enforced by Prettier (semi: false, printWidth: 120, root package.json); see AGENTS.md for the full style guide (prefer .catch()/Effect over try/catch, avoid any, single-word var names, early returns over else, const over let).
+
+## Design Documents
+
+Design docs live in docs/ (e.g. docs/plugin-guide.md, docs/cron/, docs/auto-router/, docs/baseline/).
+Always modify existing design documents rather than creating new ones. Use version numbers in headers (e.g. v4.0), include update date + change log at the end, and follow the existing format.
+Per AGENTS.md: after new features, sync docs/baseline/SPEC.md and docs/baseline/DESIGN.md; before a release, review README.md and update CHANGELOG.md.
+
+## Key Files to Reference
+
+docs/plugin-guide.md - Complete OpenCode plugin development guide (hooks, events, tools)
+agent-kernel-extension/CLAUDE.md - Extension-specific development guide
+external-plugins/CLAUDE.md - External plugin development guide with mock module patterns
+agent-kernel-extension/src/codeagent/server/index.ts - Main server extension entry
+agent-kernel-extension/src/codeagent/internal-plugins/index.ts - Built-in plugins registration
+agent-kernel-extension/src/codeagent/kernel/ - Kernel anti-corruption layer (see ACL convention above)
+external-plugins/src/index.ts - External plugin entry point
+external-plugins/src/hooks/types.ts - Hook type definitions (HookName, InternalHookName)
+external-plugins/src/steering/compose.ts
+external-plugins/src/steering/ledger.ts
+external-plugins/src/index.ts
+external-plugins/src/steering.ts
+external-plugins/steering/package.json
+external-plugins/steering/README.md
+
+exec
+/bin/zsh -lc "nl -ba docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md | sed -n '39,59p'" in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+    39	## 关键决策
+    40	
+    41	| 决策 | 备选 | 选择与理由 | 代价/风险 |
+    42	| --- | --- | --- | --- |
+    43	| 状态 | 旧持久化 ledger / 内存小状态 / 新 SQL inbox | 内存，消息持久化交给原生内核；不复制 inbox | 进程重启无自动续跑、状态工具不展示旧进程证据 |
+    44	| 工具归属 | 每 gate 全量读 / 事件映射+快照+有界 fallback | 请求 transform 绑定当前 assistant 与指导版本；tool part 事件映射 callID→assistant；事件缺失时合并一次必要的公开 SDK 查询，不能把另一 assistant 的快照误用于旧调用 | 事件非 await，必须测试延迟与未知归属；无法确认时对 pending 的普通工具保守拒绝，native subtask 除外 |
+    45	| 指导生效 | chat.message 即认为 saved / 等持久化 / 每 gate 查全史 | chat.message 记录候选，保存事件或有界 SDK message 验证后确认为 saved；持续增长的内存不能依赖全量历史 | hook 在保存前，避免把失败保存永久当 pending；transform 可直接从已保存 history 校准 |
+    46	| 文本版本 | 仅 ID / 文本附件签名 | 对活动指导记录稳定的有效内容版本（排除 ignored/synthetic、归一化原生 reminder）；快照绑定该版本，不把普通 transform 包装算编辑 | 必须防止删改后误拦，压缩/undo 不复活旧 pending |
+    47	| 提示 | 修改原始消息 / 请求副本追加 | 请求副本追加简洁 steering reminder，并在 blocked error 中给模型明确重读指引 | 不证明模型语义采纳，无注入用户原文至磁盘日志 |
+    48	| 恢复 | abort/replay / 空消息 / synthetic 继续 | 成功 idle 后 debounce + SDK status/messages 复核 + 单飞的 promptAsync synthetic control，带唯一 metadata 标记与指导 ID；使用最新指导 model/agent。控制不算新指导，不复制用户内容，不降低权限或 format | 公开无原子 expected-turn；autoResume:false 可关闭；SDK v1 缺 runtime synthetic 等字段需窄类型适配 |
+    49	| 反馈 | 新 TUI / toast + status | 公共 showToast，限频且失败可忽略；steering_status 为进程内只读状态 | TUI QUEUED 仍由原生处理，toast 可被其他会话显示 |
+    50	| 旧代码处理 | 留双实现 / 立即删 / 验收后退役 | 新包验收成功再移除旧 ledger 与 plugin 测试；compose 保留且单测。scripts/verify-steering.mjs 指向新确定性入口；旧专属脚本移除或顶部明确 LEGACY 且不再推荐，历史文档不重写为新事实 | 避免破坏一键打包和 smoke；所有引用需要核对 |
+    51	
+    52	### 最小实现职责
+    53	
+    54	可用 index.ts + 一个 state.ts（或同等简单结构），不要求特定类。不要重复 596 行旧 ledger；生产逻辑以几百行内可清晰审查为目标，超出应有具体原因。状态至少覆盖：当前会话 lifecycle/epoch、活动指导与其 saved/prepared 版本、assistant 请求快照、必要的 call 映射、单次恢复标记/计时器。idle/删除/压缩/错误及时释放不需要的映射；活跃会话和工具快照限额写明，不能静默丢弃 pending 后放行旧工具。不要引入通用事件框架。
+    55	
+    56	事件驱动读取流式变化，避免每个 delta 扫历史；仅在真正需要确认保存/工具归属/idle 恢复时用公开 SDK，有界 timeout、合并同会话并发查询。未观察到活动状态的历史输入不触发自动恢复。event 回调立即更新取消/删除 epoch，异步 continuation 在每个 await 后重新检查，catch 全部错误；不在网络失败时自动无限重试。恢复最多一次/指导版本，失败报告需人工重试。
+    57	
+    58	工具 before 输入只有 tool/sessionID/callID（无 messageID）；不可编造 API。原生 native subtask 用 part.id 的路径要通过实际 part 映射确认或用明确的安全豁免，不得让拒绝异常逃到未捕获路径。普通模型 task 仍经正常 tool-error 路径。MCP 过 gate 后的权限等待与 batch 内部子工具属于限制。
+    59	
+
+exec
+/bin/zsh -lc "rg -n 'messages.transform|chat.message|tool.execute.before|session.idle|session.error|session.status|ensureRunning|noReply' agent-kernel/packages/opencode/src/session/prompt.ts agent-kernel/packages/opencode/src/session/processor.ts agent-kernel/packages/opencode/src/session/index.ts agent-kernel/packages/plugin/src/index.ts agent-kernel/packages/opencode/src/effect/runner.ts" in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+agent-kernel/packages/opencode/src/effect/runner.ts:6:  readonly ensureRunning: (work: Effect.Effect<A, E>) => Effect.Effect<A, E>
+agent-kernel/packages/opencode/src/effect/runner.ts:111:    const ensureRunning = (work: Effect.Effect<A, E>) =>
+agent-kernel/packages/opencode/src/effect/runner.ts:211:      ensureRunning,
+agent-kernel/packages/plugin/src/index.ts:200:  "chat.message"?: (
+agent-kernel/packages/plugin/src/index.ts:226:  "tool.execute.before"?: (
+agent-kernel/packages/plugin/src/index.ts:242:  "experimental.chat.messages.transform"?: (
+agent-kernel/packages/opencode/src/session/index.ts:230:      "session.error",
+agent-kernel/packages/opencode/src/session/prompt.ts:450:                    "tool.execute.before",
+agent-kernel/packages/opencode/src/session/prompt.ts:488:                  "tool.execute.before",
+agent-kernel/packages/opencode/src/session/prompt.ts:604:        yield* plugin.trigger("tool.execute.before", { tool: "task", sessionID, callID: part.id }, { args: taskArgs })
+agent-kernel/packages/opencode/src/session/prompt.ts:1264:          "chat.message",
+agent-kernel/packages/opencode/src/session/prompt.ts:1321:          if (input.noReply === true) return message
+agent-kernel/packages/opencode/src/session/prompt.ts:1499:                yield* plugin.trigger("experimental.chat.messages.transform", {}, { messages: msgs })
+agent-kernel/packages/opencode/src/session/prompt.ts:1573:        return yield* runner.ensureRunning(runLoop(input.sessionID))
+agent-kernel/packages/opencode/src/session/prompt.ts:1752:    noReply: z.boolean().optional(),
+
+exec
+/bin/zsh -lc 'nl -ba external-plugins/src/index.ts | head -140; nl -ba external-plugins/steering/package.json; nl -ba external-plugins/src/steering.ts | head -100' in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+     1	import type { Plugin } from "@opencode-ai/plugin"
+     2	import { bundledGlobalExtensions } from "../../agent-kernel-extension/src/custom-hw/extension/bundled-global-extensions"
+     3	import { composeGlobalExtensions } from "../../agent-kernel-extension/src/custom-hw/extension/global-extension"
+     4	import { SteeringPlugin } from "./steering"
+     5	import { composeSteeringHooks } from "./steering/compose.ts"
+     6	
+     7	// The pinned kernel has no native GlobalExtension bootstrap. Its public plugin
+     8	// loader invokes this bridge, which runs the same bundled registry.
+     9	export const CodeAgentPlugin: Plugin = async (input) => composeSteeringHooks(
+    10	  await composeGlobalExtensions(bundledGlobalExtensions, input),
+    11	  await SteeringPlugin(input),
+    12	)
+     1	{
+     2	  "name": "@oneshot/opencode-steering",
+     3	  "version": "0.3.2",
+     4	  "description": "Message evidence and stale-tool steering gate for the pinned OpenCode 1.3.17 public plugin API",
+     5	  "type": "module",
+     6	  "license": "UNLICENSED",
+     7	  "exports": "./dist/index.js",
+     8	  "files": [
+     9	    "dist/index.js",
+    10	    "README.md"
+    11	  ],
+    12	  "scripts": {
+    13	    "build": "bun build ../src/steering.ts --target=bun --outfile dist/index.js"
+    14	  }
+    15	}
+     1	import type { Plugin } from "@opencode-ai/plugin"
+     2	import { z } from "zod"
+     3	import { SteeringLedger } from "./steering/ledger.ts"
+     4	
+     5	// The legacy loader calls every exported function. Keep only the plugin here.
+     6	export const SteeringPlugin: Plugin = async (input, options = {}) => {
+     7	  const ledger = new SteeringLedger(input, options)
+     8	  return {
+     9	    tool: {
+    10	      steering_status: {
+    11	        description: "Read message-level steering evidence for this session. Saved and prepared do not prove provider receipt or semantic adoption.",
+    12	        args: { messageID: z.string().optional() },
+    13	        async execute(args, context) {
+    14	          return JSON.stringify(await ledger.status(context.sessionID, typeof args.messageID === "string" ? args.messageID : undefined), null, 2)
+    15	        },
+    16	      },
+    17	    },
+    18	    "chat.message": (input, output) => ledger.observe(input.sessionID, output),
+    19	    "experimental.chat.messages.transform": (_, output) => ledger.prepare(output),
+    20	    "experimental.session.compacting": input => ledger.compacting(input.sessionID),
+    21	    "tool.execute.before": input => ledger.gate(input),
+    22	    // Event hooks are not awaited by the kernel; the ledger catches rejections.
+    23	    event: ({ event }) => ledger.event(event),
+    24	  }
+    25	}
+
+exec
+/bin/zsh -lc "nl -ba agent-kernel/packages/opencode/src/session/prompt.ts | sed -n '1240,1330p;1335,1395p;1470,1578p'" in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+  1240	            const hint = perm.action === "deny" ? " . Invoked by user; guaranteed to exist." : ""
+  1241	            return [
+  1242	              { ...part, messageID: info.id, sessionID: input.sessionID },
+  1243	              {
+  1244	                messageID: info.id,
+  1245	                sessionID: input.sessionID,
+  1246	                type: "text",
+  1247	                synthetic: true,
+  1248	                text:
+  1249	                  " Use the above message and context to generate a prompt and call the task tool with subagent: " +
+  1250	                  part.name +
+  1251	                  hint,
+  1252	              },
+  1253	            ]
+  1254	          }
+  1255	
+  1256	          return [{ ...part, messageID: info.id, sessionID: input.sessionID }]
+  1257	        })
+  1258	
+  1259	        const parts = yield* Effect.forEach(input.parts, resolvePart, { concurrency: "unbounded" }).pipe(
+  1260	          Effect.map((x) => x.flat().map(assign)),
+  1261	        )
+  1262	
+  1263	        yield* plugin.trigger(
+  1264	          "chat.message",
+  1265	          {
+  1266	            sessionID: input.sessionID,
+  1267	            agent: input.agent,
+  1268	            model: input.model,
+  1269	            messageID: input.messageID,
+  1270	            variant: input.variant,
+  1271	          },
+  1272	          { message: info, parts },
+  1273	        )
+  1274	
+  1275	        const parsed = MessageV2.Info.safeParse(info)
+  1276	        if (!parsed.success) {
+  1277	          log.error("invalid user message before save", {
+  1278	            sessionID: input.sessionID,
+  1279	            messageID: info.id,
+  1280	            agent: info.agent,
+  1281	            model: info.model,
+  1282	            issues: parsed.error.issues,
+  1283	          })
+  1284	        }
+  1285	        parts.forEach((part, index) => {
+  1286	          const p = MessageV2.Part.safeParse(part)
+  1287	          if (p.success) return
+  1288	          log.error("invalid user part before save", {
+  1289	            sessionID: input.sessionID,
+  1290	            messageID: info.id,
+  1291	            partID: part.id,
+  1292	            partType: part.type,
+  1293	            index,
+  1294	            issues: p.error.issues,
+  1295	            part,
+  1296	          })
+  1297	        })
+  1298	
+  1299	        yield* sessions.updateMessage(info)
+  1300	        for (const part of parts) yield* sessions.updatePart(part)
+  1301	
+  1302	        return { info, parts }
+  1303	      }, Effect.scoped)
+  1304	
+  1305	      const prompt: (input: PromptInput) => Effect.Effect<MessageV2.WithParts> = Effect.fn("SessionPrompt.prompt")(
+  1306	        function* (input: PromptInput) {
+  1307	          const session = yield* sessions.get(input.sessionID)
+  1308	          yield* Effect.promise(() => SessionRevert.cleanup(session))
+  1309	          const message = yield* createUserMessage(input)
+  1310	          yield* sessions.touch(input.sessionID)
+  1311	
+  1312	          const permissions: Permission.Ruleset = []
+  1313	          for (const [t, enabled] of Object.entries(input.tools ?? {})) {
+  1314	            permissions.push({ permission: t, action: enabled ? "allow" : "deny", pattern: "*" })
+  1315	          }
+  1316	          if (permissions.length > 0) {
+  1317	            session.permission = permissions
+  1318	            yield* sessions.setPermission({ sessionID: session.id, permission: permissions })
+  1319	          }
+  1320	
+  1321	          if (input.noReply === true) return message
+  1322	          return yield* loop({ sessionID: input.sessionID })
+  1323	        },
+  1324	      )
+  1325	
+  1326	      const lastAssistant = (sessionID: SessionID) =>
+  1327	        Effect.promise(async () => {
+  1328	          let latest: MessageV2.WithParts | undefined
+  1329	          for await (const item of MessageV2.stream(sessionID)) {
+  1330	            latest ??= item
+  1335	        })
+  1336	
+  1337	      const runLoop: (sessionID: SessionID) => Effect.Effect<MessageV2.WithParts> = Effect.fn("SessionPrompt.run")(
+  1338	        function* (sessionID: SessionID) {
+  1339	          const ctx = yield* InstanceState.context
+  1340	          let structured: unknown | undefined
+  1341	          let step = 0
+  1342	          const session = yield* sessions.get(sessionID)
+  1343	
+  1344	          while (true) {
+  1345	            yield* status.set(sessionID, { type: "busy" })
+  1346	            log.info("loop", { step, sessionID })
+  1347	
+  1348	            let msgs = yield* MessageV2.filterCompactedEffect(sessionID)
+  1349	
+  1350	            let lastUser: MessageV2.User | undefined
+  1351	            let lastAssistant: MessageV2.Assistant | undefined
+  1352	            let lastFinished: MessageV2.Assistant | undefined
+  1353	            let tasks: (MessageV2.CompactionPart | MessageV2.SubtaskPart)[] = []
+  1354	            for (let i = msgs.length - 1; i >= 0; i--) {
+  1355	              const msg = msgs[i]
+  1356	              if (!lastUser && msg.info.role === "user") lastUser = msg.info
+  1357	              if (!lastAssistant && msg.info.role === "assistant") lastAssistant = msg.info
+  1358	              if (!lastFinished && msg.info.role === "assistant" && msg.info.finish) lastFinished = msg.info
+  1359	              if (lastUser && lastFinished) break
+  1360	              const task = msg.parts.filter((part) => part.type === "compaction" || part.type === "subtask")
+  1361	              if (task && !lastFinished) tasks.push(...task)
+  1362	            }
+  1363	
+  1364	            if (!lastUser) throw new Error("No user message found in stream. This should never happen.")
+  1365	
+  1366	            const lastAssistantMsg = msgs.findLast(
+  1367	              (msg) => msg.info.role === "assistant" && msg.info.id === lastAssistant?.id,
+  1368	            )
+  1369	            // Some providers return "stop" even when the assistant message contains tool calls.
+  1370	            // Keep the loop running so tool results can be sent back to the model.
+  1371	            const hasToolCalls = lastAssistantMsg?.parts.some((part) => part.type === "tool") ?? false
+  1372	
+  1373	            if (
+  1374	              lastAssistant?.finish &&
+  1375	              !["tool-calls"].includes(lastAssistant.finish) &&
+  1376	              !hasToolCalls &&
+  1377	              lastUser.id < lastAssistant.id
+  1378	            ) {
+  1379	              log.info("exiting loop", { sessionID })
+  1380	              break
+  1381	            }
+  1382	
+  1383	            step++
+  1384	            if (step === 1)
+  1385	              yield* title({
+  1386	                session,
+  1387	                modelID: lastUser.model.modelID,
+  1388	                providerID: lastUser.model.providerID,
+  1389	                history: msgs,
+  1390	              }).pipe(Effect.ignore, Effect.forkIn(scope))
+  1391	
+  1392	            const model = yield* getModel(lastUser.model.providerID, lastUser.model.modelID, sessionID)
+  1393	            const task = tasks.pop()
+  1394	
+  1395	            if (task?.type === "subtask") {
+  1470	                if (lastUser.format?.type === "json_schema") {
+  1471	                  tools["StructuredOutput"] = createStructuredOutputTool({
+  1472	                    schema: lastUser.format.schema,
+  1473	                    onSuccess(output) {
+  1474	                      structured = output
+  1475	                    },
+  1476	                  })
+  1477	                }
+  1478	
+  1479	                if (step === 1) SessionSummary.summarize({ sessionID, messageID: lastUser.id })
+  1480	
+  1481	                if (step > 1 && lastFinished) {
+  1482	                  for (const m of msgs) {
+  1483	                    if (m.info.role !== "user" || m.info.id <= lastFinished.id) continue
+  1484	                    for (const p of m.parts) {
+  1485	                      if (p.type !== "text" || p.ignored || p.synthetic) continue
+  1486	                      if (!p.text.trim()) continue
+  1487	                      p.text = [
+  1488	                        "<system-reminder>",
+  1489	                        "The user sent the following message:",
+  1490	                        p.text,
+  1491	                        "",
+  1492	                        "Please address this message and continue with your tasks.",
+  1493	                        "</system-reminder>",
+  1494	                      ].join("\n")
+  1495	                    }
+  1496	                  }
+  1497	                }
+  1498	
+  1499	                yield* plugin.trigger("experimental.chat.messages.transform", {}, { messages: msgs })
+  1500	
+  1501	                const [skills, env, instructions, modelMsgs] = yield* Effect.all([
+  1502	                  Effect.promise(() => SystemPrompt.skills(agent)),
+  1503	                  Effect.promise(() => SystemPrompt.environment(model)),
+  1504	                  instruction.system().pipe(Effect.orDie),
+  1505	                  Effect.promise(() => MessageV2.toModelMessages(msgs, model)),
+  1506	                ])
+  1507	                const system = [...env, ...(skills ? [skills] : []), ...instructions]
+  1508	                const format = lastUser.format ?? { type: "text" as const }
+  1509	                if (format.type === "json_schema") system.push(STRUCTURED_OUTPUT_SYSTEM_PROMPT)
+  1510	                const result = yield* handle.process({
+  1511	                  user: lastUser,
+  1512	                  agent,
+  1513	                  permission: session.permission,
+  1514	                  sessionID,
+  1515	                  parentSessionID: session.parentID,
+  1516	                  system,
+  1517	                  messages: [...modelMsgs, ...(isLastStep ? [{ role: "assistant" as const, content: MAX_STEPS }] : [])],
+  1518	                  tools,
+  1519	                  model,
+  1520	                  toolChoice: format.type === "json_schema" ? "required" : undefined,
+  1521	                })
+  1522	
+  1523	                if (structured !== undefined) {
+  1524	                  handle.message.structured = structured
+  1525	                  handle.message.finish = handle.message.finish ?? "stop"
+  1526	                  yield* sessions.updateMessage(handle.message)
+  1527	                  return "break" as const
+  1528	                }
+  1529	
+  1530	                const finished = handle.message.finish && !["tool-calls", "unknown"].includes(handle.message.finish)
+  1531	                if (finished && !handle.message.error) {
+  1532	                  if (format.type === "json_schema") {
+  1533	                    handle.message.error = new MessageV2.StructuredOutputError({
+  1534	                      message: "Model did not produce structured output",
+  1535	                      retries: 0,
+  1536	                    }).toObject()
+  1537	                    yield* sessions.updateMessage(handle.message)
+  1538	                    return "break" as const
+  1539	                  }
+  1540	                }
+  1541	
+  1542	                if (result === "stop") return "break" as const
+  1543	                if (result === "compact") {
+  1544	                  yield* compaction.create({
+  1545	                    sessionID,
+  1546	                    agent: lastUser.agent,
+  1547	                    model: lastUser.model,
+  1548	                    auto: true,
+  1549	                    overflow: !handle.message.finish,
+  1550	                  })
+  1551	                }
+  1552	                return "continue" as const
+  1553	              }),
+  1554	              Effect.fnUntraced(function* (exit) {
+  1555	                if (Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)) yield* handle.abort()
+  1556	                yield* InstanceState.withALS(() => instruction.clear(handle.message.id)).pipe(Effect.flatMap((x) => x))
+  1557	              }),
+  1558	            )
+  1559	            if (outcome === "break") break
+  1560	            continue
+  1561	          }
+  1562	
+  1563	          yield* compaction.prune({ sessionID }).pipe(Effect.ignore, Effect.forkIn(scope))
+  1564	          return yield* lastAssistant(sessionID)
+  1565	        },
+  1566	      )
+  1567	
+  1568	      const loop: (input: z.infer<typeof LoopInput>) => Effect.Effect<MessageV2.WithParts> = Effect.fn(
+  1569	        "SessionPrompt.loop",
+  1570	      )(function* (input: z.infer<typeof LoopInput>) {
+  1571	        const s = yield* InstanceState.get(state)
+  1572	        const runner = getRunner(s.runners, input.sessionID)
+  1573	        return yield* runner.ensureRunning(runLoop(input.sessionID))
+  1574	      })
+  1575	
+  1576	      const shell: (input: ShellInput) => Effect.Effect<MessageV2.WithParts> = Effect.fn("SessionPrompt.shell")(
+  1577	        function* (input: ShellInput) {
+  1578	          const s = yield* InstanceState.get(state)
+
+exec
+/bin/zsh -lc "nl -ba agent-kernel/packages/opencode/src/effect/runner.ts | sed -n '50,155p'; nl -ba agent-kernel/packages/opencode/src/session/status.ts | sed -n '1,140p'" in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+    50	    const onInterrupt = opts?.onInterrupt
+    51	    let ids = 0
+    52	
+    53	    const state = () => SynchronizedRef.getUnsafe(ref)
+    54	    const next = () => {
+    55	      ids += 1
+    56	      return ids
+    57	    }
+    58	
+    59	    const complete = (done: Deferred.Deferred<A, E | Cancelled>, exit: Exit.Exit<A, E>) =>
+    60	      Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)
+    61	        ? Deferred.fail(done, new Cancelled()).pipe(Effect.asVoid)
+    62	        : Deferred.done(done, exit).pipe(Effect.asVoid)
+    63	
+    64	    const idleIfCurrent = () =>
+    65	      SynchronizedRef.modify(ref, (st) => [st._tag === "Idle" ? idle : Effect.void, st] as const).pipe(Effect.flatten)
+    66	
+    67	    const finishRun = (id: number, done: Deferred.Deferred<A, E | Cancelled>, exit: Exit.Exit<A, E>) =>
+    68	      SynchronizedRef.modify(
+    69	        ref,
+    70	        (st) =>
+    71	          [
+    72	            Effect.gen(function* () {
+    73	              if (st._tag === "Running" && st.run.id === id) yield* idle
+    74	              yield* complete(done, exit)
+    75	            }),
+    76	            st._tag === "Running" && st.run.id === id ? ({ _tag: "Idle" } as const) : st,
+    77	          ] as const,
+    78	      ).pipe(Effect.flatten)
+    79	
+    80	    const startRun = (work: Effect.Effect<A, E>, done: Deferred.Deferred<A, E | Cancelled>) =>
+    81	      Effect.gen(function* () {
+    82	        const id = next()
+    83	        const fiber = yield* work.pipe(
+    84	          Effect.onExit((exit) => finishRun(id, done, exit)),
+    85	          Effect.forkIn(scope),
+    86	        )
+    87	        return { id, done, fiber } satisfies RunHandle<A, E>
+    88	      })
+    89	
+    90	    const finishShell = (id: number) =>
+    91	      SynchronizedRef.modifyEffect(
+    92	        ref,
+    93	        Effect.fnUntraced(function* (st) {
+    94	          if (st._tag === "Shell" && st.shell.id === id) return [idle, { _tag: "Idle" }] as const
+    95	          if (st._tag === "ShellThenRun" && st.shell.id === id) {
+    96	            const run = yield* startRun(st.run.work, st.run.done)
+    97	            return [Effect.void, { _tag: "Running", run }] as const
+    98	          }
+    99	          return [Effect.void, st] as const
+   100	        }),
+   101	      ).pipe(Effect.flatten)
+   102	
+   103	    const stopShell = (shell: ShellHandle<A, E>) =>
+   104	      Effect.gen(function* () {
+   105	        shell.abort.abort()
+   106	        const exit = yield* Fiber.await(shell.fiber).pipe(Effect.timeoutOption("100 millis"))
+   107	        if (Option.isNone(exit)) yield* Fiber.interrupt(shell.fiber)
+   108	        yield* Fiber.await(shell.fiber).pipe(Effect.exit, Effect.asVoid)
+   109	      })
+   110	
+   111	    const ensureRunning = (work: Effect.Effect<A, E>) =>
+   112	      SynchronizedRef.modifyEffect(
+   113	        ref,
+   114	        Effect.fnUntraced(function* (st) {
+   115	          switch (st._tag) {
+   116	            case "Running":
+   117	            case "ShellThenRun":
+   118	              return [Deferred.await(st.run.done), st] as const
+   119	            case "Shell": {
+   120	              const run = {
+   121	                id: next(),
+   122	                done: yield* Deferred.make<A, E | Cancelled>(),
+   123	                work,
+   124	              } satisfies PendingHandle<A, E>
+   125	              return [Deferred.await(run.done), { _tag: "ShellThenRun", shell: st.shell, run }] as const
+   126	            }
+   127	            case "Idle": {
+   128	              const done = yield* Deferred.make<A, E | Cancelled>()
+   129	              const run = yield* startRun(work, done)
+   130	              return [Deferred.await(done), { _tag: "Running", run }] as const
+   131	            }
+   132	          }
+   133	        }),
+   134	      ).pipe(
+   135	        Effect.flatten,
+   136	        Effect.catch(
+   137	          (e): Effect.Effect<A, E> => (e instanceof Cancelled ? (onInterrupt ?? Effect.die(e)) : Effect.fail(e as E)),
+   138	        ),
+   139	      )
+   140	
+   141	    const startShell = (work: (signal: AbortSignal) => Effect.Effect<A, E>) =>
+   142	      SynchronizedRef.modifyEffect(
+   143	        ref,
+   144	        Effect.fnUntraced(function* (st) {
+   145	          if (st._tag !== "Idle") {
+   146	            return [
+   147	              Effect.sync(() => {
+   148	                if (opts?.busy) opts.busy()
+   149	                throw new Error("Runner is busy")
+   150	              }),
+   151	              st,
+   152	            ] as const
+   153	          }
+   154	          yield* busy
+   155	          const id = next()
+     1	import { BusEvent } from "@/bus/bus-event"
+     2	import { Bus } from "@/bus"
+     3	import { InstanceState } from "@/effect/instance-state"
+     4	import { makeRuntime } from "@/effect/run-service"
+     5	import { SessionID } from "./schema"
+     6	import { Effect, Layer, ServiceMap } from "effect"
+     7	import z from "zod"
+     8	
+     9	export namespace SessionStatus {
+    10	  export const Info = z
+    11	    .union([
+    12	      z.object({
+    13	        type: z.literal("idle"),
+    14	      }),
+    15	      z.object({
+    16	        type: z.literal("retry"),
+    17	        attempt: z.number(),
+    18	        message: z.string(),
+    19	        next: z.number(),
+    20	      }),
+    21	      z.object({
+    22	        type: z.literal("busy"),
+    23	      }),
+    24	    ])
+    25	    .meta({
+    26	      ref: "SessionStatus",
+    27	    })
+    28	  export type Info = z.infer<typeof Info>
+    29	
+    30	  export const Event = {
+    31	    Status: BusEvent.define(
+    32	      "session.status",
+    33	      z.object({
+    34	        sessionID: SessionID.zod,
+    35	        status: Info,
+    36	      }),
+    37	    ),
+    38	    // deprecated
+    39	    Idle: BusEvent.define(
+    40	      "session.idle",
+    41	      z.object({
+    42	        sessionID: SessionID.zod,
+    43	      }),
+    44	    ),
+    45	  }
+    46	
+    47	  export interface Interface {
+    48	    readonly get: (sessionID: SessionID) => Effect.Effect<Info>
+    49	    readonly list: () => Effect.Effect<Map<SessionID, Info>>
+    50	    readonly set: (sessionID: SessionID, status: Info) => Effect.Effect<void>
+    51	  }
+    52	
+    53	  export class Service extends ServiceMap.Service<Service, Interface>()("@opencode/SessionStatus") {}
+    54	
+    55	  export const layer = Layer.effect(
+    56	    Service,
+    57	    Effect.gen(function* () {
+    58	      const bus = yield* Bus.Service
+    59	
+    60	      const state = yield* InstanceState.make(
+    61	        Effect.fn("SessionStatus.state")(() => Effect.succeed(new Map<SessionID, Info>())),
+    62	      )
+    63	
+    64	      const get = Effect.fn("SessionStatus.get")(function* (sessionID: SessionID) {
+    65	        const data = yield* InstanceState.get(state)
+    66	        return data.get(sessionID) ?? { type: "idle" as const }
+    67	      })
+    68	
+    69	      const list = Effect.fn("SessionStatus.list")(function* () {
+    70	        return new Map(yield* InstanceState.get(state))
+    71	      })
+    72	
+    73	      const set = Effect.fn("SessionStatus.set")(function* (sessionID: SessionID, status: Info) {
+    74	        const data = yield* InstanceState.get(state)
+    75	        yield* bus.publish(Event.Status, { sessionID, status })
+    76	        if (status.type === "idle") {
+    77	          yield* bus.publish(Event.Idle, { sessionID })
+    78	          data.delete(sessionID)
+    79	          return
+    80	        }
+    81	        data.set(sessionID, status)
+    82	      })
+    83	
+    84	      return Service.of({ get, list, set })
+    85	    }),
+    86	  )
+    87	
+    88	  const defaultLayer = layer.pipe(Layer.provide(Bus.layer))
+    89	  const { runPromise } = makeRuntime(Service, defaultLayer)
+    90	
+    91	  export async function get(sessionID: SessionID) {
+    92	    return runPromise((svc) => svc.get(sessionID))
+    93	  }
+    94	
+    95	  export async function list() {
+    96	    return runPromise((svc) => svc.list())
+    97	  }
+    98	
+    99	  export async function set(sessionID: SessionID, status: Info) {
+   100	    return runPromise((svc) => svc.set(sessionID, status))
+   101	  }
+   102	}
+
+exec
+/bin/zsh -lc "nl -ba agent-kernel/packages/plugin/src/index.ts | sed -n '190,255p'; nl -ba agent-kernel/packages/opencode/src/session/prompt.ts | sed -n '580,620p'; rg -n 'session\\.idle|session\\.status|session\\.error|abort|compacting' external-plugins/src/steering/ledger.ts" in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+   190	  event?: (input: { event: Event }) => Promise<void>
+   191	  config?: (input: Config) => Promise<void>
+   192	  tool?: {
+   193	    [key: string]: ToolDefinition
+   194	  }
+   195	  auth?: AuthHook
+   196	  provider?: ProviderHook
+   197	  /**
+   198	   * Called when a new message is received
+   199	   */
+   200	  "chat.message"?: (
+   201	    input: {
+   202	      sessionID: string
+   203	      agent?: string
+   204	      model?: { providerID: string; modelID: string }
+   205	      messageID?: string
+   206	      variant?: string
+   207	    },
+   208	    output: { message: UserMessage; parts: Part[] },
+   209	  ) => Promise<void>
+   210	  /**
+   211	   * Modify parameters sent to LLM
+   212	   */
+   213	  "chat.params"?: (
+   214	    input: { sessionID: string; agent: string; model: Model; provider: ProviderContext; message: UserMessage },
+   215	    output: { temperature: number; topP: number; topK: number; options: Record<string, any> },
+   216	  ) => Promise<void>
+   217	  "chat.headers"?: (
+   218	    input: { sessionID: string; agent: string; model: Model; provider: ProviderContext; message: UserMessage },
+   219	    output: { headers: Record<string, string> },
+   220	  ) => Promise<void>
+   221	  "permission.ask"?: (input: Permission, output: { status: "ask" | "deny" | "allow" }) => Promise<void>
+   222	  "command.execute.before"?: (
+   223	    input: { command: string; sessionID: string; arguments: string },
+   224	    output: { parts: Part[] },
+   225	  ) => Promise<void>
+   226	  "tool.execute.before"?: (
+   227	    input: { tool: string; sessionID: string; callID: string },
+   228	    output: { args: any },
+   229	  ) => Promise<void>
+   230	  "shell.env"?: (
+   231	    input: { cwd: string; sessionID?: string; callID?: string },
+   232	    output: { env: Record<string, string> },
+   233	  ) => Promise<void>
+   234	  "tool.execute.after"?: (
+   235	    input: { tool: string; sessionID: string; callID: string; args: any },
+   236	    output: {
+   237	      title: string
+   238	      output: string
+   239	      metadata: any
+   240	    },
+   241	  ) => Promise<void>
+   242	  "experimental.chat.messages.transform"?: (
+   243	    input: {},
+   244	    output: {
+   245	      messages: {
+   246	        info: Message
+   247	        parts: Part[]
+   248	      }[]
+   249	    },
+   250	  ) => Promise<void>
+   251	  "experimental.chat.system.transform"?: (
+   252	    input: { sessionID?: string; model: Model },
+   253	    output: {
+   254	      system: string[]
+   255	    },
+   580	        let part: MessageV2.ToolPart = yield* sessions.updatePart({
+   581	          id: PartID.ascending(),
+   582	          messageID: assistantMessage.id,
+   583	          sessionID: assistantMessage.sessionID,
+   584	          type: "tool",
+   585	          callID: ulid(),
+   586	          tool: registry.named.task.id,
+   587	          state: {
+   588	            status: "running",
+   589	            input: {
+   590	              prompt: task.prompt,
+   591	              description: task.description,
+   592	              subagent_type: task.agent,
+   593	              command: task.command,
+   594	            },
+   595	            time: { start: Date.now() },
+   596	          },
+   597	        })
+   598	        const taskArgs = {
+   599	          prompt: task.prompt,
+   600	          description: task.description,
+   601	          subagent_type: task.agent,
+   602	          command: task.command,
+   603	        }
+   604	        yield* plugin.trigger("tool.execute.before", { tool: "task", sessionID, callID: part.id }, { args: taskArgs })
+   605	
+   606	        const taskAgent = yield* agents.get(task.agent)
+   607	        if (!taskAgent) {
+   608	          const available = (yield* agents.list()).filter((a) => !a.hidden).map((a) => a.name)
+   609	          const hint = available.length ? ` Available agents: ${available.join(", ")}` : ""
+   610	          const error = new NamedError.Unknown({ message: `Agent not found: "${task.agent}".${hint}` })
+   611	          yield* bus.publish(Session.Event.Error, { sessionID, error: error.toObject() })
+   612	          throw error
+   613	        }
+   614	
+   615	        let error: Error | undefined
+   616	        const result = yield* Effect.promise((signal) =>
+   617	          taskTool
+   618	            .execute(taskArgs, {
+   619	              agent: task.agent,
+   620	              messageID: assistantMessage.id,
+60:  private readonly compactingSessions = new Set<string>()
+85:      limitations: ["Prepared context does not confirm provider receipt or semantic adoption.", "The public tool checkpoint cannot retract tools that already passed, batch-internal subtools, or StructuredOutput.", "Automatic recovery adds an identifiable synthetic control record, never a duplicate of user guidance.", "Recovery is bounded per observed guidance fingerprint and does not resume old pending on process restart.", "No atomic cancel/expected-turn transaction, abort/replay, or exactly-once guarantee."] }
+237:    const result = await this.input.client.session.status({ query: { directory: this.directory }, signal: AbortSignal.timeout(1500) })
+320:    // The public async route reports a rejected control as session.error. Match
+386:  async compacting(sessionID: string) {
+387:    this.compactingSessions.add(sessionID)
+397:      if (this.compactingSessions.delete(sessionID)) {
+514:          const result = await this.input.client.session.status({ query: { directory: this.directory }, signal: AbortSignal.timeout(1500) })
+534:    if (event.type === "session.error" && properties?.error?.name === "UnknownError" && typeof errorMessage === "string") {
+551:    if (event.type === "session.status" && ["busy", "retry"].includes(properties?.status?.type ?? "")) {
+555:    if (event.type === "session.idle" || event.type === "session.status" && properties?.status?.type === "idle") this.activeSessions.delete(sessionID)
+561:          this.compactingSessions.delete(sessionID)
+574:        if (event.type === "session.status") {
+578:        if (event.type === "session.idle" && !["cancelled", "failed"].includes(state.lifecycle)) state.lifecycle = "idle"
+581:        if (event.type === "session.compacted") this.compactingSessions.delete(sessionID)
+582:        if (["message.updated", "message.part.updated", "message.removed", "message.part.removed", "session.status", "session.idle", "session.error", "session.compacted"].includes(event.type)) {
+
+codex
+我正在核对设计依赖的公开 hook 时序和恢复边界，重点检查验收条件是否能区分真实恢复与原生下一轮处理。
+exec
+/bin/zsh -lc "nl -ba agent-kernel/packages/opencode/src/session/processor.ts | sed -n '360,465p'; nl -ba agent-kernel/packages/opencode/src/session/prompt.ts | sed -n '100,200p'; nl -ba external-plugins/src/steering/ledger.ts | sed -n '360,410p;525,590p'" in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+   360	
+   361	            default:
+   362	              log.info("unhandled", { ...value })
+   363	              return
+   364	          }
+   365	        })
+   366	
+   367	        const cleanup = Effect.fn("SessionProcessor.cleanup")(function* () {
+   368	          if (ctx.snapshot) {
+   369	            const patch = yield* snapshot.patch(ctx.snapshot)
+   370	            if (patch.files.length) {
+   371	              yield* session.updatePart({
+   372	                id: PartID.ascending(),
+   373	                messageID: ctx.assistantMessage.id,
+   374	                sessionID: ctx.sessionID,
+   375	                type: "patch",
+   376	                hash: patch.hash,
+   377	                files: patch.files,
+   378	              })
+   379	            }
+   380	            ctx.snapshot = undefined
+   381	          }
+   382	
+   383	          if (ctx.currentText) {
+   384	            const end = Date.now()
+   385	            ctx.currentText.time = { start: ctx.currentText.time?.start ?? end, end }
+   386	            yield* session.updatePart(ctx.currentText)
+   387	            ctx.currentText = undefined
+   388	          }
+   389	
+   390	          for (const part of Object.values(ctx.reasoningMap)) {
+   391	            const end = Date.now()
+   392	            yield* session.updatePart({
+   393	              ...part,
+   394	              time: { start: part.time.start ?? end, end },
+   395	            })
+   396	          }
+   397	          ctx.reasoningMap = {}
+   398	
+   399	          const parts = MessageV2.parts(ctx.assistantMessage.id)
+   400	          for (const part of parts) {
+   401	            if (part.type !== "tool" || part.state.status === "completed" || part.state.status === "error") continue
+   402	            yield* session.updatePart({
+   403	              ...part,
+   404	              state: {
+   405	                ...part.state,
+   406	                status: "error",
+   407	                error: "Tool execution aborted",
+   408	                time: { start: Date.now(), end: Date.now() },
+   409	              },
+   410	            })
+   411	          }
+   412	          ctx.assistantMessage.time.completed = Date.now()
+   413	          yield* session.updateMessage(ctx.assistantMessage)
+   414	        })
+   415	
+   416	        const halt = Effect.fn("SessionProcessor.halt")(function* (e: unknown) {
+   417	          log.error("process", { error: e, stack: e instanceof Error ? e.stack : undefined })
+   418	          const error = parse(e)
+   419	          if (MessageV2.ContextOverflowError.isInstance(error)) {
+   420	            ctx.needsCompaction = true
+   421	            yield* bus.publish(Session.Event.Error, { sessionID: ctx.sessionID, error })
+   422	            return
+   423	          }
+   424	          ctx.assistantMessage.error = error
+   425	          yield* bus.publish(Session.Event.Error, {
+   426	            sessionID: ctx.assistantMessage.sessionID,
+   427	            error: ctx.assistantMessage.error,
+   428	          })
+   429	          yield* status.set(ctx.sessionID, { type: "idle" })
+   430	        })
+   431	
+   432	        const abort = Effect.fn("SessionProcessor.abort")(() =>
+   433	          Effect.gen(function* () {
+   434	            if (!ctx.assistantMessage.error) {
+   435	              yield* halt(new DOMException("Aborted", "AbortError"))
+   436	            }
+   437	            if (!ctx.assistantMessage.time.completed) {
+   438	              yield* cleanup()
+   439	              return
+   440	            }
+   441	            yield* session.updateMessage(ctx.assistantMessage)
+   442	          }),
+   443	        )
+   444	
+   445	        const process = Effect.fn("SessionProcessor.process")(function* (streamInput: LLM.StreamInput) {
+   446	          log.info("process")
+   447	          ctx.needsCompaction = false
+   448	          ctx.shouldBreak = (yield* config.get()).experimental?.continue_loop_on_deny !== true
+   449	
+   450	          return yield* Effect.gen(function* () {
+   451	            yield* Effect.gen(function* () {
+   452	              ctx.currentText = undefined
+   453	              ctx.reasoningMap = {}
+   454	              const stream = llm.stream(streamInput)
+   455	
+   456	              yield* stream.pipe(
+   457	                Stream.tap((event) => handleEvent(event)),
+   458	                Stream.takeUntil(() => ctx.needsCompaction),
+   459	                Stream.runDrain,
+   460	              )
+   461	            }).pipe(
+   462	              Effect.onInterrupt(() => Effect.sync(() => void (aborted = true))),
+   463	              Effect.catchCauseIf(
+   464	                (cause) => !Cause.hasInterruptsOnly(cause),
+   465	                (cause) => Effect.fail(Cause.squash(cause)),
+   100	      const truncate = yield* Truncate.Service
+   101	      const spawner = yield* ChildProcessSpawner.ChildProcessSpawner
+   102	      const scope = yield* Scope.Scope
+   103	      const instruction = yield* Instruction.Service
+   104	
+   105	      const state = yield* InstanceState.make(
+   106	        Effect.fn("SessionPrompt.state")(function* () {
+   107	          const runners = new Map<string, Runner<MessageV2.WithParts>>()
+   108	          yield* Effect.addFinalizer(
+   109	            Effect.fnUntraced(function* () {
+   110	              yield* Effect.forEach(runners.values(), (r) => r.cancel, { concurrency: "unbounded", discard: true })
+   111	              runners.clear()
+   112	            }),
+   113	          )
+   114	          return { runners }
+   115	        }),
+   116	      )
+   117	
+   118	      const getRunner = (runners: Map<string, Runner<MessageV2.WithParts>>, sessionID: SessionID) => {
+   119	        const existing = runners.get(sessionID)
+   120	        if (existing) return existing
+   121	        const runner = Runner.make<MessageV2.WithParts>(scope, {
+   122	          onIdle: Effect.gen(function* () {
+   123	            runners.delete(sessionID)
+   124	            yield* status.set(sessionID, { type: "idle" })
+   125	          }),
+   126	          onBusy: status.set(sessionID, { type: "busy" }),
+   127	          onInterrupt: lastAssistant(sessionID),
+   128	          busy: () => {
+   129	            throw new Session.BusyError(sessionID)
+   130	          },
+   131	        })
+   132	        runners.set(sessionID, runner)
+   133	        return runner
+   134	      }
+   135	
+   136	      const assertNotBusy: (sessionID: SessionID) => Effect.Effect<void, Session.BusyError> = Effect.fn(
+   137	        "SessionPrompt.assertNotBusy",
+   138	      )(function* (sessionID: SessionID) {
+   139	        const s = yield* InstanceState.get(state)
+   140	        const runner = s.runners.get(sessionID)
+   141	        if (runner?.busy) throw new Session.BusyError(sessionID)
+   142	      })
+   143	
+   144	      const cancel = Effect.fn("SessionPrompt.cancel")(function* (sessionID: SessionID) {
+   145	        log.info("cancel", { sessionID })
+   146	        const s = yield* InstanceState.get(state)
+   147	        const runner = s.runners.get(sessionID)
+   148	        if (!runner || !runner.busy) {
+   149	          yield* status.set(sessionID, { type: "idle" })
+   150	          return
+   151	        }
+   152	        yield* runner.cancel
+   153	      })
+   154	
+   155	      const resolvePromptParts = Effect.fn("SessionPrompt.resolvePromptParts")(function* (template: string) {
+   156	        const ctx = yield* InstanceState.context
+   157	        const parts: PromptInput["parts"] = [{ type: "text", text: template }]
+   158	        const files = ConfigMarkdown.files(template)
+   159	        const seen = new Set<string>()
+   160	        yield* Effect.forEach(
+   161	          files,
+   162	          Effect.fnUntraced(function* (match) {
+   163	            const name = match[1]
+   164	            if (seen.has(name)) return
+   165	            seen.add(name)
+   166	            const filepath = name.startsWith("~/")
+   167	              ? path.join(os.homedir(), name.slice(2))
+   168	              : path.resolve(ctx.worktree, name)
+   169	
+   170	            const info = yield* fsys.stat(filepath).pipe(Effect.option)
+   171	            if (Option.isNone(info)) {
+   172	              const found = yield* agents.get(name)
+   173	              if (found) parts.push({ type: "agent", name: found.name })
+   174	              return
+   175	            }
+   176	            const stat = info.value
+   177	            parts.push({
+   178	              type: "file",
+   179	              url: pathToFileURL(filepath).href,
+   180	              filename: name,
+   181	              mime: stat.type === "Directory" ? "application/x-directory" : "text/plain",
+   182	            })
+   183	          }),
+   184	          { concurrency: "unbounded", discard: true },
+   185	        )
+   186	        return parts
+   187	      })
+   188	
+   189	      const title = Effect.fn("SessionPrompt.ensureTitle")(function* (input: {
+   190	        session: Session.Info
+   191	        history: MessageV2.WithParts[]
+   192	        providerID: ProviderID
+   193	        modelID: ModelID
+   194	      }) {
+   195	        if (input.session.parentID) return
+   196	        if (!Session.isDefaultTitle(input.session.title)) return
+   197	
+   198	        const real = (m: MessageV2.WithParts) =>
+   199	          m.info.role === "user" && !m.parts.every((p) => "synthetic" in p && p.synthetic)
+   200	        const idx = input.history.findIndex(real)
+   360	    const explicit = texts.some(part => prefix.test(String(part.text)))
+   361	    if (explicit && !effective(output.parts).length) throw new Error("Usage: steer: <guidance for the current task>, or attach a file")
+   362	    if (!effective(output.parts).length) return
+   363	    this.invalidate(sessionID)
+   364	    const observedTerminalEpoch = this.terminalEpochs.get(sessionID) ?? 0
+   365	    await this.serial(sessionID, async state => {
+   366	      // This runs before the kernel persists the incoming message. It never
+   367	      // mutates input or reports a successful save merely because the hook ran.
+   368	      await this.reconcile(state).catch(() => undefined)
+   369	      const entry = this.entry(state, output.message.id)
+   370	      entry.observationReason = explicit ? "explicit" : state.lifecycle === "active" ? "active" : "ordinary"
+   371	      const expected = fingerprint(output.parts)
+   372	      if (entry.expectedFingerprint !== expected) {
+   373	        entry.expectedFingerprint = expected
+   374	        entry.historicalBaseline = false
+   375	        if (entry.fingerprint !== expected) entry.saved = "unknown"
+   376	      }
+   377	      if (this.autoResume && observedActive && observedTerminalEpoch === (this.terminalEpochs.get(sessionID) ?? 0)) {
+   378	        const eligible = this.eligible.get(sessionID) ?? new Map<string, string>()
+   379	        eligible.set(entry.messageID, expected)
+   380	        this.eligible.set(sessionID, eligible)
+   381	      }
+   382	      await this.persist(state)
+   383	      this.schedule(state)
+   384	    })
+   385	  }
+   386	  async compacting(sessionID: string) {
+   387	    this.compactingSessions.add(sessionID)
+   388	    await this.serial(sessionID, async state => { this.diagnostic(state, "compaction-started"); await this.persist(state) })
+   389	  }
+   390	  async prepare(output: { messages: Message[] }) {
+   391	    const sessionIDs = [...new Set(output.messages.map(message => message.info.sessionID))]
+   392	    if (sessionIDs.length !== 1) return
+   393	    const sessionID = sessionIDs[0]
+   394	    await this.serial(sessionID, async state => {
+   395	      let messages: Message[]
+   396	      try { messages = await this.reconcile(state) } catch { await this.persist(state); return }
+   397	      if (this.compactingSessions.delete(sessionID)) {
+   398	        this.diagnostic(state, "compaction-prepared")
+   399	        await this.persist(state)
+   400	        return
+   401	      }
+   402	      const contextIDs = new Set(output.messages.map(message => message.info.id))
+   403	      const parent = [...output.messages].reverse().find(message => message.info.role === "user")?.info.id
+   404	      const candidates = messages.filter(message => message.info.role === "assistant" && !message.info.summary && !message.info.time?.completed && !message.info.finish && !message.info.error
+   405	        && message.info.parentID === parent && !contextIDs.has(message.info.id))
+   406	      if (candidates.length !== 1 || state.snapshots.some(snapshot => snapshot.assistantID === candidates[0]?.info.id)) {
+   407	        this.diagnostic(state, "assistant-association-unavailable")
+   408	        await this.persist(state)
+   409	        return
+   410	      }
+   525	      return result
+   526	    })
+   527	  }
+   528	  async event(event: { type: string; properties?: unknown }) {
+   529	    const properties = event.properties as { sessionID?: string; messageID?: string; info?: Message["info"]; part?: { sessionID?: string }; status?: { type: string }; error?: { name?: string; data?: { message?: string } } } | undefined
+   530	    const sessionID = properties?.sessionID ?? properties?.info?.sessionID ?? properties?.part?.sessionID
+   531	      ?? (event.type === "session.deleted" ? properties?.info?.id : undefined)
+   532	    if (!sessionID) return
+   533	    const errorMessage = properties?.error?.data?.message
+   534	    if (event.type === "session.error" && properties?.error?.name === "UnknownError" && typeof errorMessage === "string") {
+   535	      const tokens = this.suppressionTokens.get(sessionID)
+   536	      const ownToken = tokens && [...tokens].find(token => errorMessage.includes(token))
+   537	      if (ownToken) {
+   538	        tokens!.delete(ownToken)
+   539	        if (!tokens!.size) this.suppressionTokens.delete(sessionID)
+   540	        if (!this.deleted.has(sessionID)) await this.serial(sessionID, async state => {
+   541	          this.diagnostic(state, "recovery-suppression-notification")
+   542	          await this.persist(state)
+   543	        }).catch(() => undefined)
+   544	        return
+   545	      }
+   546	    }
+   547	    // Invalidate before awaiting the queue, so cancellation can suppress a
+   548	    // scheduled/in-flight control even while a slow SDK read is outstanding.
+   549	    const terminal = event.type === "session.deleted" || !!(properties?.error ?? properties?.info?.error)
+   550	    if (terminal) this.invalidate(sessionID, true)
+   551	    if (event.type === "session.status" && ["busy", "retry"].includes(properties?.status?.type ?? "")) {
+   552	      this.invalidate(sessionID)
+   553	      this.activeSessions.add(sessionID)
+   554	    }
+   555	    if (event.type === "session.idle" || event.type === "session.status" && properties?.status?.type === "idle") this.activeSessions.delete(sessionID)
+   556	    try {
+   557	      await this.serial(sessionID, async state => {
+   558	        if (event.type === "session.deleted") {
+   559	          this.deleted.add(sessionID)
+   560	          state.lifecycle = "deleted"
+   561	          this.compactingSessions.delete(sessionID)
+   562	          await rm(state.stateFile, { force: true }).catch(() => this.diagnostic(state, "state-delete-failed"))
+   563	          this.sessions.delete(sessionID)
+   564	          return
+   565	        }
+   566	        if (this.deleted.has(sessionID)) return
+   567	        if (event.type === "message.removed" && typeof properties?.messageID === "string") {
+   568	          const entry = state.messages.find(item => item.messageID === properties.messageID)
+   569	          if (entry) {
+   570	            entry.removedAt = Date.now()
+   571	            this.diagnostic(state, "message-removal-observed", { messageIDs: [entry.messageID] })
+   572	          }
+   573	        }
+   574	        if (event.type === "session.status") {
+   575	          if (properties?.status?.type === "busy" || properties?.status?.type === "retry") state.lifecycle = "active"
+   576	          else if (!["cancelled", "failed"].includes(state.lifecycle)) state.lifecycle = "idle"
+   577	        }
+   578	        if (event.type === "session.idle" && !["cancelled", "failed"].includes(state.lifecycle)) state.lifecycle = "idle"
+   579	        const error = properties?.error ?? properties?.info?.error
+   580	        if (error) state.lifecycle = error.name === "MessageAbortedError" ? "cancelled" : "failed"
+   581	        if (event.type === "session.compacted") this.compactingSessions.delete(sessionID)
+   582	        if (["message.updated", "message.part.updated", "message.removed", "message.part.removed", "session.status", "session.idle", "session.error", "session.compacted"].includes(event.type)) {
+   583	          await this.reconcile(state).catch(() => undefined)
+   584	          await this.persist(state)
+   585	          this.schedule(state)
+   586	        }
+   587	      })
+   588	    } catch {
+   589	      // Event callbacks are fire-and-forget in the pinned kernel. Never allow an
+   590	      // unhandled rejection to crash it or represent this as delivery success.
+
+exec
+/bin/zsh -lc "rg -n 'promptAsync|PromptAsync|prompt_async' agent-kernel/packages/opencode/src/server agent-kernel/packages/sdk/js/src/gen/sdk.gen.ts | head -30; rg -n 'metadata|synthetic' agent-kernel/packages/opencode/src/session/prompt.ts | tail -20" in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+exec
+/bin/zsh -lc "rg -n 'result.*stop|return \"stop\"|session.error|abort\\(' agent-kernel/packages/opencode/src/session/processor.ts agent-kernel/packages/opencode/src/session/prompt.ts; nl -ba agent-kernel/packages/opencode/src/session/prompt.ts | sed -n '1400,1470p'; rg -n 'synthetic|ignored' agent-kernel/packages/opencode/src/session/message-v2.ts | head -35" in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+agent-kernel/packages/sdk/js/src/gen/sdk.gen.ts:97:  SessionPromptAsyncData,
+agent-kernel/packages/sdk/js/src/gen/sdk.gen.ts:98:  SessionPromptAsyncResponses,
+agent-kernel/packages/sdk/js/src/gen/sdk.gen.ts:99:  SessionPromptAsyncErrors,
+agent-kernel/packages/sdk/js/src/gen/sdk.gen.ts:639:  public promptAsync<ThrowOnError extends boolean = false>(options: Options<SessionPromptAsyncData, ThrowOnError>) {
+agent-kernel/packages/sdk/js/src/gen/sdk.gen.ts:640:    return (options.client ?? this._client).post<SessionPromptAsyncResponses, SessionPromptAsyncErrors, ThrowOnError>({
+agent-kernel/packages/sdk/js/src/gen/sdk.gen.ts:641:      url: "/session/{id}/prompt_async",
+agent-kernel/packages/opencode/src/server/routes/session.ts:825:      "/:sessionID/prompt_async",
+agent-kernel/packages/opencode/src/server/routes/session.ts:830:        operationId: "session.prompt_async",
+agent-kernel/packages/opencode/src/server/routes/session.ts:852:            log.error("prompt_async failed", { sessionID, error: err })
+agent-kernel/packages/opencode/src/server/server.ts:33:    if (method === "POST" && /\/session\/[^/]+\/(message|prompt_async)$/.test(path)) return true
+880:                metadata: { output, description: "" },
+894:                part.state.metadata = { output, description: "" }
+1005:                  synthetic: true,
+1020:                      synthetic: true,
+1029:                      synthetic: true,
+1043:                  synthetic: true,
+1058:                      synthetic: true,
+1065:                      synthetic: true,
+1109:                      synthetic: true,
+1125:                              metadata: async () => {},
+1140:                      synthetic: true,
+1147:                          synthetic: true,
+1168:                      synthetic: true,
+1187:                          metadata: async () => {},
+1198:                      synthetic: true,
+1205:                      synthetic: true,
+1218:                    synthetic: true,
+1247:                synthetic: true,
+1485:                      if (p.type !== "text" || p.ignored || p.synthetic) continue
+1892:          metadata: { valid: true },
+
+ succeeded in 0ms:
+agent-kernel/packages/opencode/src/session/prompt.ts:1369:            // Some providers return "stop" even when the assistant message contains tool calls.
+agent-kernel/packages/opencode/src/session/prompt.ts:1408:              if (result === "stop") break
+agent-kernel/packages/opencode/src/session/prompt.ts:1542:                if (result === "stop") return "break" as const
+agent-kernel/packages/opencode/src/session/prompt.ts:1555:                if (Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)) yield* handle.abort()
+agent-kernel/packages/opencode/src/session/processor.ts:484:              yield* abort()
+agent-kernel/packages/opencode/src/session/processor.ts:487:            if (ctx.blocked || ctx.assistantMessage.error || aborted) return "stop"
+agent-kernel/packages/opencode/src/session/processor.ts:489:          }).pipe(Effect.onInterrupt(() => abort().pipe(Effect.asVoid)))
+  1400	            if (task?.type === "compaction") {
+  1401	              const result = yield* compaction.process({
+  1402	                messages: msgs,
+  1403	                parentID: lastUser.id,
+  1404	                sessionID,
+  1405	                auto: task.auto,
+  1406	                overflow: task.overflow,
+  1407	              })
+  1408	              if (result === "stop") break
+  1409	              continue
+  1410	            }
+  1411	
+  1412	            if (
+  1413	              lastFinished &&
+  1414	              lastFinished.summary !== true &&
+  1415	              (yield* compaction.isOverflow({ tokens: lastFinished.tokens, model }))
+  1416	            ) {
+  1417	              yield* compaction.create({ sessionID, agent: lastUser.agent, model: lastUser.model, auto: true })
+  1418	              continue
+  1419	            }
+  1420	
+  1421	            const agent = yield* agents.get(lastUser.agent)
+  1422	            if (!agent) {
+  1423	              const available = (yield* agents.list()).filter((a) => !a.hidden).map((a) => a.name)
+  1424	              const hint = available.length ? ` Available agents: ${available.join(", ")}` : ""
+  1425	              const error = new NamedError.Unknown({ message: `Agent not found: "${lastUser.agent}".${hint}` })
+  1426	              yield* bus.publish(Session.Event.Error, { sessionID, error: error.toObject() })
+  1427	              throw error
+  1428	            }
+  1429	            const maxSteps = agent.steps ?? Infinity
+  1430	            const isLastStep = step >= maxSteps
+  1431	            msgs = yield* insertReminders({ messages: msgs, agent, session })
+  1432	
+  1433	            const msg: MessageV2.Assistant = {
+  1434	              id: MessageID.ascending(),
+  1435	              parentID: lastUser.id,
+  1436	              role: "assistant",
+  1437	              mode: agent.name,
+  1438	              agent: agent.name,
+  1439	              variant: lastUser.variant,
+  1440	              path: { cwd: ctx.directory, root: ctx.worktree },
+  1441	              cost: 0,
+  1442	              tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
+  1443	              modelID: model.id,
+  1444	              providerID: model.providerID,
+  1445	              time: { created: Date.now() },
+  1446	              sessionID,
+  1447	            }
+  1448	            yield* sessions.updateMessage(msg)
+  1449	            const handle = yield* processor.create({
+  1450	              assistantMessage: msg,
+  1451	              sessionID,
+  1452	              model,
+  1453	            })
+  1454	
+  1455	            const outcome: "break" | "continue" = yield* Effect.onExit(
+  1456	              Effect.gen(function* () {
+  1457	                const lastUserMsg = msgs.findLast((m) => m.info.role === "user")
+  1458	                const bypassAgentCheck = lastUserMsg?.parts.some((p) => p.type === "agent") ?? false
+  1459	
+  1460	                const tools = yield* resolveTools({
+  1461	                  agent,
+  1462	                  session,
+  1463	                  model,
+  1464	                  tools: lastUser.tools,
+  1465	                  processor: handle,
+  1466	                  bypassAgentCheck,
+  1467	                  messages: msgs,
+  1468	                })
+  1469	
+  1470	                if (lastUser.format?.type === "json_schema") {
+113:    synthetic: z.boolean().optional(),
+114:    ignored: z.boolean().optional(),
+649:          if (part.type === "text" && !part.ignored)
+
+exec
+/bin/zsh -lc "nl -ba agent-kernel/packages/opencode/src/session/processor.ts | sed -n '465,495p'; nl -ba agent-kernel/packages/opencode/src/session/message-v2.ts | sed -n '95,120p;640,660p'; nl -ba agent-kernel/packages/opencode/src/session/prompt.ts | sed -n '1730,1795p'; nl -ba agent-kernel/packages/opencode/src/server/routes/session.ts | sed -n '825,865p'; rg -n 'function insertReminders|const insertReminders' agent-kernel/packages/opencode/src/session/prompt.ts" in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+   465	                (cause) => Effect.fail(Cause.squash(cause)),
+   466	              ),
+   467	              Effect.retry(
+   468	                SessionRetry.policy({
+   469	                  parse,
+   470	                  set: (info) =>
+   471	                    status.set(ctx.sessionID, {
+   472	                      type: "retry",
+   473	                      attempt: info.attempt,
+   474	                      message: info.message,
+   475	                      next: info.next,
+   476	                    }),
+   477	                }),
+   478	              ),
+   479	              Effect.catch(halt),
+   480	              Effect.ensuring(cleanup()),
+   481	            )
+   482	
+   483	            if (aborted && !ctx.assistantMessage.error) {
+   484	              yield* abort()
+   485	            }
+   486	            if (ctx.needsCompaction) return "compact"
+   487	            if (ctx.blocked || ctx.assistantMessage.error || aborted) return "stop"
+   488	            return "continue"
+   489	          }).pipe(Effect.onInterrupt(() => abort().pipe(Effect.asVoid)))
+   490	        })
+   491	
+   492	        return {
+   493	          get message() {
+   494	            return ctx.assistantMessage
+   495	          },
+    95	    snapshot: z.string(),
+    96	  }).meta({
+    97	    ref: "SnapshotPart",
+    98	  })
+    99	  export type SnapshotPart = z.infer<typeof SnapshotPart>
+   100	
+   101	  export const PatchPart = PartBase.extend({
+   102	    type: z.literal("patch"),
+   103	    hash: z.string(),
+   104	    files: z.string().array(),
+   105	  }).meta({
+   106	    ref: "PatchPart",
+   107	  })
+   108	  export type PatchPart = z.infer<typeof PatchPart>
+   109	
+   110	  export const TextPart = PartBase.extend({
+   111	    type: z.literal("text"),
+   112	    text: z.string(),
+   113	    synthetic: z.boolean().optional(),
+   114	    ignored: z.boolean().optional(),
+   115	    time: z
+   116	      .object({
+   117	        start: z.number(),
+   118	        end: z.number().optional(),
+   119	      })
+   120	      .optional(),
+   640	
+   641	      if (msg.info.role === "user") {
+   642	        const userMessage: UIMessage = {
+   643	          id: msg.info.id,
+   644	          role: "user",
+   645	          parts: [],
+   646	        }
+   647	        result.push(userMessage)
+   648	        for (const part of msg.parts) {
+   649	          if (part.type === "text" && !part.ignored)
+   650	            userMessage.parts.push({
+   651	              type: "text",
+   652	              text: part.text,
+   653	            })
+   654	          // text/plain and directory files are converted into text parts, ignore them
+   655	          if (part.type === "file" && part.mime !== "text/plain" && part.mime !== "application/x-directory") {
+   656	            if (options?.stripMedia && isMedia(part.mime)) {
+   657	              userMessage.parts.push({
+   658	                type: "text",
+   659	                text: `[Attached ${part.mime}: ${part.filename ?? "file"}]`,
+   660	              })
+  1730	        Layer.provide(Agent.defaultLayer),
+  1731	        Layer.provide(Bus.layer),
+  1732	        Layer.provide(CrossSpawnSpawner.defaultLayer),
+  1733	      ),
+  1734	    ),
+  1735	  )
+  1736	  const { runPromise } = makeRuntime(Service, defaultLayer)
+  1737	
+  1738	  export async function assertNotBusy(sessionID: SessionID) {
+  1739	    return runPromise((svc) => svc.assertNotBusy(SessionID.zod.parse(sessionID)))
+  1740	  }
+  1741	
+  1742	  export const PromptInput = z.object({
+  1743	    sessionID: SessionID.zod,
+  1744	    messageID: MessageID.zod.optional(),
+  1745	    model: z
+  1746	      .object({
+  1747	        providerID: ProviderID.zod,
+  1748	        modelID: ModelID.zod,
+  1749	      })
+  1750	      .optional(),
+  1751	    agent: z.string().optional(),
+  1752	    noReply: z.boolean().optional(),
+  1753	    tools: z
+  1754	      .record(z.string(), z.boolean())
+  1755	      .optional()
+  1756	      .describe(
+  1757	        "@deprecated tools and permissions have been merged, you can set permissions on the session itself now",
+  1758	      ),
+  1759	    format: MessageV2.Format.optional(),
+  1760	    system: z.string().optional(),
+  1761	    variant: z.string().optional(),
+  1762	    parts: z.array(
+  1763	      z.discriminatedUnion("type", [
+  1764	        MessageV2.TextPart.omit({
+  1765	          messageID: true,
+  1766	          sessionID: true,
+  1767	        })
+  1768	          .partial({
+  1769	            id: true,
+  1770	          })
+  1771	          .meta({
+  1772	            ref: "TextPartInput",
+  1773	          }),
+  1774	        MessageV2.FilePart.omit({
+  1775	          messageID: true,
+  1776	          sessionID: true,
+  1777	        })
+  1778	          .partial({
+  1779	            id: true,
+  1780	          })
+  1781	          .meta({
+  1782	            ref: "FilePartInput",
+  1783	          }),
+  1784	        MessageV2.AgentPart.omit({
+  1785	          messageID: true,
+  1786	          sessionID: true,
+  1787	        })
+  1788	          .partial({
+  1789	            id: true,
+  1790	          })
+  1791	          .meta({
+  1792	            ref: "AgentPartInput",
+  1793	          }),
+  1794	        MessageV2.SubtaskPart.omit({
+  1795	          messageID: true,
+   825	      "/:sessionID/prompt_async",
+   826	      describeRoute({
+   827	        summary: "Send async message",
+   828	        description:
+   829	          "Create and send a new message to a session asynchronously, starting the session if needed and returning immediately.",
+   830	        operationId: "session.prompt_async",
+   831	        responses: {
+   832	          204: {
+   833	            description: "Prompt accepted",
+   834	          },
+   835	          ...errors(400, 404),
+   836	        },
+   837	      }),
+   838	      validator(
+   839	        "param",
+   840	        z.object({
+   841	          sessionID: SessionID.zod,
+   842	        }),
+   843	      ),
+   844	      validator("json", SessionPrompt.PromptInput.omit({ sessionID: true })),
+   845	      async (c) => {
+   846	        c.status(204)
+   847	        c.header("Content-Type", "application/json")
+   848	        return stream(c, async () => {
+   849	          const sessionID = c.req.valid("param").sessionID
+   850	          const body = c.req.valid("json")
+   851	          SessionPrompt.prompt({ ...body, sessionID }).catch((err) => {
+   852	            log.error("prompt_async failed", { sessionID, error: err })
+   853	            Bus.publish(Session.Event.Error, {
+   854	              sessionID,
+   855	              error: new NamedError.Unknown({ message: err instanceof Error ? err.message : String(err) }).toObject(),
+   856	            })
+   857	          })
+   858	        })
+   859	      },
+   860	    )
+   861	    .post(
+   862	      "/:sessionID/command",
+   863	      describeRoute({
+   864	        summary: "Send command",
+   865	        description: "Send a new command to a session for execution by the AI assistant.",
+252:      const insertReminders = Effect.fn("SessionPrompt.insertReminders")(function* (input: {
+
+exec
+/bin/zsh -lc "nl -ba agent-kernel/packages/opencode/src/session/message-v2.ts | sed -n '110,135p;345,410p'; nl -ba agent-kernel/packages/opencode/src/session/prompt.ts | sed -n '920,965p'; nl -ba agent-kernel/packages/opencode/src/session/prompt.ts | sed -n '1160,1235p'" in /Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch
+ succeeded in 0ms:
+   110	  export const TextPart = PartBase.extend({
+   111	    type: z.literal("text"),
+   112	    text: z.string(),
+   113	    synthetic: z.boolean().optional(),
+   114	    ignored: z.boolean().optional(),
+   115	    time: z
+   116	      .object({
+   117	        start: z.number(),
+   118	        end: z.number().optional(),
+   119	      })
+   120	      .optional(),
+   121	    metadata: z.record(z.string(), z.any()).optional(),
+   122	  }).meta({
+   123	    ref: "TextPart",
+   124	  })
+   125	  export type TextPart = z.infer<typeof TextPart>
+   126	
+   127	  export const ReasoningPart = PartBase.extend({
+   128	    type: z.literal("reasoning"),
+   129	    text: z.string(),
+   130	    metadata: z.record(z.string(), z.any()).optional(),
+   131	    time: z.object({
+   132	      start: z.number(),
+   133	      end: z.number().optional(),
+   134	    }),
+   135	  }).meta({
+   345	    state: ToolState,
+   346	    metadata: z.record(z.string(), z.any()).optional(),
+   347	  }).meta({
+   348	    ref: "ToolPart",
+   349	  })
+   350	  export type ToolPart = z.infer<typeof ToolPart>
+   351	
+   352	  const Base = z.object({
+   353	    id: MessageID.zod,
+   354	    sessionID: SessionID.zod,
+   355	  })
+   356	
+   357	  export const User = Base.extend({
+   358	    role: z.literal("user"),
+   359	    time: z.object({
+   360	      created: z.number(),
+   361	    }),
+   362	    format: Format.optional(),
+   363	    summary: z
+   364	      .object({
+   365	        title: z.string().optional(),
+   366	        body: z.string().optional(),
+   367	        diffs: Snapshot.FileDiff.array(),
+   368	      })
+   369	      .optional(),
+   370	    agent: z.string(),
+   371	    model: z.object({
+   372	      providerID: ProviderID.zod,
+   373	      modelID: ModelID.zod,
+   374	    }),
+   375	    system: z.string().optional(),
+   376	    tools: z.record(z.string(), z.boolean()).optional(),
+   377	    variant: z.string().optional(),
+   378	  }).meta({
+   379	    ref: "UserMessage",
+   380	  })
+   381	  export type User = z.infer<typeof User>
+   382	
+   383	  export const Part = z
+   384	    .discriminatedUnion("type", [
+   385	      TextPart,
+   386	      SubtaskPart,
+   387	      ReasoningPart,
+   388	      FilePart,
+   389	      ToolPart,
+   390	      StepStartPart,
+   391	      StepFinishPart,
+   392	      SnapshotPart,
+   393	      PatchPart,
+   394	      AgentPart,
+   395	      RetryPart,
+   396	      CompactionPart,
+   397	    ])
+   398	    .meta({
+   399	      ref: "Part",
+   400	    })
+   401	  export type Part = z.infer<typeof Part>
+   402	
+   403	  export const Assistant = Base.extend({
+   404	    role: z.literal("assistant"),
+   405	    time: z.object({
+   406	      created: z.number(),
+   407	      completed: z.number().optional(),
+   408	    }),
+   409	    error: z
+   410	      .discriminatedUnion("name", [
+   920	        providerID: ProviderID,
+   921	        modelID: ModelID,
+   922	        sessionID: SessionID,
+   923	      ) {
+   924	        const exit = yield* provider.getModel(providerID, modelID).pipe(Effect.exit)
+   925	        if (Exit.isSuccess(exit)) return exit.value
+   926	        const err = Cause.squash(exit.cause)
+   927	        if (Provider.ModelNotFoundError.isInstance(err)) {
+   928	          const hint = err.data.suggestions?.length ? ` Did you mean: ${err.data.suggestions.join(", ")}?` : ""
+   929	          yield* bus.publish(Session.Event.Error, {
+   930	            sessionID,
+   931	            error: new NamedError.Unknown({
+   932	              message: `Model not found: ${err.data.providerID}/${err.data.modelID}.${hint}`,
+   933	            }).toObject(),
+   934	          })
+   935	        }
+   936	        return yield* Effect.failCause(exit.cause)
+   937	      })
+   938	
+   939	      const lastModel = Effect.fnUntraced(function* (sessionID: SessionID) {
+   940	        const model = yield* Effect.promise(async () => {
+   941	          for await (const item of MessageV2.stream(sessionID)) {
+   942	            if (item.info.role === "user" && item.info.model) return item.info.model
+   943	          }
+   944	        })
+   945	        if (model) return model
+   946	        return yield* provider.defaultModel()
+   947	      })
+   948	
+   949	      const createUserMessage = Effect.fn("SessionPrompt.createUserMessage")(function* (input: PromptInput) {
+   950	        const agentName = input.agent || (yield* agents.defaultAgent())
+   951	        const ag = yield* agents.get(agentName)
+   952	        if (!ag) {
+   953	          const available = (yield* agents.list()).filter((a) => !a.hidden).map((a) => a.name)
+   954	          const hint = available.length ? ` Available agents: ${available.join(", ")}` : ""
+   955	          const error = new NamedError.Unknown({ message: `Agent not found: "${agentName}".${hint}` })
+   956	          yield* bus.publish(Session.Event.Error, { sessionID: input.sessionID, error: error.toObject() })
+   957	          throw error
+   958	        }
+   959	
+   960	        const model = input.model ?? ag.model ?? (yield* lastModel(input.sessionID))
+   961	        const same = ag.model && model.providerID === ag.model.providerID && model.modelID === ag.model.modelID
+   962	        const full =
+   963	          !input.variant && ag.variant && same
+   964	            ? yield* provider
+   965	                .getModel(model.providerID, model.modelID)
+  1160	                    yield* bus.publish(Session.Event.Error, {
+  1161	                      sessionID: input.sessionID,
+  1162	                      error: new NamedError.Unknown({ message }).toObject(),
+  1163	                    })
+  1164	                    pieces.push({
+  1165	                      messageID: info.id,
+  1166	                      sessionID: input.sessionID,
+  1167	                      type: "text",
+  1168	                      synthetic: true,
+  1169	                      text: `Read tool failed to read ${filepath} with the following error: ${message}`,
+  1170	                    })
+  1171	                  }
+  1172	                  return pieces
+  1173	                }
+  1174	
+  1175	                if (part.mime === "application/x-directory") {
+  1176	                  const args = { filePath: filepath }
+  1177	                  const result = yield* Effect.promise(() => registry.named.read.init()).pipe(
+  1178	                    Effect.flatMap((t) =>
+  1179	                      Effect.promise(() =>
+  1180	                        t.execute(args, {
+  1181	                          sessionID: input.sessionID,
+  1182	                          abort: new AbortController().signal,
+  1183	                          agent: input.agent!,
+  1184	                          messageID: info.id,
+  1185	                          extra: { bypassCwdCheck: true },
+  1186	                          messages: [],
+  1187	                          metadata: async () => {},
+  1188	                          ask: async () => {},
+  1189	                        }),
+  1190	                      ),
+  1191	                    ),
+  1192	                  )
+  1193	                  return [
+  1194	                    {
+  1195	                      messageID: info.id,
+  1196	                      sessionID: input.sessionID,
+  1197	                      type: "text",
+  1198	                      synthetic: true,
+  1199	                      text: `Called the Read tool with the following input: ${JSON.stringify(args)}`,
+  1200	                    },
+  1201	                    {
+  1202	                      messageID: info.id,
+  1203	                      sessionID: input.sessionID,
+  1204	                      type: "text",
+  1205	                      synthetic: true,
+  1206	                      text: result.output,
+  1207	                    },
+  1208	                    { ...part, messageID: info.id, sessionID: input.sessionID },
+  1209	                  ]
+  1210	                }
+  1211	
+  1212	                yield* filetime.read(input.sessionID, filepath)
+  1213	                return [
+  1214	                  {
+  1215	                    messageID: info.id,
+  1216	                    sessionID: input.sessionID,
+  1217	                    type: "text",
+  1218	                    synthetic: true,
+  1219	                    text: `Called the Read tool with the following input: {"filePath":"${filepath}"}`,
+  1220	                  },
+  1221	                  {
+  1222	                    id: part.id,
+  1223	                    messageID: info.id,
+  1224	                    sessionID: input.sessionID,
+  1225	                    type: "file",
+  1226	                    url:
+  1227	                      `data:${part.mime};base64,` +
+  1228	                      Buffer.from(yield* fsys.readFile(filepath).pipe(Effect.catch(Effect.die))).toString("base64"),
+  1229	                    mime: part.mime,
+  1230	                    filename: part.filename!,
+  1231	                    source: part.source,
+  1232	                  },
+  1233	                ]
+  1234	              }
+  1235	            }
+
+codex
+- **P1｜G2 集成测试的屏障无法确定命中完成边界。** 设计要求在最终响应完成前保存插话，再证明后续请求来自 recovery（[DESIGN.md:31](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:31>)、[DESIGN.md:64](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:64>)）。但正常模型响应结束后，processor 通常返回 `continue`，loop 会再次读取消息；插话若在该读取前保存，会被原生机制处理，而非 recovery（[processor.ts:486](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/processor.ts:486>)、[prompt.ts:1348](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/prompt.ts:1348>)）。建议先设计可观测的屏障，确保插话保存在**最后一次消息读取之后、runner 结束之前**，并同时断言无插件时消息被孤立、有插件时出现 continuation。若公开接口无法确定性控制这一窗口，应明确记录测试缺口，不把较早的响应屏障当作 G2 验证。
+
+- **P1｜“取消后不自动继续”的验收承诺超过了公开接口能保证的范围。** 设计一方面要求取消后不得复活，另一方面承认检查与 dispatch 非原子（[DESIGN.md:18](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:18>)、[DESIGN.md:34](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:34>)、[DESIGN.md:48](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:48>)）。尤其 runner 已空闲时的 cancel 只发布 idle，没有专门的取消事件（[prompt.ts:144](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/prompt.ts:144>)）；`promptAsync` 也立即返回，后台才执行（[session.ts:844](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/server/routes/session.ts:844>)）。建议将保证限定为“插件在 dispatch 前观察到取消或终止证据时抑制恢复”，列出最后检查与派发之间的竞态，并测试该窗口。若产品必须保证取消绝不复活，需单独评审内核原子协议，而非由外置插件声称实现。
+
+- **P1｜恢复消息可能改变原请求的执行约束。** 设计只明确沿用最新指导的 model/agent，同时要求不降低权限或 format（[DESIGN.md:48](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:48>)）。但 synthetic continuation 会成为新的 last user；内核从该消息读取 `format`、`tools`、`variant` 等信息（[message-v2.ts:357](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/message-v2.ts:357>)、[prompt.ts:1433](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/prompt.ts:1433>)、[prompt.ts:1460](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/prompt.ts:1460>)）。建议明确 continuation 从哪条消息继承哪些字段，并测试 format、工具限制、system 和 variant；无法安全还原时应停止自动恢复并提示用户。另一选择是缩小支持范围，明确列出不能自动恢复的请求类型。
+
+- **P2｜保存确认需要区分消息记录与完整内容。** 设计允许通过保存事件确认指导已保存（[DESIGN.md:45](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:45>)），但内核先保存 message，再逐个保存 part（[prompt.ts:1299](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/prompt.ts:1299>)）。仅凭 message 事件可能过早标记 saved，在多 part 或附件尚未完整落盘时触发 gate 或恢复。建议以 hook 中记录的有效 part 集合和内容版本为预期，在事件或 SDK 查询确认完整匹配后才标记 saved；增加延迟、部分保存和保存失败测试。代价是状态确认稍晚，但证据与实际保存内容一致。
+tokens used
+40,689
+- **P1｜G2 集成测试的屏障无法确定命中完成边界。** 设计要求在最终响应完成前保存插话，再证明后续请求来自 recovery（[DESIGN.md:31](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:31>)、[DESIGN.md:64](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:64>)）。但正常模型响应结束后，processor 通常返回 `continue`，loop 会再次读取消息；插话若在该读取前保存，会被原生机制处理，而非 recovery（[processor.ts:486](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/processor.ts:486>)、[prompt.ts:1348](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/prompt.ts:1348>)）。建议先设计可观测的屏障，确保插话保存在**最后一次消息读取之后、runner 结束之前**，并同时断言无插件时消息被孤立、有插件时出现 continuation。若公开接口无法确定性控制这一窗口，应明确记录测试缺口，不把较早的响应屏障当作 G2 验证。
+
+- **P1｜“取消后不自动继续”的验收承诺超过了公开接口能保证的范围。** 设计一方面要求取消后不得复活，另一方面承认检查与 dispatch 非原子（[DESIGN.md:18](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:18>)、[DESIGN.md:34](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:34>)、[DESIGN.md:48](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:48>)）。尤其 runner 已空闲时的 cancel 只发布 idle，没有专门的取消事件（[prompt.ts:144](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/prompt.ts:144>)）；`promptAsync` 也立即返回，后台才执行（[session.ts:844](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/server/routes/session.ts:844>)）。建议将保证限定为“插件在 dispatch 前观察到取消或终止证据时抑制恢复”，列出最后检查与派发之间的竞态，并测试该窗口。若产品必须保证取消绝不复活，需单独评审内核原子协议，而非由外置插件声称实现。
+
+- **P1｜恢复消息可能改变原请求的执行约束。** 设计只明确沿用最新指导的 model/agent，同时要求不降低权限或 format（[DESIGN.md:48](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:48>)）。但 synthetic continuation 会成为新的 last user；内核从该消息读取 `format`、`tools`、`variant` 等信息（[message-v2.ts:357](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/message-v2.ts:357>)、[prompt.ts:1433](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/prompt.ts:1433>)、[prompt.ts:1460](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/prompt.ts:1460>)）。建议明确 continuation 从哪条消息继承哪些字段，并测试 format、工具限制、system 和 variant；无法安全还原时应停止自动恢复并提示用户。另一选择是缩小支持范围，明确列出不能自动恢复的请求类型。
+
+- **P2｜保存确认需要区分消息记录与完整内容。** 设计允许通过保存事件确认指导已保存（[DESIGN.md:45](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/DESIGN.md:45>)），但内核先保存 message，再逐个保存 part（[prompt.ts:1299](</Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/agent-kernel/packages/opencode/src/session/prompt.ts:1299>)）。仅凭 message 事件可能过早标记 saved，在多 part 或附件尚未完整落盘时触发 gate 或恢复。建议以 hook 中记录的有效 part 集合和内容版本为预期，在事件或 SDK 查询确认完整匹配后才标记 saved；增加延迟、部分保存和保存失败测试。代价是状态确认稍晚，但证据与实际保存内容一致。

@@ -1,0 +1,625 @@
+{
+  "source": "deterministic official OpenCode 1.3.17",
+  "mode": "source",
+  "rawEvidence": ".codeagent/steering-v2-case-XOymhl/evidence.json",
+  "requests": [
+    {
+      "index": 0,
+      "messages": [
+        {
+          "role": "user",
+          "content": "TASK: preserve completed initial work"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "messages": [
+        {
+          "role": "user",
+          "content": "TASK: preserve completed initial work"
+        },
+        {
+          "role": "user",
+          "content": "GUIDE: latest direction must survive summary chains"
+        },
+        {
+          "role": "assistant",
+          "content": "Completed."
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "What did we do so far?"
+            },
+            {
+              "type": "text",
+              "text": "[Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "Provide a detailed prompt for continuing our conversation above.\nFocus on information that would be helpful for continuing the conversation, including what we did, what we're doing, which files we're working on, and what we're going to do next.\nThe summary that you construct will be used so that another agent can read it and continue the work.\nDo not call any tools. Respond only with the summary text.\nRespond in the same language as the user's messages in the conversation.\n\nWhen constructing the summary, try to stick to this template:\n---\n## Goal\n\n[What goal(s) is the user trying to accomplish?]\n\n## Instructions\n\n- [What important instructions did the user give you that are relevant]\n- [If there is a plan or spec, include information about it so next agent can continue using it]\n\n## Discoveries\n\n[What notable things were learned during this conversation that would be useful for the next agent to know when continuing the work]\n\n## Accomplished\n\n[What work has been completed, what work is still in progress, and what work is left?]\n\n## Relevant files / directories\n\n[Construct a structured list of relevant files that have been read, edited, or created that pertain to the task at hand. If all the files in a directory are relevant, include the path to the directory.]\n---"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "messages": [
+        {
+          "role": "user",
+          "content": "What did we do so far?"
+        },
+        {
+          "role": "assistant",
+          "content": "Compact summary of prior work."
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "What did we do so far?"
+            },
+            {
+              "type": "text",
+              "text": "[Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "Provide a detailed prompt for continuing our conversation above.\nFocus on information that would be helpful for continuing the conversation, including what we did, what we're doing, which files we're working on, and what we're going to do next.\nThe summary that you construct will be used so that another agent can read it and continue the work.\nDo not call any tools. Respond only with the summary text.\nRespond in the same language as the user's messages in the conversation.\n\nWhen constructing the summary, try to stick to this template:\n---\n## Goal\n\n[What goal(s) is the user trying to accomplish?]\n\n## Instructions\n\n- [What important instructions did the user give you that are relevant]\n- [If there is a plan or spec, include information about it so next agent can continue using it]\n\n## Discoveries\n\n[What notable things were learned during this conversation that would be useful for the next agent to know when continuing the work]\n\n## Accomplished\n\n[What work has been completed, what work is still in progress, and what work is left?]\n\n## Relevant files / directories\n\n[Construct a structured list of relevant files that have been read, edited, or created that pertain to the task at hand. If all the files in a directory are relevant, include the path to the directory.]\n---"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "messages": [
+        {
+          "role": "user",
+          "content": "What did we do so far?"
+        },
+        {
+          "role": "assistant",
+          "content": "Compact summary of prior work."
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "What did we do so far?"
+            },
+            {
+              "type": "text",
+              "text": "[Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "Provide a detailed prompt for continuing our conversation above.\nFocus on information that would be helpful for continuing the conversation, including what we did, what we're doing, which files we're working on, and what we're going to do next.\nThe summary that you construct will be used so that another agent can read it and continue the work.\nDo not call any tools. Respond only with the summary text.\nRespond in the same language as the user's messages in the conversation.\n\nWhen constructing the summary, try to stick to this template:\n---\n## Goal\n\n[What goal(s) is the user trying to accomplish?]\n\n## Instructions\n\n- [What important instructions did the user give you that are relevant]\n- [If there is a plan or spec, include information about it so next agent can continue using it]\n\n## Discoveries\n\n[What notable things were learned during this conversation that would be useful for the next agent to know when continuing the work]\n\n## Accomplished\n\n[What work has been completed, what work is still in progress, and what work is left?]\n\n## Relevant files / directories\n\n[Construct a structured list of relevant files that have been read, edited, or created that pertain to the task at hand. If all the files in a directory are relevant, include the path to the directory.]\n---"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "messages": [
+        {
+          "role": "user",
+          "content": "What did we do so far?"
+        },
+        {
+          "role": "assistant",
+          "content": "Compact summary of prior work."
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Continue with the next ordinary tool"
+            },
+            {
+              "type": "text",
+              "text": "[Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "messages": [
+        {
+          "role": "user",
+          "content": "What did we do so far?"
+        },
+        {
+          "role": "assistant",
+          "content": "Compact summary of prior work."
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Continue with the next ordinary tool"
+            },
+            {
+              "type": "text",
+              "text": "[Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools."
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_0",
+              "type": "function",
+              "function": {
+                "name": "bash",
+                "arguments": "{\"command\":\"printf continued > '/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-XOymhl/summary-chain.txt'\",\"description\":\"ordinary tool after three summaries\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_0",
+          "content": ""
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1793724132096
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "fixture",
+          "modelID": "fixture"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_1a24a2b00001Vdkgy7B7ImCv8F",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "TASK: preserve completed initial work",
+          "id": "prt_1a24a2b01001M0h6aeiXHOUM4m",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a2b00001Vdkgy7B7ImCv8F"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1793724132140
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "fixture",
+          "modelID": "fixture"
+        },
+        "id": "msg_1a24a2b2c001FqkIrXYhbUeaYx",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "GUIDE: latest direction must survive summary chains",
+          "id": "prt_1a24a2b2c002cNHJgRnocVl1DX",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a2b2c001FqkIrXYhbUeaYx"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_1a24a2b00001Vdkgy7B7ImCv8F",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-XOymhl",
+          "root": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "fixture",
+        "providerID": "fixture",
+        "time": {
+          "created": 1793724132276,
+          "completed": 1793724132670
+        },
+        "finish": "stop",
+        "id": "msg_1a24a2bb400123O20Q6K1fn6mW",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Completed.",
+          "time": {
+            "start": 1793724132551,
+            "end": 1793724132551
+          },
+          "id": "prt_1a24a2cc5002QmnZ0i1pknVSHE",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a2bb400123O20Q6K1fn6mW"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "user",
+        "model": {
+          "providerID": "fixture",
+          "modelID": "fixture"
+        },
+        "agent": "build",
+        "time": {
+          "created": 1793724132689
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_1a24a2d51001Ozx103VshHaAzs",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "compaction",
+          "auto": false,
+          "id": "prt_1a24a2d510037aF2FgEDF7NOVI",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a2d51001Ozx103VshHaAzs"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "assistant",
+        "parentID": "msg_1a24a2d51001Ozx103VshHaAzs",
+        "mode": "compaction",
+        "agent": "compaction",
+        "summary": true,
+        "path": {
+          "cwd": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-XOymhl",
+          "root": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "fixture",
+        "providerID": "fixture",
+        "time": {
+          "created": 1793724132695,
+          "completed": 1793724132929
+        },
+        "finish": "stop",
+        "id": "msg_1a24a2d57001xK0snG3m4jaPqu",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Compact summary of prior work.",
+          "time": {
+            "start": 1793724132791,
+            "end": 1793724132791
+          },
+          "id": "prt_1a24a2db6001jqEhLmVy33ysnL",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a2d57001xK0snG3m4jaPqu"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "user",
+        "model": {
+          "providerID": "fixture",
+          "modelID": "fixture"
+        },
+        "agent": "build",
+        "time": {
+          "created": 1793724132940
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_1a24a2e4c001lNhsgc6F3qp7lX",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "compaction",
+          "auto": false,
+          "id": "prt_1a24a2e4d001pqHlJnA9C8p567",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a2e4c001lNhsgc6F3qp7lX"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "assistant",
+        "parentID": "msg_1a24a2e4c001lNhsgc6F3qp7lX",
+        "mode": "compaction",
+        "agent": "compaction",
+        "summary": true,
+        "path": {
+          "cwd": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-XOymhl",
+          "root": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "fixture",
+        "providerID": "fixture",
+        "time": {
+          "created": 1793724132943,
+          "completed": 1793724133236
+        },
+        "finish": "stop",
+        "id": "msg_1a24a2e4f001Mx471oWK30crPj",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Compact summary of prior work.",
+          "time": {
+            "start": 1793724133070,
+            "end": 1793724133070
+          },
+          "id": "prt_1a24a2ecd001qjH5sg9A2pr3WV",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a2e4f001Mx471oWK30crPj"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "user",
+        "model": {
+          "providerID": "fixture",
+          "modelID": "fixture"
+        },
+        "agent": "build",
+        "time": {
+          "created": 1793724133245
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_1a24a2f7d0018gbYt68rFpDgth",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "compaction",
+          "auto": false,
+          "id": "prt_1a24a2f7d003xpLxveJpjnvdNk",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a2f7d0018gbYt68rFpDgth"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "assistant",
+        "parentID": "msg_1a24a2f7d0018gbYt68rFpDgth",
+        "mode": "compaction",
+        "agent": "compaction",
+        "summary": true,
+        "path": {
+          "cwd": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-XOymhl",
+          "root": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "fixture",
+        "providerID": "fixture",
+        "time": {
+          "created": 1793724133250,
+          "completed": 1793724137199
+        },
+        "finish": "stop",
+        "id": "msg_1a24a2f820010M2UHC7Y7Hmd2q",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Compact summary of prior work.",
+          "time": {
+            "start": 1793724135798,
+            "end": 1793724135798
+          },
+          "id": "prt_1a24a3968001fFv6xPyA48u7pK",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a2f820010M2UHC7Y7Hmd2q"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1793724137329
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "fixture",
+          "modelID": "fixture"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_1a24a3f71001xB4E2vmn6nuPEZ",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Continue with the next ordinary tool",
+          "id": "prt_1a24a3f71002yef6Elhr0kvCR7",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a3f71001xB4E2vmn6nuPEZ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_1a24a3f71001xB4E2vmn6nuPEZ",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-XOymhl",
+          "root": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "fixture",
+        "providerID": "fixture",
+        "time": {
+          "created": 1793724137386,
+          "completed": 1793724138732
+        },
+        "finish": "tool-calls",
+        "id": "msg_1a24a3faa001mJEbdPToiH94VZ",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_0",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "printf continued > '/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-XOymhl/summary-chain.txt'",
+              "description": "ordinary tool after three summaries"
+            },
+            "output": "",
+            "metadata": {
+              "output": "",
+              "exit": 0,
+              "description": "ordinary tool after three summaries",
+              "truncated": false
+            },
+            "title": "ordinary tool after three summaries",
+            "time": {
+              "start": 1793724138283,
+              "end": 1793724138440
+            }
+          },
+          "id": "prt_1a24a431b0016t2d0e2k6BgrIw",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a3faa001mJEbdPToiH94VZ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_1a24a3f71001xB4E2vmn6nuPEZ",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-case-XOymhl",
+          "root": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "fixture",
+        "providerID": "fixture",
+        "time": {
+          "created": 1793724138741,
+          "completed": 1793724139237
+        },
+        "finish": "stop",
+        "id": "msg_1a24a44f5001co1ches89I6Iqq",
+        "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Completed.",
+          "time": {
+            "start": 1793724138992,
+            "end": 1793724138992
+          },
+          "id": "prt_1a24a45ed001FUt2wKCXVtWQzD",
+          "sessionID": "ses_e5db5d54affeCnYSqRymkLSUcJ",
+          "messageID": "msg_1a24a44f5001co1ches89I6Iqq"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+✔ A4/A6 real overflow compaction replays guidance under new IDs and admits its ordinary tool (4227.048292ms)
+✔ A4 three manual summaries and summary-only continuation carry explicit provider reminders across idle pruning (4359.322125ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8672.460125

@@ -1,0 +1,262 @@
+[
+  {
+    "mode": "headless",
+    "enabled": false,
+    "rawDirectory": ".codeagent/steering-v2-demo-headless/disabled",
+    "requests": 4,
+    "source": "real",
+    "files": [
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/request-0.json",
+        "sha256": "4d8b579874d674e033e17f8801ec906d7a01b8ad1483300f02e1f971f9f76872"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/request-1.json",
+        "sha256": "859059d441eb058c61127ac19a70ad05e162a172f4b875fe552b679c0c693c0c"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/request-2.json",
+        "sha256": "d6f09471516b644e69bcf90ab36fde36b78b6b540697b8d93e7c9025c3ef20e8"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/request-3.json",
+        "sha256": "00f7ae6db859b5338c7fcb0738845613f3d1277ce63ec98f2489e7fa792f6dfe"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/response-0.json",
+        "sha256": "5d4c4ca8f04a3e8b754a48b2170a9cd06b6e690b2b3b07ec019a39953fa3ba6c"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/response-1.json",
+        "sha256": "def52c6c6f23df786ce0a0f4c2b7e8d66bd393ad8b6cc8b8b56ae5ef410f5536"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/response-2.json",
+        "sha256": "019247f83800420c0766167dde2bc63f1ff30a4a97a5add5e26fb4ccb949eff6"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/response-3.json",
+        "sha256": "a79d8b8a9c3cec4048d273bc66c7f98af9dec5a488fd613883ee0b1367d53f8d"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/codex-0.jsonl",
+        "sha256": "7b8245ef5b12da724211a492edbb28d0d4812a0db4d80730e81e39cf15efeff7"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/codex-1.jsonl",
+        "sha256": "a10399085d77e90e0d6e7f6d709a87d29f6aa65a4caf6bdf72b6d97e4d485635"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/codex-2.jsonl",
+        "sha256": "e751adf96f70ea2625c37a56d58c18bcea7b4fc7215f62e67c9cd1275628ad0c"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/codex-3.jsonl",
+        "sha256": "25e9cccd2e2c3021f900b8fb37ee7d83ddc6fb42c8cce49b785382218d255e77"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/messages.json",
+        "sha256": "9869b2f5b767a23250ac122e5049944ca2437e8ddb8a4561ef3917813d14f5f2"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/disabled/kernel/kernel.log",
+        "sha256": "796944d809faf03d9871a20219326f97157b08f4188f1757214ae13a2234f4a9"
+      }
+    ]
+  },
+  {
+    "mode": "headless",
+    "enabled": true,
+    "rawDirectory": ".codeagent/steering-v2-demo-headless/enabled",
+    "requests": 4,
+    "source": "real",
+    "files": [
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/request-0.json",
+        "sha256": "290c7d3bfb9af3766f03701a68ca98fcf5556f40e4504b224ffdea62097f8973"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/request-1.json",
+        "sha256": "e740a826d2443e77910dc2545821c5e1aaa4b7d54628e7795fef1a9aeeb5424f"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/request-2.json",
+        "sha256": "d2988cd288023416ada45439852aa6c2cac8977e75688fc717bbbbdbcf2cf27c"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/request-3.json",
+        "sha256": "6e6145a16d5f30080a44c656b1939db0ee88262ccd860cc68ff034880aaf298a"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/response-0.json",
+        "sha256": "dd45f064bba316e7a5120f1927ebb66fcfe389f1d5b2f71f3078918fbcb7b519"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/response-1.json",
+        "sha256": "76e4229d8495455fd66a0fe5bc2c0130ccd563cbeaf45c708d76c1f091d5060c"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/response-2.json",
+        "sha256": "b86634e4c14224c555b9a005326efce7a46cb2927f2eaca9efd1b7bcdd0de814"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/response-3.json",
+        "sha256": "ef062b1a197ace1a0401bcf34382ac6365b26283cdf67b2924038e81c5840bd4"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/codex-0.jsonl",
+        "sha256": "40d03a34f09d133f8e9419656bc2dfdfc55d4fd8e65905dabee54a7605190ca5"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/codex-1.jsonl",
+        "sha256": "ce1558a7842e5a9e169d920311397abff1ac921af35a12368e4033823231fa96"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/codex-2.jsonl",
+        "sha256": "7062df874b1d25dd28ccfc4dac39f640710284658614a2a921af58347d8fccec"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/codex-3.jsonl",
+        "sha256": "efd908c6969ddf8a916fc30ea31a8615b1b2fee06fc4971f7b74f852a3336944"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/messages.json",
+        "sha256": "10c14d88c2b8c826dd2792b78a16ba52a3915d6b91aa2d401f63bfeba361ef22"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-headless/enabled/kernel/kernel.log",
+        "sha256": "0b2c58788ba62f7c741f8bfbb1f1e19b89e3be8a70fb3e50fe6016229ac90f37"
+      }
+    ]
+  },
+  {
+    "mode": "tui",
+    "enabled": false,
+    "rawDirectory": ".codeagent/steering-v2-demo-tui/disabled",
+    "requests": 4,
+    "source": "real",
+    "files": [
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/request-0.json",
+        "sha256": "d29ef621d881a7c7d62efa8fe68d8c304c88245cb57f818c39d9185d56886fc3"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/request-1.json",
+        "sha256": "3afefd09a5d6ee0667e9189b2f2850a5570193276c27753fd715745a9179a046"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/request-2.json",
+        "sha256": "f247b162d4dc8168471a1845a1b96335ba7c11cf27f8e4021c7d91cf1829a0b0"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/request-3.json",
+        "sha256": "e34fe71f920a79764334902258e66a93084de0a5475d9d91c01a6e7ae73a3587"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/response-0.json",
+        "sha256": "e364a0cfa97c587cec0d597a13f40722c23f0bdba2037ca58713ec10bea9ee8c"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/response-1.json",
+        "sha256": "e272cf47c1b44f6d6f7baa458cd583d82f8200687ec1f5e96cc45f436be93bec"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/response-2.json",
+        "sha256": "cda29c7d6a87a278b82c2675851adc9710e27722ba3a344cb31b6a4c610711be"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/response-3.json",
+        "sha256": "b4e1bf153d1d17ce866f63dce1ba41c6aef9aa21ce686e84bf7837f655e4d31c"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/codex-0.jsonl",
+        "sha256": "74079e3039ab41e5e51d4266296c57dd10b07cda7389eccc84bc528aeaf4b768"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/codex-1.jsonl",
+        "sha256": "734083181d46bdb7db62e278ed76693df8cd2a8ab251620b3f0978095452fbb9"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/codex-2.jsonl",
+        "sha256": "440930eb3b17c2262b88846172b15846fc9513136a2fa3b2120e7075bd98467e"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/codex-3.jsonl",
+        "sha256": "6cd3b2692faa59cac92f1e1f097ce449cf94353ff8f4b3a788fccef9c951b3ac"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/messages.json",
+        "sha256": "ae50d537b8058ee2c8a5a3a911593ad758eeacbc8d81ecebe4464df98d7d1dc2"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/disabled/kernel/kernel.log",
+        "sha256": "25bc8bb237a99291fb5e2a15851c41a534eb55193f8fa2a63fbbb0b40cdbf8e6"
+      }
+    ]
+  },
+  {
+    "mode": "tui",
+    "enabled": true,
+    "rawDirectory": ".codeagent/steering-v2-demo-tui/enabled",
+    "requests": 4,
+    "source": "real",
+    "files": [
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/request-0.json",
+        "sha256": "e2dcc81496f640f2953384e9c5ffc9167cc3c994ee06439d5722f7d1288d3b47"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/request-1.json",
+        "sha256": "4f8732875976aa6252b89c4cbe318d59c9951f77e7d75c74ce807f013876b53a"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/request-2.json",
+        "sha256": "30c51bfbe6b561da113111daddfef1446eb47d8ab356c69af0d25a8a942e8e46"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/request-3.json",
+        "sha256": "19483e229f17bfc41a85cf7b29c6a57d77b7380d2379c0ed6438189d82b94fa2"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/response-0.json",
+        "sha256": "cd09bc06267e32a501ca210ce8c9b5904b2d91d12d7dd30b5b2a1afd4fd68341"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/response-1.json",
+        "sha256": "b726c6962716c098ee7fe286fdbbc3340eebcbe63159821309e2f055d8165ff7"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/response-2.json",
+        "sha256": "35c22fb79d4c723ba0301adb272eb525e12372f8cded8efa85fb5390428c9a13"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/response-3.json",
+        "sha256": "d3eb17743380a7370a0a45d8560c50688dc68e550bb78bc7ef551a4445e435e8"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/codex-0.jsonl",
+        "sha256": "3fdbbd9ad47027de79455c053da24c0991166a6de84fe740c109ebe3e7aa8d01"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/codex-1.jsonl",
+        "sha256": "4b9a03d91825bf7cef11c540171e3541b655d8c1bb0a12651dc51c961d572040"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/codex-2.jsonl",
+        "sha256": "fb86d698a54da75366337cb337cb075387aee41af32ac6e08f604f59ba880e6f"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/codex-3.jsonl",
+        "sha256": "88c1bea7603d100b620d5eca297b57a688a7e4b5d6a9318b40f74b7d02262b8c"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/messages.json",
+        "sha256": "e831f691bad46fa118d365f91260108ddc2d9432906f9ddb460719f2c90d4573"
+      },
+      {
+        "path": ".codeagent/steering-v2-demo-tui/enabled/kernel/kernel.log",
+        "sha256": "192626b77113d73b9df4f6f18600a3c2cab101b9094532e6edc7eb74549967f0"
+      }
+    ]
+  }
+]

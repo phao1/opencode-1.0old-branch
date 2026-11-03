@@ -16,7 +16,7 @@ const responseSchema = {
 }
 const aborted = () => Object.assign(new Error('Codex request cancelled'), { name: 'AbortError' })
 
-export async function invokeCodexCli(body, { codexBinary, model, signal, timeoutMs = 120000, temporaryRoot = tmpdir() }) {
+export async function invokeCodexCli(body, { codexBinary, model, signal, timeoutMs = 120000, temporaryRoot = tmpdir(), onEvidence = async () => {} }) {
   if (signal?.aborted) throw aborted()
   const directory = await mkdtemp(path.join(temporaryRoot, 'opencode-codex-request-'))
   const schemaFile = path.join(directory, 'schema.json'), resultFile = path.join(directory, 'result.json')
@@ -79,6 +79,7 @@ export async function invokeCodexCli(body, { codexBinary, model, signal, timeout
     for (const event of events) for (const [key, value] of Object.entries(event.usage ?? {})) {
       if (typeof value === 'number') usage[key] = (usage[key] ?? 0) + value
     }
+    await onEvidence({ jsonl: stdout, decision, usage })
     return { decision, usage }
   } finally {
     clearTimeout(timer); clearTimeout(hardStop)

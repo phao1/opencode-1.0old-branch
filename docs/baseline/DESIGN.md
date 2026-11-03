@@ -52,7 +52,7 @@ Independent stage invocations use prompt version and persisted role/model/sessio
 
 变更记录：v0.6 补全研发技能与来源追溯；验证记录见下。
 
-## Steering v0.3 设计
+## Steering v0.3 设计（历史，当前为 v2）
 
 本版由真实 one-shot run 保存设计，并经两名独立 agent 并行评审；完整阶段记录由 worker 负责，不手工填写完成状态。核心生产模块位于 external-plugins/src/，内核 gitlink 不变。
 
@@ -92,3 +92,33 @@ steering_status 查询当前会话的逐消息状态。saved、prepared、provid
 新增真实内核历史探针覆盖 revert→新 prompt cleanup 和 DELETE 两条路径。动作探针改成静态公共插件 fixture，避免原生成代码中的字面换行转义错误；基线并行工具只约束每个动作一次及批次先后，不要求并行批次内部的完成顺序。
 
 `npm run debug:steering` 启动固定内核、安装后的独立包、固定版本 Vite Web app 与真实 Codex 中继，目录、状态、模型请求和工具动作均隔离保存。它只提供可观察的动作工具和模型协议转换，不替模型选择目标；不更改内核源码或用户全局配置。原生前端首次打开项目可能发生 `worktree` 初始化竞态，页面重启后继续验证，未修改固定前端。
+
+## Steering v2 / 0.4.0（2026-11-04）
+
+独立包 index.ts 只导出 SteeringPlugin；state.ts 管理有界进程内状态，不复制 inbox、不写 disk ledger、不依赖 extension 或内核私有模块。聚合桥接相对导入独立包源码，由 Bun 一并构建。旧 ledger 与默认插件测试在新内核/真实模型对照验证后退役。
+
+chat.message 记录候选的全部有效 part 签名；message/part 保存事件完整匹配才确认 saved。transform 每个真实请求合并一次 SDK 历史读取，寻找未完成、parentID 匹配、不在输入数组里的唯一 assistant，绑定原生 ID 有序指导版本。指导只在请求副本追加 latest-priority reminder。callID 事件映射与一次合并 fallback 避免每 token/tool 扫历史；未知普通工具保守拒绝，状态工具豁免。native task 的 part.id 特殊路径及未知 task 安全豁免，避免固定版本未捕获 hook 异常留下 running。
+
+成功 idle debounce 后重新核对 history/status/session.get，预留 epoch/version/terminal-assistant permit，再在区外 promptAsync；synthetic control 进入 chat.message 后复核 permit/revert/status，204 不算保存成功。每指导版本最多一次尝试；未知结果不重试。控制继承 model/agent/system/variant/format，省略 tools，权限不变。取消/错误/删除/压缩/revert 与新输入即时失效 permit，未观察/最终检查后的竞态仍是限制。
+
+状态上限及生命周期、noReply 不兼容、安装二选一、确定性 CI 与真实演示见 [独立包 README](../../external-plugins/steering/README.md)。完整设计为 [run DESIGN v1.4](../oneshot/runs/20261104-0426-steering-v2/DESIGN.md)，实施与验证证据见同 run 索引。
+
+变更记录：2026-11-04，新增 Steering v2 当前设计说明；以上 v0.3/0.3.2 段落保留为历史，不表示当前仍持久化 ledger。
+
+### Steering v2 round 2 修复（2026-11-04）
+
+按 run DESIGN v1.3 修复：仅 info/空 parts/长时间历史缺席不清退已观察候选，保留原预期 part 指纹及后续保存确认能力，无法确认时在 status 给出未知/人工检查诊断；不再按 1.5 秒年龄删除。所有并发 gate 等待同一 in-flight history，fallback 标记不再让普通 task 提前套用 native 豁免。
+
+压缩开始标记由 summary transform 消费，完成事件清除而非重新置位；记录本次 summary 实际包含的指导版本，仅成功后标 compacted，保持与普通 prepared 分离。后续包含对应 summary 的请求可获得该覆盖；后到/编辑版本与失败 summary 不继承退役。成功终止且 idle 时释放 settled/compacted 证据和无用快照，保留 pending/unknown；256 上限约束未解决输入，不再限制整个会话普通输入总数。聚合入口原样转交第二参数（含 autoResume:false），扩展注册和 worker 行为不变。
+
+变更记录：2026-11-04，第二轮实现及回归；[本 run 索引](../oneshot/runs/20261104-0426-steering-v2/README.md) 保存结果，旧轮报告/原始评审证据不改写。本轮未重新运行真实模型演示，正式全量验证由宿主执行。
+
+### Steering v2 round 3 / DESIGN v1.4（2026-11-04）
+
+连续摘要只在输入包含旧 covering summary 且当前内容版本未变时继承覆盖，成功后替换为新 summaryID；失败/未包含/编辑/晚到版本不继承，不建无限 lineage graph。摘要请求、覆盖摘要后的普通请求及 native replay 请求均带静态最新优先/保留完成结果/报告跳过动作提示；安全 idle 后仅保留一个最新 summary 提示标记，不宣称摘要语义完整。
+
+overflow replay 使用当前压缩窗口、公开 auto/overflow trigger、成功 summary、相邻 native 新 ID、严格内容及 model/agent/system/variant/format/tools 对照，只在真实请求包含完整匹配的 replay 时将原指导版本绑定为 prepared。新真实输入/取消失败/新压缩/首次后续请求关闭窗口；不把任意同文历史当原指导。text/plain 及生成文本保持；image/*、application/pdf 按固定源码转换为 Attached 占位文本，原媒体不在 replay 请求中。status 的 replayedAs/mediaStripped 明确此区别，不重注大附件。
+
+新候选的 info-only/慢保存继续保守保留；已保存输入经公开编辑及当前历史校准为空白/ignored/synthetic 后不阻断或恢复，观察仍保留时改回有效内容重新 gate。取消/失败会话只有明确 idle 且无 running/permit 才清理，active 或未确认边界保留安全容量上限。独立包 exact public plugin dev/peer 仍为 1.3.17，peer optional 表示类型/host API 约束；单文件 runtime 依赖继续内嵌，packaging 使用全新空 npm cache 真实离线安装并检查 peer 未安装。
+
+变更记录：2026-11-04，第三轮六项采纳修复与客观回归；完整正式 verify（含真实 headless/TUI）由宿主执行，旧轮评审/证据不改写。

@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import assert from 'node:assert/strict'
@@ -11,7 +11,7 @@ const output = path.join(root, 'dist')
 mkdirSync(output, { recursive: true })
 mkdirSync(path.join(root, '.codeagent'), { recursive: true })
 const fixture = mkdtempSync(path.join(root, '.codeagent/steering-package-'))
-const build = execFileSync(process.env.BUN_BINARY ?? 'bun', ['build', path.join(root, 'external-plugins/src/steering.ts'), '--target=bun', '--outfile', path.join(pkg, 'dist/index.js')], { encoding: 'utf8' })
+const build = execFileSync(process.env.BUN_BINARY ?? 'bun', ['build', path.join(root, 'external-plugins/steering/src/index.ts'), '--target=bun', '--outfile', path.join(pkg, 'dist/index.js')], { encoding: 'utf8' })
 writeFileSync(path.join(fixture, 'build.log'), build)
 const npm = process.env.NPM_BINARY ?? 'npm'
 const packed = JSON.parse(execFileSync(npm, ['pack', pkg, '--pack-destination', output, '--ignore-scripts', '--json'], { encoding: 'utf8' }))[0]
@@ -22,11 +22,18 @@ const sha256 = createHash('sha256').update(readFileSync(artifact)).digest('hex')
 const install = path.join(fixture, 'install')
 mkdirSync(install)
 writeFileSync(path.join(install, 'package.json'), JSON.stringify({ private: true, type: 'module' }))
-const installation = execFileSync(npm, ['install', '--prefix', install, '--offline', '--ignore-scripts', '--no-audit', '--no-fund', artifact], { encoding: 'utf8' })
+const npmCache = path.join(fixture, 'empty-npm-cache')
+mkdirSync(npmCache)
+assert.deepEqual(readdirSync(npmCache), [], 'Offline installation must start with an empty npm cache')
+const installation = execFileSync(npm, ['install', '--cache', npmCache, '--prefix', install, '--offline', '--ignore-scripts', '--no-audit', '--no-fund', artifact], { encoding: 'utf8' })
 writeFileSync(path.join(fixture, 'install.log'), installation)
 const installed = path.join(install, 'node_modules/@oneshot/opencode-steering')
 const manifest = JSON.parse(readFileSync(path.join(installed, 'package.json'), 'utf8'))
 assert.equal(manifest.version, JSON.parse(readFileSync(path.join(root, 'external-plugins/steering/package.json'), 'utf8')).version, 'Installed version must match the source package')
+assert.equal(manifest.peerDependencies['@opencode-ai/plugin'], '1.3.17')
+assert.equal(manifest.peerDependenciesMeta['@opencode-ai/plugin'].optional, true)
+assert.equal(manifest.devDependencies['@opencode-ai/plugin'], '1.3.17')
+assert.equal(existsSync(path.join(install, 'node_modules/@opencode-ai/plugin')), false, 'Optional type-only peer must not be fetched for the bundled runtime')
 assert.equal(manifest.dependencies, undefined, 'The standalone artifact bundles its public runtime dependencies')
 const installedPluginPath = path.join(installed, 'dist/index.js')
 const bundle = readFileSync(installedPluginPath, 'utf8')
@@ -39,7 +46,7 @@ assert.deepEqual(Object.keys(exported), ['SteeringPlugin'], 'Legacy loader must 
 assert.equal(typeof exported.SteeringPlugin, 'function')
 const report = { package: manifest.name, version: manifest.version, artifact, sha256, integrity: packed.integrity,
   fixture, installedPluginPath, installedBundleSHA256, files: packed.files.map(file => file.path),
-  offlineInstallation: 'passed', importedEntry: 'passed', kernelEndToEnd: 'not checked by packaging; run verify-steering', passed: true }
+  offlineInstallation: 'passed', npmCache, offlineCacheWasEmpty: true, optionalPeerNotInstalled: true, importedEntry: 'passed', kernelEndToEnd: 'not checked by packaging; run verify-steering', passed: true }
 writeFileSync(path.join(fixture, 'report.json'), JSON.stringify(report, null, 2))
 writeFileSync(path.join(output, 'steering-package-report.json'), JSON.stringify(report, null, 2))
 console.log(JSON.stringify(report, null, 2))

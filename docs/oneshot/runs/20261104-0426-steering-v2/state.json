@@ -1,0 +1,769 @@
+{
+  "version": 2,
+  "id": "20261104-0426-steering-v2",
+  "title": "OpenCode 1.0 外置插件：插话 steering v2",
+  "size": "L",
+  "sizeExplicit": true,
+  "baseCommit": "60d42de9b35634b98a93ba37d8a273e622d56521",
+  "createdAt": "2026-11-03T15:26:45.769Z",
+  "updatedAt": "2026-11-03T16:50:30.467Z",
+  "nodes": {
+    "brainstorm": {
+      "status": "done",
+      "startedAt": "2026-11-03T15:27:02.365Z",
+      "finishedAt": "2026-11-03T15:28:42.354Z",
+      "note": ""
+    },
+    "design": {
+      "status": "done",
+      "startedAt": "2026-11-03T15:28:42.393Z",
+      "finishedAt": "2026-11-03T15:30:16.563Z",
+      "note": ""
+    },
+    "improve": {
+      "status": "done",
+      "round": 1,
+      "startedAt": "2026-11-03T15:30:24.692Z",
+      "finishedAt": "2026-11-03T15:35:19.032Z",
+      "note": ""
+    },
+    "impl": {
+      "status": "done",
+      "finishedAt": "2026-11-03T16:45:05.469Z",
+      "note": "Host checked final report/diff; transitive summaries, empty edit, terminal capacity and empty-cache offline install independently pass. Overflow and G3 have official-kernel evidence. Final formal verify follows."
+    },
+    "verify": {
+      "status": "done",
+      "finishedAt": "2026-11-03T16:49:43.917Z"
+    },
+    "review": {
+      "status": "done",
+      "round": 2,
+      "startedAt": "2026-11-03T16:20:03.197Z",
+      "finishedAt": "2026-11-03T16:50:30.401Z",
+      "note": "Two independent review rounds retained request-changes; all accepted findings fixed in Generator rounds 2/3 and independently checked by host. Final 10/10 verify PASS; no unresolved P0/P1. No third evaluator round claimed."
+    },
+    "deliver": {
+      "status": "running",
+      "startedAt": "2026-11-03T16:50:30.467Z"
+    }
+  },
+  "checks": [
+    {
+      "command": "node_modules/.bin/tsc --noEmit -p .",
+      "name": "root-typecheck"
+    },
+    {
+      "command": "node_modules/.bin/tsc --noEmit -p external-plugins/steering",
+      "name": "package-typecheck"
+    },
+    {
+      "command": "/Users/penghao/.bun/bin/bun run --cwd external-plugins/steering build",
+      "name": "package-build"
+    },
+    {
+      "command": "node --test external-plugins/steering/test/*.test.mjs",
+      "name": "steering-tests"
+    },
+    {
+      "command": "npm test",
+      "name": "regression"
+    },
+    {
+      "command": "BUN_BINARY=/Users/penghao/.bun/bin/bun node scripts/package-steering.mjs",
+      "name": "package-install"
+    },
+    {
+      "command": "node scripts/check-kernel.mjs",
+      "name": "kernel-boundary"
+    },
+    {
+      "command": "node scripts/steering-v2-demo.mjs --out .codeagent/steering-v2-demo-headless",
+      "name": "real-headless"
+    },
+    {
+      "command": "node scripts/steering-v2-demo.mjs --tui --out .codeagent/steering-v2-demo-tui",
+      "name": "real-tui"
+    },
+    {
+      "command": "BUN_BINARY=/Users/penghao/.bun/bin/bun node scripts/verify-steering.mjs",
+      "name": "installed-integration"
+    }
+  ],
+  "rounds": {
+    "improve": {
+      "1": {
+        "agents": {
+          "codex@gpt-6.1-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 92233,
+            "durationMs": 191174,
+            "at": "2026-11-03T15:33:35.870Z",
+            "model": "gpt-6.1-sol"
+          },
+          "codex@gpt-6-astra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 92234,
+            "durationMs": 185033,
+            "at": "2026-11-03T15:33:29.734Z",
+            "model": "gpt-6-astra"
+          },
+          "codex@gpt-6.1-terra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 92236,
+            "durationMs": 100723,
+            "at": "2026-11-03T15:32:05.427Z",
+            "model": "gpt-6.1-terra"
+          },
+          "codex@gpt-5.6-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 92240,
+            "durationMs": 207921,
+            "at": "2026-11-03T15:33:52.625Z",
+            "model": "gpt-5.6-sol"
+          },
+          "claude": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T15:30:24.705Z",
+            "model": null
+          },
+          "qodercli": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T15:30:24.706Z",
+            "model": null
+          },
+          "agy": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T15:30:24.706Z",
+            "model": null
+          },
+          "gemini": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T15:30:24.707Z",
+            "model": null
+          },
+          "dsh": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T15:30:24.707Z",
+            "model": null
+          },
+          "codebuddy": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T15:30:24.712Z",
+            "model": null
+          },
+          "opencode": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T15:30:24.712Z",
+            "model": null
+          }
+        },
+        "startedAt": "2026-11-03T15:30:24.692Z",
+        "degraded": false,
+        "finishedAt": "2026-11-03T15:33:52.626Z"
+      }
+    },
+    "review": {
+      "1": {
+        "agents": {
+          "codex@gpt-6.1-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 39263,
+            "durationMs": 225312,
+            "at": "2026-11-03T16:02:55.523Z",
+            "model": "gpt-6.1-sol"
+          },
+          "codex@gpt-6-astra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 39264,
+            "durationMs": 227002,
+            "at": "2026-11-03T16:02:57.216Z",
+            "model": "gpt-6-astra"
+          },
+          "codex@gpt-6.1-terra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 39266,
+            "durationMs": 180404,
+            "at": "2026-11-03T16:02:10.620Z",
+            "model": "gpt-6.1-terra"
+          },
+          "codex@gpt-5.6-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 39269,
+            "durationMs": 274820,
+            "at": "2026-11-03T16:03:45.037Z",
+            "model": "gpt-5.6-sol"
+          },
+          "claude": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T15:59:10.217Z",
+            "model": null
+          },
+          "qodercli": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T15:59:10.218Z",
+            "model": null
+          },
+          "agy": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T15:59:10.218Z",
+            "model": null
+          },
+          "gemini": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T15:59:10.218Z",
+            "model": null
+          },
+          "dsh": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T15:59:10.218Z",
+            "model": null
+          },
+          "codebuddy": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T15:59:10.219Z",
+            "model": null
+          },
+          "opencode": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T15:59:10.219Z",
+            "model": null
+          }
+        },
+        "startedAt": "2026-11-03T15:59:10.210Z",
+        "degraded": false,
+        "finishedAt": "2026-11-03T16:03:45.039Z"
+      },
+      "2": {
+        "agents": {
+          "codex@gpt-6.1-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 17957,
+            "durationMs": 246089,
+            "at": "2026-11-03T16:24:09.288Z",
+            "model": "gpt-6.1-sol"
+          },
+          "codex@gpt-6-astra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 17958,
+            "durationMs": 193670,
+            "at": "2026-11-03T16:23:16.872Z",
+            "model": "gpt-6-astra"
+          },
+          "codex@gpt-6.1-terra": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 17960,
+            "durationMs": 86951,
+            "at": "2026-11-03T16:21:30.154Z",
+            "model": "gpt-6.1-terra"
+          },
+          "codex@gpt-5.6-sol": {
+            "status": "ok",
+            "reason": "",
+            "code": 0,
+            "signal": null,
+            "pid": 17963,
+            "durationMs": 280722,
+            "at": "2026-11-03T16:24:43.927Z",
+            "model": "gpt-5.6-sol"
+          },
+          "claude": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T16:20:03.205Z",
+            "model": null
+          },
+          "qodercli": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T16:20:03.205Z",
+            "model": null
+          },
+          "agy": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T16:20:03.206Z",
+            "model": null
+          },
+          "gemini": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T16:20:03.206Z",
+            "model": null
+          },
+          "dsh": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T16:20:03.207Z",
+            "model": null
+          },
+          "codebuddy": {
+            "status": "unavailable",
+            "reason": "authentication required / not logged in",
+            "durationMs": 0,
+            "at": "2026-11-03T16:20:03.207Z",
+            "model": null
+          },
+          "opencode": {
+            "status": "unavailable",
+            "reason": "binary not found",
+            "durationMs": 0,
+            "at": "2026-11-03T16:20:03.207Z",
+            "model": null
+          }
+        },
+        "startedAt": "2026-11-03T16:20:03.197Z",
+        "degraded": false,
+        "finishedAt": "2026-11-03T16:24:43.930Z"
+      }
+    }
+  },
+  "impl": {
+    "attempts": [
+      {
+        "round": 1,
+        "startedAt": "2026-11-03T15:35:19.169Z",
+        "fix": null,
+        "resumedFrom": null,
+        "status": "ok",
+        "args": [
+          "exec",
+          "--dangerously-bypass-approvals-and-sandbox",
+          "-C",
+          "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch",
+          "-m",
+          "gpt-6.1-sol",
+          "--json",
+          "-o",
+          "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/impl/round-1/report.md",
+          "-"
+        ],
+        "threadId": "01a1a20c-f092-7930-9526-1b58931a1cf4",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 95392,
+        "durationMs": 1138735,
+        "finishedAt": "2026-11-03T15:54:17.905Z"
+      },
+      {
+        "round": 2,
+        "startedAt": "2026-11-03T16:06:05.157Z",
+        "fix": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/review/round-1/findings.md",
+        "resumedFrom": "01a1a20c-f092-7930-9526-1b58931a1cf4",
+        "status": "ok",
+        "args": [
+          "exec",
+          "resume",
+          "01a1a20c-f092-7930-9526-1b58931a1cf4",
+          "--dangerously-bypass-approvals-and-sandbox",
+          "-m",
+          "gpt-6.1-sol",
+          "--json",
+          "-o",
+          "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/impl/round-2/report.md",
+          "-"
+        ],
+        "threadId": "01a1a20c-f092-7930-9526-1b58931a1cf4",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 41188,
+        "durationMs": 539612,
+        "finishedAt": "2026-11-03T16:15:04.771Z"
+      },
+      {
+        "round": 3,
+        "startedAt": "2026-11-03T16:27:31.209Z",
+        "fix": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/review/round-2/findings.md",
+        "resumedFrom": "01a1a20c-f092-7930-9526-1b58931a1cf4",
+        "status": "ok",
+        "args": [
+          "exec",
+          "resume",
+          "01a1a20c-f092-7930-9526-1b58931a1cf4",
+          "--dangerously-bypass-approvals-and-sandbox",
+          "-m",
+          "gpt-6.1-sol",
+          "--json",
+          "-o",
+          "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/impl/round-3/report.md",
+          "-"
+        ],
+        "threadId": "01a1a20c-f092-7930-9526-1b58931a1cf4",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 20068,
+        "durationMs": 992699,
+        "finishedAt": "2026-11-03T16:44:03.909Z"
+      }
+    ],
+    "inline": false,
+    "threadId": "01a1a20c-f092-7930-9526-1b58931a1cf4"
+  },
+  "timeline": [
+    {
+      "at": "2026-11-03T15:26:45.771Z",
+      "action": "init",
+      "detail": "L"
+    },
+    {
+      "at": "2026-11-03T15:26:45.775Z",
+      "action": "run-host",
+      "detail": "pid=91742"
+    },
+    {
+      "at": "2026-11-03T15:27:02.365Z",
+      "action": "start",
+      "detail": "brainstorm "
+    },
+    {
+      "at": "2026-11-03T15:28:42.354Z",
+      "action": "done",
+      "detail": "brainstorm "
+    },
+    {
+      "at": "2026-11-03T15:28:42.393Z",
+      "action": "start",
+      "detail": "design "
+    },
+    {
+      "at": "2026-11-03T15:30:15.895Z",
+      "action": "checks-add",
+      "detail": "node_modules/.bin/tsc --noEmit -p ."
+    },
+    {
+      "at": "2026-11-03T15:30:15.944Z",
+      "action": "checks-add",
+      "detail": "node_modules/.bin/tsc --noEmit -p external-plugins/steering"
+    },
+    {
+      "at": "2026-11-03T15:30:16.017Z",
+      "action": "checks-add",
+      "detail": "/Users/penghao/.bun/bin/bun run --cwd external-plugins/steering build"
+    },
+    {
+      "at": "2026-11-03T15:30:16.089Z",
+      "action": "checks-add",
+      "detail": "node --test external-plugins/steering/test/*.test.mjs"
+    },
+    {
+      "at": "2026-11-03T15:30:16.161Z",
+      "action": "checks-add",
+      "detail": "npm test"
+    },
+    {
+      "at": "2026-11-03T15:30:16.235Z",
+      "action": "checks-add",
+      "detail": "BUN_BINARY=/Users/penghao/.bun/bin/bun node scripts/package-steering.mjs"
+    },
+    {
+      "at": "2026-11-03T15:30:16.307Z",
+      "action": "checks-add",
+      "detail": "node scripts/check-kernel.mjs"
+    },
+    {
+      "at": "2026-11-03T15:30:16.383Z",
+      "action": "checks-add",
+      "detail": "node scripts/steering-v2-demo.mjs --out .codeagent/steering-v2-demo-headless"
+    },
+    {
+      "at": "2026-11-03T15:30:16.456Z",
+      "action": "checks-add",
+      "detail": "node scripts/steering-v2-demo.mjs --tui --out .codeagent/steering-v2-demo-tui"
+    },
+    {
+      "at": "2026-11-03T15:30:16.563Z",
+      "action": "done",
+      "detail": "design "
+    },
+    {
+      "at": "2026-11-03T15:33:52.627Z",
+      "action": "fanout",
+      "detail": "improve round 1"
+    },
+    {
+      "at": "2026-11-03T15:35:19.032Z",
+      "action": "done",
+      "detail": "improve "
+    },
+    {
+      "at": "2026-11-03T15:54:17.906Z",
+      "action": "impl",
+      "detail": "round 1: ok"
+    },
+    {
+      "at": "2026-11-03T15:54:59.165Z",
+      "action": "checks-add",
+      "detail": "BUN_BINARY=/Users/penghao/.bun/bin/bun node scripts/verify-steering.mjs"
+    },
+    {
+      "at": "2026-11-03T15:54:59.233Z",
+      "action": "done",
+      "detail": "impl Host inspected actual diff, standalone source/tests, real evidence and kernel boundary; formal verify follows. Design v1.2 adds installed-artifact check."
+    },
+    {
+      "at": "2026-11-03T15:58:54.354Z",
+      "action": "verify",
+      "detail": "PASS"
+    },
+    {
+      "at": "2026-11-03T16:03:45.040Z",
+      "action": "fanout",
+      "detail": "review round 1"
+    },
+    {
+      "at": "2026-11-03T16:15:04.771Z",
+      "action": "impl",
+      "detail": "round 2: ok resumed"
+    },
+    {
+      "at": "2026-11-03T16:15:44.164Z",
+      "action": "done",
+      "detail": "impl Host inspected round-2 report/diff; info-only, slow-save, concurrent task and official summarize reproductions now pass. Formal verify follows."
+    },
+    {
+      "at": "2026-11-03T16:19:57.228Z",
+      "action": "verify",
+      "detail": "PASS"
+    },
+    {
+      "at": "2026-11-03T16:24:43.931Z",
+      "action": "fanout",
+      "detail": "review round 2"
+    },
+    {
+      "at": "2026-11-03T16:44:03.910Z",
+      "action": "impl",
+      "detail": "round 3: ok resumed"
+    },
+    {
+      "at": "2026-11-03T16:45:05.469Z",
+      "action": "done",
+      "detail": "impl Host checked final report/diff; transitive summaries, empty edit, terminal capacity and empty-cache offline install independently pass. Overflow and G3 have official-kernel evidence. Final formal verify follows."
+    },
+    {
+      "at": "2026-11-03T16:49:43.917Z",
+      "action": "verify",
+      "detail": "PASS"
+    },
+    {
+      "at": "2026-11-03T16:50:30.401Z",
+      "action": "done",
+      "detail": "review Two independent review rounds retained request-changes; all accepted findings fixed in Generator rounds 2/3 and independently checked by host. Final 10/10 verify PASS; no unresolved P0/P1. No third evaluator round claimed."
+    },
+    {
+      "at": "2026-11-03T16:50:30.467Z",
+      "action": "start",
+      "detail": "deliver "
+    }
+  ],
+  "host": {
+    "pid": 91742,
+    "startedAt": "2026-11-03T15:26:45.775Z",
+    "background": true,
+    "args": [
+      "exec",
+      "--dangerously-bypass-approvals-and-sandbox",
+      "-C",
+      "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch",
+      "--json",
+      "-o",
+      "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/docs/oneshot/runs/20261104-0426-steering-v2/host.last.md",
+      "-"
+    ]
+  },
+  "verification": {
+    "results": [
+      {
+        "command": "node_modules/.bin/tsc --noEmit -p .",
+        "name": "root-typecheck",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 94356,
+        "durationMs": 226,
+        "log": "verify/1-root-typecheck.log",
+        "at": "2026-11-03T16:45:05.803Z"
+      },
+      {
+        "command": "node_modules/.bin/tsc --noEmit -p external-plugins/steering",
+        "name": "package-typecheck",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 94357,
+        "durationMs": 132,
+        "log": "verify/2-package-typecheck.log",
+        "at": "2026-11-03T16:45:05.936Z"
+      },
+      {
+        "command": "/Users/penghao/.bun/bin/bun run --cwd external-plugins/steering build",
+        "name": "package-build",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 94358,
+        "durationMs": 54,
+        "log": "verify/3-package-build.log",
+        "at": "2026-11-03T16:45:05.992Z"
+      },
+      {
+        "command": "node --test external-plugins/steering/test/*.test.mjs",
+        "name": "steering-tests",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 94360,
+        "durationMs": 56394,
+        "log": "verify/4-steering-tests.log",
+        "at": "2026-11-03T16:46:02.387Z"
+      },
+      {
+        "command": "npm test",
+        "name": "regression",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 95560,
+        "durationMs": 58440,
+        "log": "verify/5-regression.log",
+        "at": "2026-11-03T16:47:00.828Z"
+      },
+      {
+        "command": "BUN_BINARY=/Users/penghao/.bun/bin/bun node scripts/package-steering.mjs",
+        "name": "package-install",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 29623,
+        "durationMs": 609,
+        "log": "verify/6-package-install.log",
+        "at": "2026-11-03T16:47:01.438Z"
+      },
+      {
+        "command": "node scripts/check-kernel.mjs",
+        "name": "kernel-boundary",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 29661,
+        "durationMs": 104,
+        "log": "verify/7-kernel-boundary.log",
+        "at": "2026-11-03T16:47:01.543Z"
+      },
+      {
+        "command": "node scripts/steering-v2-demo.mjs --out .codeagent/steering-v2-demo-headless",
+        "name": "real-headless",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 29672,
+        "durationMs": 50723,
+        "log": "verify/8-real-headless.log",
+        "at": "2026-11-03T16:47:52.266Z"
+      },
+      {
+        "command": "node scripts/steering-v2-demo.mjs --tui --out .codeagent/steering-v2-demo-tui",
+        "name": "real-tui",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 30390,
+        "durationMs": 54846,
+        "log": "verify/9-real-tui.log",
+        "at": "2026-11-03T16:48:47.113Z"
+      },
+      {
+        "command": "BUN_BINARY=/Users/penghao/.bun/bin/bun node scripts/verify-steering.mjs",
+        "name": "installed-integration",
+        "status": "ok",
+        "reason": "",
+        "code": 0,
+        "signal": null,
+        "pid": 34082,
+        "durationMs": 56803,
+        "log": "verify/10-installed-integration.log",
+        "at": "2026-11-03T16:49:43.916Z"
+      }
+    ],
+    "at": "2026-11-03T16:49:43.916Z",
+    "ok": true
+  }
+}

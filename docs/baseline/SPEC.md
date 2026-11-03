@@ -1,4 +1,4 @@
-# One-shot 自动化开发框架 Spec v0.7
+# One-shot 自动化开发框架 Spec v0.7 / Steering v2 (0.4.0)
 
 Steering 的当前规范为 [STEERING.md](STEERING.md)，公开 API 证据见 [STEERING-FEASIBILITY.md](STEERING-FEASIBILITY.md)。旧 v0.1 的提示包装不满足本版行为验收。
 
@@ -61,7 +61,7 @@ Steering 的当前规范为 [STEERING.md](STEERING.md)，公开 API 证据见 [S
 
 F2：验收标准必须绑定全部对应 checks 或明确 manual:true，原始描述/绑定不可被 planner 改写；人工项只能 MANUAL/PENDING。F6：空/未绑定候选不入队，同源内容变化必须显式报冲突；只允许显式更新未入队 candidate。F1：受信脚本和 skill 基于 baseCommit 或操作员 SHA256 固定，执行与交付前后重验，不能改写检查来通过验收。具体标准 H2/H6/H1/HM/HE、设计及验证记录见 [ONE-SHOT-HARDENING.md](ONE-SHOT-HARDENING.md)。
 
-## Steering 外置插件 v0.3
+## Steering 外置插件 v0.3（历史，当前为 v2）
 
 目标是在同一运行任务中接收方向修正，保留既有消息和已完成工作，并阻止尚未通过公开检查点的旧计划工具。验收 ID 及原文集中在 STEERING.md 的 ST-01 至 ST-08，避免维护两套含义不同的标准。
 
@@ -72,3 +72,31 @@ F2：验收标准必须绑定全部对应 checks 或明确 manual:true，原始�
 ### v0.3.2 历史删除（2026-10-24）
 
 Undo 后继续任务和公开消息删除不得永久阻断同一会话。只有收到公开 `message.removed` 并通过 SDK 确认有效输入已不存在，才将原证据标为 `pendingReason: removed`，保留原准备与未知采纳记录。无删除确认的 SDK 缺失仍拒绝工具；附件删除不视为整条消息删除。同 ID 输入重新出现时重新检查，不继承删除豁免。验证汇总见 [STEERING-DELIVERY.md](STEERING-DELIVERY.md)。
+
+## Steering v2 / 0.4.0（2026-11-04）
+
+当前独立实现位于 external-plugins/steering/src，使用 @opencode-ai/plugin@1.3.17 的公开 hooks/SDK。验收以 [本轮设计 A1–A10](../oneshot/runs/20261104-0426-steering-v2/DESIGN.md) 为准。旧 ST 标准与 ledger 记录保持历史身份。普通输入原文/附件由原生内核保存；插件只保留有界进程内证据。prepared、provider、adopted 分离，后两者 unknown。
+
+同一 assistant 的多个未过 gate 旧工具都拒绝；晚保存指导在成功 idle 后按版本最多一次 synthetic continuation。permit 在取消/错误/删除/压缩/revert、新输入或正常准备后失效。native SubtaskPart/未知 task 安全豁免以避免 running 悬挂；普通已确认模型 task 仍 gate。重启不重放，autoResume:false 可关闭；活动 noReply 不能辨认。原子取消/派发、已运行工具、batch 内部、StructuredOutput 与运行中子代理转发不在保证范围。
+
+根默认 npm test 包含真实官方 1.3.17 + 本地 SSE 确定性对照；真实 Codex headless 和 tmux TUI 对照单独执行。安装、CI 精确二进制供给、限制及证据见 [STEERING.md](STEERING.md) 与 [本轮索引](../oneshot/runs/20261104-0426-steering-v2/README.md)。
+
+变更记录：2026-11-04，Steering v2 取代磁盘 ledger 默认实现，更新公开 API 契约与 A1–A10 验证入口；one-shot 框架规格未改。
+
+### Steering v2 round 2 修复（2026-11-04）
+
+按 run DESIGN v1.3 修复：仅 info/空 parts/长时间历史缺席不清退已观察候选，保留原预期 part 指纹及后续保存确认能力，无法确认时在 status 给出未知/人工检查诊断；不再按 1.5 秒年龄删除。所有并发 gate 等待同一 in-flight history，fallback 标记不再让普通 task 提前套用 native 豁免。
+
+压缩开始标记由 summary transform 消费，完成事件清除而非重新置位；记录本次 summary 实际包含的指导版本，仅成功后标 compacted，保持与普通 prepared 分离。后续包含对应 summary 的请求可获得该覆盖；后到/编辑版本与失败 summary 不继承退役。成功终止且 idle 时释放 settled/compacted 证据和无用快照，保留 pending/unknown；256 上限约束未解决输入，不再限制整个会话普通输入总数。聚合入口原样转交第二参数（含 autoResume:false），扩展注册和 worker 行为不变。
+
+变更记录：2026-11-04，第二轮实现及回归；[本 run 索引](../oneshot/runs/20261104-0426-steering-v2/README.md) 保存结果，旧轮报告/原始评审证据不改写。本轮未重新运行真实模型演示，正式全量验证由宿主执行。
+
+### Steering v2 round 3 / DESIGN v1.4（2026-11-04）
+
+连续摘要只在输入包含旧 covering summary 且当前内容版本未变时继承覆盖，成功后替换为新 summaryID；失败/未包含/编辑/晚到版本不继承，不建无限 lineage graph。摘要请求、覆盖摘要后的普通请求及 native replay 请求均带静态最新优先/保留完成结果/报告跳过动作提示；安全 idle 后仅保留一个最新 summary 提示标记，不宣称摘要语义完整。
+
+overflow replay 使用当前压缩窗口、公开 auto/overflow trigger、成功 summary、相邻 native 新 ID、严格内容及 model/agent/system/variant/format/tools 对照，只在真实请求包含完整匹配的 replay 时将原指导版本绑定为 prepared。新真实输入/取消失败/新压缩/首次后续请求关闭窗口；不把任意同文历史当原指导。text/plain 及生成文本保持；image/*、application/pdf 按固定源码转换为 Attached 占位文本，原媒体不在 replay 请求中。status 的 replayedAs/mediaStripped 明确此区别，不重注大附件。
+
+新候选的 info-only/慢保存继续保守保留；已保存输入经公开编辑及当前历史校准为空白/ignored/synthetic 后不阻断或恢复，观察仍保留时改回有效内容重新 gate。取消/失败会话只有明确 idle 且无 running/permit 才清理，active 或未确认边界保留安全容量上限。独立包 exact public plugin dev/peer 仍为 1.3.17，peer optional 表示类型/host API 约束；单文件 runtime 依赖继续内嵌，packaging 使用全新空 npm cache 真实离线安装并检查 peer 未安装。
+
+变更记录：2026-11-04，第三轮六项采纳修复与客观回归；完整正式 verify（含真实 headless/TUI）由宿主执行，旧轮评审/证据不改写。

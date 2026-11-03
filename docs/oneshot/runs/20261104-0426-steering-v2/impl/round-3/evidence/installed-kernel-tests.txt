@@ -1,0 +1,22 @@
+{"installedPluginPath":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-qPaibD/install/node_modules/@oneshot/opencode-steering/dist/index.js","sha256":"4a802c68f7ae4301a90e4d1e1842bc2d182dbdf86835e8e1dce5da4d3726ea37","installedBundleSHA256":"95ea7974c5afc2badb1cfd36f9cc761731966b06238afce09d51477aad3582e1","emptyCache":true,"optionalPeerNotInstalled":true}
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=false (6019.555041ms)
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=true (4680.044875ms)
+✔ A3 late-save native-ID double barrier; plugin=false (4300.011125ms)
+✔ A3 late-save native-ID double barrier; plugin=true (4515.3295ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=false (4717.760083ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=true (4787.469083ms)
+✔ A6 native SubtaskPart completes with mixed input; ordinary task is gated (7650.446583ms)
+✔ A6 abort suppresses continuation of saved guidance (9397.772542ms)
+✔ A6 revert before late-save completion preserves undo and supports redo (5136.44325ms)
+✔ A2/A3 slow save after product observation stays blocking and later automatically recovers (6470.592375ms)
+✔ A5/A6 manual summarize permits first ordinary tool and subsequent normal requests (5180.189875ms)
+✔ A4/A6 real overflow compaction replays guidance under new IDs and admits its ordinary tool (4218.443083ms)
+✔ A4 three manual summaries and summary-only continuation carry explicit provider reminders across idle pruning (4546.218084ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71724.4895

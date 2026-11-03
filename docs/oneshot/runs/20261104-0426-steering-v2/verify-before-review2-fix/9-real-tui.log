@@ -1,0 +1,39 @@
+{
+  "source": "real",
+  "tui": true,
+  "cases": [
+    {
+      "enabled": false,
+      "source": "real",
+      "tui": true,
+      "passed": true,
+      "out": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-demo-tui/disabled",
+      "summary": "Retained checkpoint.md containing \"completed first step\". Per the latest guidance, skipped any further obsolete.md action. The earlier obsolete.md write had already completed before that guidance arrived.",
+      "requests": 4,
+      "usage": {
+        "input_tokens": 102910,
+        "cached_input_tokens": 14592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 211,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "enabled": true,
+      "source": "real",
+      "tui": true,
+      "passed": true,
+      "out": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-demo-tui/enabled",
+      "summary": "Retained checkpoint.md containing \"completed first step\". Skipped obsolete.md because the latest user guidance explicitly cancelled the pending second step. The completed first step remains preserved.",
+      "requests": 4,
+      "usage": {
+        "input_tokens": 104620,
+        "cached_input_tokens": 39168,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 201,
+        "reasoning_output_tokens": 0
+      }
+    }
+  ],
+  "passed": true
+}

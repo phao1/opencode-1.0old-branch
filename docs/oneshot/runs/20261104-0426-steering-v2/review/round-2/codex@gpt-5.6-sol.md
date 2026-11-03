@@ -1,0 +1,7 @@
+- [P1] 保存事件竞态仍会放行旧 task — 历史查询期间若指导 part 更新使 revision 改变，查询结果会被整体丢弃，包括其中有效的 callID 归属；随后普通 `task` 被当作 unknown/native 直接豁免。只读 hook 复现中，查询实际包含已保存指导和普通 task 映射，但旧 task 仍被 ADMITTED，重新破坏 G1。(evidence: external-plugins/steering/src/state.ts:98; external-plugins/steering/src/state.ts:198)
+- [P1] 连续压缩会丢失指导覆盖关系 — 第一次摘要覆盖未准备指导后，第二次摘要只包含前一摘要，不会把原指导的 coverage 传递到新 summaryID；后续请求仅含新摘要，快照无法认可仍绑定旧 summaryID 的指导，正常工具会持续收到 `STEERING_STALE_CONTEXT`。(evidence: external-plugins/steering/src/state.ts:145; external-plugins/steering/src/state.ts:180)
+- [P1] 压缩路径没有满足 G3 的明确吸收提示 — 压缩 transform 在记录 coverage 后直接返回，未注入“最新指导优先/跳过旧动作”提醒；成功后又仅凭指导曾出现在摘要输入中将其标记 compacted，并允许包含该摘要的请求执行工具。若摘要遗漏或弱化指导，下一普通模型请求不再看到原指导或强提示，违反 MVP 必须覆盖 G3 的要求。(evidence: external-plugins/steering/src/state.ts:145; external-plugins/steering/src/state.ts:178)
+- [P2] 将已保存指导编辑为空会永久阻断工具 — `message.part.updated` 把文本改为空白或 ignored 后，历史校准将零有效 parts 一律视为未知保存中间态；由于没有 removed 标记，记录会永久保持 dirty，之后的新请求及成功 idle 都无法清退，所有普通工具持续被判 stale。(evidence: external-plugins/steering/src/state.ts:82; external-plugins/steering/src/state.ts:202)
+- [P2] 取消会话可耗尽全局 session 容量 — 取消或错误只把会话置 stopped，失败终止又不满足 prune 条件，已观察 guides 因此永不清除且会话不可淘汰；只读复现连续取消 128 个单消息会话后，第 129 个会话的普通输入在保存前抛出 `STEERING_CAPACITY`。(evidence: external-plugins/steering/src/state.ts:46; external-plugins/steering/src/state.ts:226; external-plugins/steering/src/state.ts:331)
+
+VERDICT: request-changes

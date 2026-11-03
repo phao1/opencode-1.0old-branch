@@ -1,0 +1,3 @@
+- [P2] 取消后的会话可能耗尽全局容量，导致新会话无法发送消息 — 连续在 128 个不同会话中取消任务时，错误事件会停止恢复，但已观察的指导仍留在 `guides` 中；清理逻辑又不会清理失败的终止消息。这些会话因此不符合淘汰条件，第 129 个会话的 `chat.message` 会抛出 `STEERING_CAPACITY`，普通输入也无法保存。即使每个会话只有一条输入，也能触发该问题。(evidence: external-plugins/steering/src/state.ts:46; external-plugins/steering/src/state.ts:61; external-plugins/steering/src/state.ts:226; external-plugins/steering/src/state.ts:331)
+
+VERDICT: request-changes

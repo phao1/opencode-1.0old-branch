@@ -1,0 +1,39 @@
+✔ all effective parts must save; request reminder leaves original attachments unchanged (12.812958ms)
+✔ ignored, synthetic and empty input are not guidance (0.422708ms)
+✔ one calibration per request; stream deltas and many mapped tools do not scan history (103.32475ms)
+✔ request assistant must be unique; never associate the last historical assistant (1.00425ms)
+✔ multi-session observations do not leak (0.818084ms)
+✔ native part.id path and unknown task query failure never throw; ordinary task still gates (0.693917ms)
+✔ stable native ID ordering, edits and partial/whole deletion keep useful guidance (1.083042ms)
+✔ native system reminder normalization does not turn wrapping into an edit (0.669333ms)
+✔ late save resumes at most once, preserving model/agent/system/variant/format and omitting tools (238.303417ms)
+✔ control permit invalidated before save: cancel (80.773958ms)
+✔ control permit invalidated before save: error (85.36225ms)
+✔ control permit invalidated before save: delete (85.207ms)
+✔ control permit invalidated before save: compact (84.308667ms)
+✔ control permit invalidated before save: revert (84.894333ms)
+✔ control permit invalidated before save: new input (79.559166ms)
+✔ control permit invalidated before save: prepared (82.928333ms)
+✔ dispatch checks revert via SDK even if event absent; no retries after unknown outcome (387.421083ms)
+✔ restart history never becomes eligible, status remains callable offline, compaction transform does not invent preparation (103.417ms)
+✔ composition preserves both tools and event handlers (1.147958ms)
+✔ SDK calibration cannot confirm a newly observed attachment set while only its text has saved (1.772792ms)
+✔ normal tool missing events receives one coalesced fallback, never another assistants snapshot (1.391334ms)
+✔ missing candidates remain unknown after 1.5s and still confirm a late save (0.967625ms)
+✔ delayed old part events cannot admit a stale assistant after an in-place edit (0.667333ms)
+✔ delayed removal events cannot retire guidance still present in native history (0.563791ms)
+✔ info-only history retains expected parts; later save blocks the original assistant (0.330042ms)
+✔ concurrent bash and ordinary task both wait for shared ownership history (12.369833ms)
+✔ completed compaction clears only summary marker and admits first ordinary tool (1.239459ms)
+✔ successful summary retires only included versions without claiming normal preparation (1.688375ms)
+✔ guidance arriving during summary and failed summaries never inherit retirement (0.908792ms)
+✔ more than 300 ordinary completed turns prune settled evidence and keep bounded caches (290.876375ms)
+✔ standalone and actual aggregate entry both honor autoResume:false without dropping extension tools (549.600042ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2431.077417

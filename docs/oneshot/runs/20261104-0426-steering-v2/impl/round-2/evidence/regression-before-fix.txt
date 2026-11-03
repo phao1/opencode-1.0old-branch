@@ -1,0 +1,136 @@
+✖ missing candidates remain unknown after 1.5s and still confirm a late save (19.173541ms)
+✖ info-only history retains expected parts; later save blocks the original assistant (0.559834ms)
+✖ concurrent bash and ordinary task both wait for shared ownership history (12.230042ms)
+✖ completed compaction clears only summary marker and admits first ordinary tool (0.675542ms)
+✖ successful summary retires only included versions without claiming normal preparation (0.601625ms)
+✖ guidance arriving during summary and failed summaries never inherit retirement (2.680042ms)
+✖ more than 300 ordinary completed turns prune settled evidence and keep bounded caches (0.32125ms)
+✖ standalone and actual aggregate entry both honor autoResume:false without dropping extension tools (462.84325ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 0
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 658.024542
+
+✖ failing tests:
+
+test at external-plugins/steering/test/state.test.mjs:236:1
+✖ missing candidates remain unknown after 1.5s and still confirm a late save (19.173541ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:243:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /STEERING_STALE_CONTEXT/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at external-plugins/steering/test/state.test.mjs:272:1
+✖ info-only history retains expected parts; later save blocks the original assistant (0.559834ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:278:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /STEERING_STALE_CONTEXT/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at external-plugins/steering/test/state.test.mjs:285:1
+✖ concurrent bash and ordinary task both wait for shared ownership history (12.230042ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:296:27)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at external-plugins/steering/test/state.test.mjs:316:1
+✖ completed compaction clears only summary marker and admits first ordinary tool (0.675542ms)
+  Error: STEERING_STALE_CONTEXT: request did not prepare latest guidance (m01, m11). [Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools.
+      at SteeringState.gate (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:184:11)
+      at tool.execute.before (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/index.ts:17:43)
+      at Object.call (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:42:40)
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:322:37)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at external-plugins/steering/test/state.test.mjs:325:1
+✖ successful summary retires only included versions without claiming normal preparation (0.601625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - true
+  
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:331:50)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at external-plugins/steering/test/state.test.mjs:341:1
+✖ guidance arriving during summary and failed summaries never inherit retirement (2.680042ms)
+  Error: STEERING_STALE_CONTEXT: request did not prepare latest guidance (m04). [Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools.
+      at SteeringState.gate (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/state.ts:184:11)
+      at tool.execute.before (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/src/index.ts:17:43)
+      at Object.call (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:42:40)
+      at async TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:354:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at external-plugins/steering/test/state.test.mjs:364:1
+✖ more than 300 ordinary completed turns prune settled evidence and keep bounded caches (0.32125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:372:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at external-plugins/steering/test/state.test.mjs:382:1
+✖ standalone and actual aggregate entry both honor autoResume:false without dropping extension tools (462.84325ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/external-plugins/steering/test/state.test.mjs:397:48)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

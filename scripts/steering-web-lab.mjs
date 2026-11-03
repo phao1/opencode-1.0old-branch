@@ -1,3 +1,5 @@
+// LEGACY v0.3 ledger evidence only; not a v2 verification command.
+// Replacement: node scripts/verify-steering.mjs (real demos: scripts/steering-v2-demo.mjs).
 import http from 'node:http'
 import path from 'node:path'
 import { spawn } from 'node:child_process'

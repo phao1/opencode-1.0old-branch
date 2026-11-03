@@ -1,0 +1,60 @@
+{
+  "package": "@oneshot/opencode-steering",
+  "version": "0.4.0",
+  "artifact": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/dist/oneshot-opencode-steering-0.4.0.tgz",
+  "sha256": "b06b07cd5d1f47956e9024dca2cd25630e5edaa40498e339f219995396c05caa",
+  "integrity": "sha512-DzXWzBT5I4vQFvU0HG3k70CF7/rRnj/rujZkV/5Pqa4Ns+KJnfTJPUSv2zzM7kMdp0bSVwD0YbBdGw9EFtxmFw==",
+  "fixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-0AXXDT",
+  "installedPluginPath": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-0AXXDT/install/node_modules/@oneshot/opencode-steering/dist/index.js",
+  "installedBundleSHA256": "32a972b7462e38f41aa802c80ba5b2a386008e90dca7d6d6eea25ecadb182ffe",
+  "files": [
+    "README.md",
+    "dist/index.js",
+    "package.json"
+  ],
+  "offlineInstallation": "passed",
+  "importedEntry": "passed",
+  "kernelEndToEnd": "not checked by packaging; run verify-steering",
+  "passed": true
+}
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=false (4725.788708ms)
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=true (6659.363584ms)
+✔ A3 late-save native-ID double barrier; plugin=false (5244.009ms)
+✔ A3 late-save native-ID double barrier; plugin=true (4551.295708ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=false (4316.062916ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=true (4274.012584ms)
+✔ A6 native SubtaskPart completes with mixed input; ordinary task is gated (5195.276459ms)
+✔ A6 abort suppresses continuation of saved guidance (4569.252834ms)
+✔ A6 revert before late-save completion preserves undo and supports redo (4777.631625ms)
+✔ all effective parts must save; request reminder leaves original attachments unchanged (13.696041ms)
+✔ ignored, synthetic and empty input are not guidance (0.534834ms)
+✔ one calibration per request; stream deltas and many mapped tools do not scan history (103.092208ms)
+✔ request assistant must be unique; never associate the last historical assistant (0.747042ms)
+✔ multi-session observations do not leak (0.463584ms)
+✔ native part.id path and unknown task query failure never throw; ordinary task still gates (0.47575ms)
+✔ stable native ID ordering, edits and partial/whole deletion keep useful guidance (0.701459ms)
+✔ native system reminder normalization does not turn wrapping into an edit (0.4635ms)
+✔ late save resumes at most once, preserving model/agent/system/variant/format and omitting tools (233.583917ms)
+✔ control permit invalidated before save: cancel (89.076042ms)
+✔ control permit invalidated before save: error (98.571292ms)
+✔ control permit invalidated before save: delete (80.375ms)
+✔ control permit invalidated before save: compact (82.533584ms)
+✔ control permit invalidated before save: revert (84.807291ms)
+✔ control permit invalidated before save: new input (85.888791ms)
+✔ control permit invalidated before save: prepared (78.833084ms)
+✔ dispatch checks revert via SDK even if event absent; no retries after unknown outcome (388.187834ms)
+✔ restart history never becomes eligible, status remains callable offline, compaction transform does not invent preparation (102.112625ms)
+✔ composition preserves both tools and event handlers (1.388792ms)
+✔ SDK calibration cannot confirm a newly observed attachment set while only its text has saved (1.541458ms)
+✔ normal tool missing events receives one coalesced fallback, never another assistants snapshot (0.56675ms)
+✔ a failed candidate confirmed absent by a later full calibration does not block forever (0.382666ms)
+✔ delayed old part events cannot admit a stale assistant after an in-place edit (0.283792ms)
+✔ delayed removal events cannot retire guidance still present in native history (0.396167ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44411.214375

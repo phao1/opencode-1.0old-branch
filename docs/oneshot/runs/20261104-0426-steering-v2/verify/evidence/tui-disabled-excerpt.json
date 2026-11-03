@@ -1,0 +1,171 @@
+{
+  "source": "real Codex CLI via OpenCode 1.3.17",
+  "mode": "tui",
+  "enabled": false,
+  "rawDirectory": ".codeagent/steering-v2-demo-tui/disabled",
+  "requests": 4,
+  "report": {
+    "enabled": false,
+    "source": "real",
+    "tui": true,
+    "passed": true,
+    "out": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-demo-tui/disabled",
+    "summary": "Retained checkpoint.md containing \"completed first step\". The latest guidance cancels obsolete.md work, so all further obsolete.md actions were skipped. The earlier obsolete.md write had already completed before that guidance arrived.",
+    "requests": 4,
+    "usage": {
+      "input_tokens": 104116,
+      "cached_input_tokens": 14592,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 215,
+      "reasoning_output_tokens": 0
+    }
+  },
+  "tools": [
+    {
+      "assistantID": "msg_1a24f7765001Ij2on4DfEsTolJ",
+      "part": {
+        "type": "tool",
+        "tool": "work_action",
+        "callID": "call_d167410a-af9f-45c7-aefd-95892e8f4ac9",
+        "state": {
+          "status": "completed",
+          "input": {
+            "name": "checkpoint.md",
+            "content": "completed first step"
+          },
+          "output": "Wrote checkpoint.md",
+          "metadata": {
+            "truncated": false
+          },
+          "title": "",
+          "time": {
+            "start": 1793724483915,
+            "end": 1793724483917
+          }
+        },
+        "id": "prt_1a24f8949001r9ma7nswBbbB1t",
+        "sessionID": "ses_e5db095b4ffeZzwGeLDlKAi6If",
+        "messageID": "msg_1a24f7765001Ij2on4DfEsTolJ"
+      }
+    },
+    {
+      "assistantID": "msg_1a24f89ba001zjYa68gaMFBec7",
+      "part": {
+        "type": "tool",
+        "tool": "work_action",
+        "callID": "call_547a2689-23af-4bee-aa1f-4eae35150488",
+        "state": {
+          "status": "completed",
+          "input": {
+            "name": "obsolete.md",
+            "content": "original second step"
+          },
+          "output": "Wrote obsolete.md",
+          "metadata": {
+            "truncated": false
+          },
+          "title": "",
+          "time": {
+            "start": 1793724488817,
+            "end": 1793724488818
+          }
+        },
+        "id": "prt_1a24f9c71001IQKOfBnL6Yhihk",
+        "sessionID": "ses_e5db095b4ffeZzwGeLDlKAi6If",
+        "messageID": "msg_1a24f89ba001zjYa68gaMFBec7"
+      }
+    },
+    {
+      "assistantID": "msg_1a24f9cda001YCJtoZD2IDy42k",
+      "part": {
+        "type": "tool",
+        "tool": "work_action",
+        "callID": "call_7efa23b4-9b62-4a89-8180-0d822f2e550d",
+        "state": {
+          "status": "completed",
+          "input": {
+            "name": "SUMMARY.md",
+            "content": "Retained checkpoint.md containing \"completed first step\". The latest guidance cancels obsolete.md work, so all further obsolete.md actions were skipped. The earlier obsolete.md write had already completed before that guidance arrived."
+          },
+          "output": "Wrote SUMMARY.md",
+          "metadata": {
+            "truncated": false
+          },
+          "title": "",
+          "time": {
+            "start": 1793724495243,
+            "end": 1793724495244
+          }
+        },
+        "id": "prt_1a24fb589001THN70InBrHUfez",
+        "sessionID": "ses_e5db095b4ffeZzwGeLDlKAi6If",
+        "messageID": "msg_1a24f9cda001YCJtoZD2IDy42k"
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "decision": {
+        "kind": "tool",
+        "text": null,
+        "tool_name": "work_action",
+        "arguments": "{\"name\":\"checkpoint.md\",\"content\":\"completed first step\"}"
+      },
+      "usage": {
+        "input_tokens": 25827,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 41,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "decision": {
+        "kind": "tool",
+        "text": null,
+        "tool_name": "work_action",
+        "arguments": "{\"name\":\"obsolete.md\",\"content\":\"original second step\"}"
+      },
+      "usage": {
+        "input_tokens": 25933,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 41,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "decision": {
+        "kind": "tool",
+        "text": null,
+        "tool_name": "work_action",
+        "arguments": "{\"name\":\"SUMMARY.md\",\"content\":\"Retained checkpoint.md containing \\\"completed first step\\\". The latest guidance cancels obsolete.md work, so all further obsolete.md actions were skipped. The earlier obsolete.md write had already completed before that guidance arrived.\"}"
+      },
+      "usage": {
+        "input_tokens": 26119,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 81,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "decision": {
+        "kind": "text",
+        "text": "Kept checkpoint.md and wrote SUMMARY.md. obsolete.md had already been written before your guidance; no further obsolete actions were performed.",
+        "tool_name": null,
+        "arguments": null
+      },
+      "usage": {
+        "input_tokens": 26237,
+        "cached_input_tokens": 14592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 52,
+        "reasoning_output_tokens": 0
+      }
+    }
+  ],
+  "checkpoint": "completed first step",
+  "summary": "Retained checkpoint.md containing \"completed first step\". The latest guidance cancels obsolete.md work, so all further obsolete.md actions were skipped. The earlier obsolete.md write had already completed before that guidance arrived.",
+  "obsoleteExists": true
+}

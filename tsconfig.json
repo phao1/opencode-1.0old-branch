@@ -14,7 +14,8 @@
   "include": [
     "agent-kernel-extension/src/**/*.ts",
     "external-plugins/src/**/*.ts",
-    "scripts/one-shot.ts"
+    "scripts/one-shot.ts",
+    "external-plugins/steering/src/**/*.ts"
   ],
   "exclude": [
     "agent-kernel"

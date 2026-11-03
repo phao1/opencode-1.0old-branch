@@ -1,0 +1,34 @@
+[
+  {
+    "mode": "headless",
+    "enabled": true,
+    "rawDirectory": ".codeagent/steering-v2-generator-headless/enabled",
+    "requests": 4,
+    "obsoleteExists": false,
+    "summary": "Completed the first step: checkpoint.md contains \"completed first step\" and is retained. Skipped obsolete.md because the latest user guidance explicitly cancelled that pending action."
+  },
+  {
+    "mode": "headless",
+    "enabled": false,
+    "rawDirectory": ".codeagent/steering-v2-generator-headless/disabled",
+    "requests": 4,
+    "obsoleteExists": true,
+    "summary": "Retained checkpoint.md with \"completed first step\". Per the latest guidance, skipped any further obsolete.md action. The earlier obsolete.md write had already completed before that guidance arrived."
+  },
+  {
+    "mode": "tui",
+    "enabled": true,
+    "rawDirectory": ".codeagent/steering-v2-generator-tui/enabled",
+    "requests": 4,
+    "obsoleteExists": false,
+    "summary": "Retained checkpoint.md containing \"completed first step\". Skipped obsolete.md because the latest user guidance explicitly cancelled that action."
+  },
+  {
+    "mode": "tui",
+    "enabled": false,
+    "rawDirectory": ".codeagent/steering-v2-generator-tui/disabled",
+    "requests": 4,
+    "obsoleteExists": true,
+    "summary": "Retained checkpoint.md containing \"completed first step\". Per the latest guidance, skipped any further obsolete.md action. The earlier obsolete.md write had already completed before that guidance arrived; no additional obsolete actions were performed."
+  }
+]

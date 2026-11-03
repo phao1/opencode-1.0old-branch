@@ -1,0 +1,44 @@
+{
+  "design": "v1.4",
+  "role": "Generator implementation verification; independent acceptance remains with host",
+  "acceptedFindingsFixed": 6,
+  "checks": {
+    "unit": {
+      "passed": 49,
+      "total": 49
+    },
+    "package": {
+      "passed": 62,
+      "total": 62
+    },
+    "root": {
+      "passed": 131,
+      "total": 131
+    },
+    "installedKernel": {
+      "passed": 13,
+      "total": 13
+    },
+    "typecheckRoot": "passed",
+    "typecheckPackage": "passed",
+    "buildPackage": "passed",
+    "buildAggregate": "passed",
+    "emptyCacheOfflineInstall": "passed",
+    "optionalPeerNotInstalled": true,
+    "kernelBoundary": "passed",
+    "diffCheck": "passed"
+  },
+  "artifact": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/dist/oneshot-opencode-steering-0.4.0.tgz",
+  "sha256": "4a802c68f7ae4301a90e4d1e1842bc2d182dbdf86835e8e1dce5da4d3726ea37",
+  "installedBundleSHA256": "95ea7974c5afc2badb1cfd36f9cc761731966b06238afce09d51477aad3582e1",
+  "formalVerifyRun": false,
+  "realHeadlessAndTuiRerun": false,
+  "limitations": [
+    "provider/adopted remain unknown",
+    "summary hints do not prove semantic retention",
+    "native image/PDF replay contains placeholders, not original media",
+    "cancel/dispatch/save is non-atomic",
+    "unknown native task safety exemption remains",
+    "unconfirmed candidate saves remain pending until evidence or explicit resolution"
+  ]
+}

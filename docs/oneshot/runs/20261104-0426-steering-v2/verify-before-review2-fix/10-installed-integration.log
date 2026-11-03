@@ -1,0 +1,69 @@
+{
+  "package": "@oneshot/opencode-steering",
+  "version": "0.4.0",
+  "artifact": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/dist/oneshot-opencode-steering-0.4.0.tgz",
+  "sha256": "88ee30d6627b2be2af9a1e2e5b1ffe1705a410063b3af79b81a9629bf4b1351a",
+  "integrity": "sha512-fmiWwIQuXLyPuiW5hdfwG5eetIbnFZBATgf+US5T92d9ipC9/YxazeUeqPpAqE6h9h3TsG5aBTFCm63fEukL2w==",
+  "fixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-86IJ8l",
+  "installedPluginPath": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-86IJ8l/install/node_modules/@oneshot/opencode-steering/dist/index.js",
+  "installedBundleSHA256": "96c661d8b54a620e0c5164acd80d9430f87d951c4f983595f0018b362bd54503",
+  "files": [
+    "README.md",
+    "dist/index.js",
+    "package.json"
+  ],
+  "offlineInstallation": "passed",
+  "importedEntry": "passed",
+  "kernelEndToEnd": "not checked by packaging; run verify-steering",
+  "passed": true
+}
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=false (4336.60075ms)
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=true (3977.977416ms)
+✔ A3 late-save native-ID double barrier; plugin=false (3649.052959ms)
+✔ A3 late-save native-ID double barrier; plugin=true (3940.723666ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=false (3694.828875ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=true (3673.691333ms)
+✔ A6 native SubtaskPart completes with mixed input; ordinary task is gated (3952.83225ms)
+✔ A6 abort suppresses continuation of saved guidance (3822.938875ms)
+✔ A6 revert before late-save completion preserves undo and supports redo (3937.831125ms)
+✔ A2/A3 slow save after product observation stays blocking and later automatically recovers (5787.818958ms)
+✔ A5/A6 manual summarize permits first ordinary tool and subsequent normal requests (4399.769875ms)
+✔ all effective parts must save; request reminder leaves original attachments unchanged (13.2195ms)
+✔ ignored, synthetic and empty input are not guidance (0.54575ms)
+✔ one calibration per request; stream deltas and many mapped tools do not scan history (104.162416ms)
+✔ request assistant must be unique; never associate the last historical assistant (1.0665ms)
+✔ multi-session observations do not leak (0.468125ms)
+✔ native part.id path and unknown task query failure never throw; ordinary task still gates (0.387791ms)
+✔ stable native ID ordering, edits and partial/whole deletion keep useful guidance (0.620583ms)
+✔ native system reminder normalization does not turn wrapping into an edit (0.362125ms)
+✔ late save resumes at most once, preserving model/agent/system/variant/format and omitting tools (238.516875ms)
+✔ control permit invalidated before save: cancel (82.872375ms)
+✔ control permit invalidated before save: error (86.674083ms)
+✔ control permit invalidated before save: delete (85.146459ms)
+✔ control permit invalidated before save: compact (84.77625ms)
+✔ control permit invalidated before save: revert (84.409666ms)
+✔ control permit invalidated before save: new input (82.665125ms)
+✔ control permit invalidated before save: prepared (84.186667ms)
+✔ dispatch checks revert via SDK even if event absent; no retries after unknown outcome (387.519208ms)
+✔ restart history never becomes eligible, status remains callable offline, compaction transform does not invent preparation (101.227833ms)
+✔ composition preserves both tools and event handlers (0.404542ms)
+✔ SDK calibration cannot confirm a newly observed attachment set while only its text has saved (0.485875ms)
+✔ normal tool missing events receives one coalesced fallback, never another assistants snapshot (0.376375ms)
+✔ missing candidates remain unknown after 1.5s and still confirm a late save (0.267125ms)
+✔ delayed old part events cannot admit a stale assistant after an in-place edit (0.243458ms)
+✔ delayed removal events cannot retire guidance still present in native history (0.349959ms)
+✔ info-only history retains expected parts; later save blocks the original assistant (0.283334ms)
+✔ concurrent bash and ordinary task both wait for shared ownership history (12.151083ms)
+✔ completed compaction clears only summary marker and admits first ordinary tool (0.59325ms)
+✔ successful summary retires only included versions without claiming normal preparation (0.66625ms)
+✔ guidance arriving during summary and failed summaries never inherit retirement (0.870416ms)
+✔ more than 300 ordinary completed turns prune settled evidence and keep bounded caches (287.837709ms)
+✔ standalone and actual aggregate entry both honor autoResume:false without dropping extension tools (505.083416ms)
+ℹ tests 42
+ℹ suites 0
+ℹ pass 42
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45267.57275

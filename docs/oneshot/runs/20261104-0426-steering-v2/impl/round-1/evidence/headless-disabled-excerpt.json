@@ -1,0 +1,262 @@
+{
+  "source": "real",
+  "mode": "headless",
+  "enabled": false,
+  "rawDirectory": ".codeagent/steering-v2-demo-headless/disabled",
+  "nativeToolParts": [
+    {
+      "assistantID": "msg_1a21acc34001bZWUj1RYg5Yy31",
+      "tool": "work_action",
+      "callID": "call_5508c294-659a-4059-a262-482002397b68",
+      "state": {
+        "status": "completed",
+        "input": {
+          "name": "checkpoint.md",
+          "content": "completed first step"
+        },
+        "output": "Wrote checkpoint.md",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1793721034187,
+          "end": 1793721034194
+        }
+      }
+    },
+    {
+      "assistantID": "msg_1a21ae6c3001X5g0zR60Dr7rNT",
+      "tool": "work_action",
+      "callID": "call_1079c0e9-439f-4020-ac07-9a65dc94c335",
+      "state": {
+        "status": "completed",
+        "input": {
+          "name": "obsolete.md",
+          "content": "original second step"
+        },
+        "output": "Wrote obsolete.md",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1793721040371,
+          "end": 1793721040374
+        }
+      }
+    },
+    {
+      "assistantID": "msg_1a21afe9e001Tj0puAuWP74pji",
+      "tool": "work_action",
+      "callID": "call_2a31fb0e-0736-41ad-add1-3a20d5e54995",
+      "state": {
+        "status": "completed",
+        "input": {
+          "name": "SUMMARY.md",
+          "content": "Retained checkpoint.md with \"completed first step\". Per the latest guidance, skipped any further obsolete.md action. The earlier obsolete.md write had already completed before that guidance arrived."
+        },
+        "output": "Wrote SUMMARY.md",
+        "metadata": {
+          "truncated": false
+        },
+        "title": "",
+        "time": {
+          "start": 1793721048571,
+          "end": 1793721048573
+        }
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "decision": {
+        "kind": "tool",
+        "text": null,
+        "tool_name": "work_action",
+        "arguments": "{\"name\":\"checkpoint.md\",\"content\":\"completed first step\"}"
+      },
+      "usage": {
+        "input_tokens": 25831,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 41,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "decision": {
+        "kind": "tool",
+        "text": null,
+        "tool_name": "work_action",
+        "arguments": "{\"name\":\"obsolete.md\",\"content\":\"original second step\"}"
+      },
+      "usage": {
+        "input_tokens": 25927,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 41,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "decision": {
+        "kind": "tool",
+        "text": null,
+        "tool_name": "work_action",
+        "arguments": "{\"name\":\"SUMMARY.md\",\"content\":\"Retained checkpoint.md with \\\"completed first step\\\". Per the latest guidance, skipped any further obsolete.md action. The earlier obsolete.md write had already completed before that guidance arrived.\"}"
+      },
+      "usage": {
+        "input_tokens": 26115,
+        "cached_input_tokens": 14592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 106,
+        "reasoning_output_tokens": 29
+      }
+    },
+    {
+      "decision": {
+        "kind": "text",
+        "text": "Retained checkpoint.md and wrote SUMMARY.md. obsolete.md had already been written before your guidance; no further obsolete actions were performed.",
+        "tool_name": null,
+        "arguments": null
+      },
+      "usage": {
+        "input_tokens": 26227,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 52,
+        "reasoning_output_tokens": 0
+      }
+    }
+  ],
+  "codexJSONLExcerpts": [
+    {
+      "file": ".codeagent/steering-v2-demo-headless/disabled/codex-0.jsonl",
+      "event": {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "{\"kind\":\"tool\",\"text\":null,\"tool_name\":\"work_action\",\"arguments\":\"{\\\"name\\\":\\\"checkpoint.md\\\",\\\"content\\\":\\\"completed first step\\\"}\"}"
+        }
+      }
+    },
+    {
+      "file": ".codeagent/steering-v2-demo-headless/disabled/codex-0.jsonl",
+      "event": {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 25831,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 41,
+          "reasoning_output_tokens": 0
+        }
+      }
+    },
+    {
+      "file": ".codeagent/steering-v2-demo-headless/disabled/codex-1.jsonl",
+      "event": {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "{\"kind\":\"tool\",\"text\":null,\"tool_name\":\"work_action\",\"arguments\":\"{\\\"name\\\":\\\"obsolete.md\\\",\\\"content\\\":\\\"original second step\\\"}\"}"
+        }
+      }
+    },
+    {
+      "file": ".codeagent/steering-v2-demo-headless/disabled/codex-1.jsonl",
+      "event": {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 25927,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 41,
+          "reasoning_output_tokens": 0
+        }
+      }
+    },
+    {
+      "file": ".codeagent/steering-v2-demo-headless/disabled/codex-2.jsonl",
+      "event": {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "{\"kind\":\"tool\",\"text\":null,\"tool_name\":\"work_action\",\"arguments\":\"{\\\"name\\\":\\\"SUMMARY.md\\\",\\\"content\\\":\\\"Retained checkpoint.md with \\\\\\\"completed first step\\\\\\\". Per the latest guidance, skipped any further obsolete.md action. The earlier obsolete.md write had already completed before that guidance arrived.\\\"}\"}"
+        }
+      }
+    },
+    {
+      "file": ".codeagent/steering-v2-demo-headless/disabled/codex-2.jsonl",
+      "event": {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 26115,
+          "cached_input_tokens": 14592,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 106,
+          "reasoning_output_tokens": 29
+        }
+      }
+    },
+    {
+      "file": ".codeagent/steering-v2-demo-headless/disabled/codex-3.jsonl",
+      "event": {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "{\"kind\":\"text\",\"text\":\"Retained checkpoint.md and wrote SUMMARY.md. obsolete.md had already been written before your guidance; no further obsolete actions were performed.\",\"tool_name\":null,\"arguments\":null}"
+        }
+      }
+    },
+    {
+      "file": ".codeagent/steering-v2-demo-headless/disabled/codex-3.jsonl",
+      "event": {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 26227,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 52,
+          "reasoning_output_tokens": 0
+        }
+      }
+    }
+  ],
+  "checkpoint": "completed first step",
+  "obsoleteExists": true,
+  "summary": "Retained checkpoint.md with \"completed first step\". Per the latest guidance, skipped any further obsolete.md action. The earlier obsolete.md write had already completed before that guidance arrived.",
+  "guidanceRequests": [
+    {
+      "file": ".codeagent/steering-v2-demo-headless/disabled/request-2.json",
+      "userMessages": [
+        {
+          "role": "user",
+          "content": "Use work_action to perform these separate steps in order, exactly one artifact per tool call: (1) write checkpoint.md with \"completed first step\"; (2) write obsolete.md with \"original second step\"; (3) write SUMMARY.md summarizing what you completed. Then give a brief final answer."
+        },
+        {
+          "role": "user",
+          "content": "<system-reminder>\nThe user sent the following message:\nChange direction now: keep checkpoint.md. Skip the pending obsolete.md action. Write SUMMARY.md explaining that obsolete.md was skipped because of this latest guidance, and retain the completed first step. Do not perform obsolete actions.\n\nPlease address this message and continue with your tasks.\n</system-reminder>"
+        }
+      ]
+    },
+    {
+      "file": ".codeagent/steering-v2-demo-headless/disabled/request-3.json",
+      "userMessages": [
+        {
+          "role": "user",
+          "content": "Use work_action to perform these separate steps in order, exactly one artifact per tool call: (1) write checkpoint.md with \"completed first step\"; (2) write obsolete.md with \"original second step\"; (3) write SUMMARY.md summarizing what you completed. Then give a brief final answer."
+        },
+        {
+          "role": "user",
+          "content": "Change direction now: keep checkpoint.md. Skip the pending obsolete.md action. Write SUMMARY.md explaining that obsolete.md was skipped because of this latest guidance, and retain the completed first step. Do not perform obsolete actions."
+        }
+      ]
+    }
+  ]
+}

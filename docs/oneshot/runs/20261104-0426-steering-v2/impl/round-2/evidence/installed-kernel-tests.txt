@@ -1,0 +1,20 @@
+{"installedPluginPath":"/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-BjvU32/install/node_modules/@oneshot/opencode-steering/dist/index.js","sha256":"88ee30d6627b2be2af9a1e2e5b1ffe1705a410063b3af79b81a9629bf4b1351a","installedBundleSHA256":"96c661d8b54a620e0c5164acd80d9430f87d951c4f983595f0018b362bd54503"}
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=false (5798.569ms)
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=true (5155.650042ms)
+✔ A3 late-save native-ID double barrier; plugin=false (4794.268833ms)
+✔ A3 late-save native-ID double barrier; plugin=true (4828.745708ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=false (4531.959584ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=true (4505.732166ms)
+✔ A6 native SubtaskPart completes with mixed input; ordinary task is gated (4584.890083ms)
+✔ A6 abort suppresses continuation of saved guidance (4691.435ms)
+✔ A6 revert before late-save completion preserves undo and supports redo (4207.1655ms)
+✔ A2/A3 slow save after product observation stays blocking and later automatically recovers (5711.812084ms)
+✔ A5/A6 manual summarize permits first ordinary tool and subsequent normal requests (4539.125417ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 53449.611208

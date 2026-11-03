@@ -1,0 +1,74 @@
+[
+  {
+    "case": "manual-summary-first-tool",
+    "source": "deterministic, official 1.3.17 server",
+    "evidence": ".codeagent/steering-v2-case-kQLvUV/evidence.json",
+    "kernelLogs": [
+      ".codeagent/steering-v2-kernel-minypG/kernel.log"
+    ],
+    "requests": 6
+  },
+  {
+    "case": "slow-save-after-product",
+    "source": "deterministic, official 1.3.17 server",
+    "evidence": ".codeagent/steering-v2-case-GxINrs/evidence.json",
+    "kernelLogs": [
+      ".codeagent/steering-v2-kernel-PSJMyD/kernel.log"
+    ],
+    "requests": 3
+  },
+  {
+    "case": "manual-summary-first-tool",
+    "source": "deterministic, official 1.3.17 server",
+    "evidence": ".codeagent/steering-v2-case-ZWPIUA/evidence.json",
+    "kernelLogs": [
+      ".codeagent/steering-v2-kernel-Giiq9B/kernel.log"
+    ],
+    "requests": 6
+  },
+  {
+    "case": "slow-save-after-product",
+    "source": "deterministic, official 1.3.17 server",
+    "evidence": ".codeagent/steering-v2-case-U2wqaD/evidence.json",
+    "kernelLogs": [
+      ".codeagent/steering-v2-kernel-Tm59a4/kernel.log"
+    ],
+    "requests": 3
+  },
+  {
+    "case": "manual-summary-first-tool",
+    "source": "deterministic, official 1.3.17 server",
+    "evidence": ".codeagent/steering-v2-case-4YWDRZ/evidence.json",
+    "kernelLogs": [
+      ".codeagent/steering-v2-kernel-MQm8tp/kernel.log"
+    ],
+    "requests": 6
+  },
+  {
+    "case": "manual-summary-first-tool",
+    "source": "deterministic, official 1.3.17 server",
+    "evidence": ".codeagent/steering-v2-case-eZwse7/evidence.json",
+    "kernelLogs": [
+      ".codeagent/steering-v2-kernel-1mmB9i/kernel.log"
+    ],
+    "requests": 6
+  },
+  {
+    "case": "slow-save-after-product",
+    "source": "deterministic, official 1.3.17 server",
+    "evidence": ".codeagent/steering-v2-case-jLXyTz/evidence.json",
+    "kernelLogs": [
+      ".codeagent/steering-v2-kernel-TVl9Om/kernel.log"
+    ],
+    "requests": 3
+  },
+  {
+    "case": "slow-save-after-product",
+    "source": "deterministic, official 1.3.17 server",
+    "evidence": ".codeagent/steering-v2-case-gsMLlS/evidence.json",
+    "kernelLogs": [
+      ".codeagent/steering-v2-kernel-rhmIsH/kernel.log"
+    ],
+    "requests": 3
+  }
+]

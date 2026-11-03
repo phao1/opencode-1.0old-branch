@@ -1,3 +1,19 @@
+# Steering v2 规范与验证索引（0.4.0）
+
+版本：v2.3；更新：2026-11-04。
+
+当前规范是 [本轮 DESIGN v1.4 / A1–A10](../oneshot/runs/20261104-0426-steering-v2/DESIGN.md)。实现、验收命令、结果与真实模型/TUI 证据见 [本轮索引](../oneshot/runs/20261104-0426-steering-v2/README.md)；安装与限制见 [独立包 README](../../external-plugins/steering/README.md)。
+
+当前独立包使用公开 1.3.17 Hooks/SDK，进程内观察普通活动输入，绑定 assistant 请求快照，拦截所有未过 gate 的旧普通工具，附加最新优先提醒，并在成功 idle 后最多一次/指导版本恢复晚保存输入。原始消息/附件不变，控制只引用 ID。取消/错误/删除/压缩/revert、新输入和正常准备使 permit 失效；provider/adopted 始终 unknown。
+
+native SubtaskPart 与未知 task 安全豁免；已确认 callID 的模型 task 正常 gate。已过 gate 的工具、batch 内部、StructuredOutput、运行中子代理转发、紧急中止和独立 follow-up queue 不提供保证。取消与派发不是原子；idle cancel 没专用事件；未完成的 revert 或最终检查后的取消仍可能竞态。活动 noReply 用户应关闭 autoResume。重启不重放旧 pending。
+
+变更记录：2026-11-04，v2.0 用 A1–A10 与新包取代默认 ledger；下面原规范及其证据保留历史身份。
+
+---
+
+## 历史：v0.3 及更早规范（不作为 v2 当前实现声明）
+
 # Steering 行为与可行性验收
 
 日期：2026-10-23。目标内核：`517e6c9aa4c61dbc125e7654fc596f1d529f20d9`（v1.3.17）。
@@ -49,3 +65,21 @@
 - 这是确定性协议验证，不是真实模型质量验收，也尚未覆盖关闭竞态、重启、压缩、权限及生产插件。
 - `node scripts/smoke-one-shot.mjs` 已通过真实插件入口加载、四个 one-shot 工具注册、普通/显式文本持久化、删除会话。日志在 `.codeagent/kernel-lab-scG4WE/kernel.log`。修复通过隔离配置及正式依赖安装完成，没有修改内核。
 - Codex CLI 默认模型连通检查及 one-shot JSON 适配器检查均通过。后续阶段使用独立 session、同一默认模型，不能称为多模型评审。CLI 遇到 WebSocket TLS EOF 后自动回退成功，保留事件日志。
+
+### Steering v2 round 2 修复（2026-11-04）
+
+按 run DESIGN v1.3 修复：仅 info/空 parts/长时间历史缺席不清退已观察候选，保留原预期 part 指纹及后续保存确认能力，无法确认时在 status 给出未知/人工检查诊断；不再按 1.5 秒年龄删除。所有并发 gate 等待同一 in-flight history，fallback 标记不再让普通 task 提前套用 native 豁免。
+
+压缩开始标记由 summary transform 消费，完成事件清除而非重新置位；记录本次 summary 实际包含的指导版本，仅成功后标 compacted，保持与普通 prepared 分离。后续包含对应 summary 的请求可获得该覆盖；后到/编辑版本与失败 summary 不继承退役。成功终止且 idle 时释放 settled/compacted 证据和无用快照，保留 pending/unknown；256 上限约束未解决输入，不再限制整个会话普通输入总数。聚合入口原样转交第二参数（含 autoResume:false），扩展注册和 worker 行为不变。
+
+变更记录：2026-11-04，第二轮实现及回归；[本 run 索引](../oneshot/runs/20261104-0426-steering-v2/README.md) 保存结果，旧轮报告/原始评审证据不改写。本轮未重新运行真实模型演示，正式全量验证由宿主执行。
+
+### Steering v2 round 3 / DESIGN v1.4（2026-11-04）
+
+连续摘要只在输入包含旧 covering summary 且当前内容版本未变时继承覆盖，成功后替换为新 summaryID；失败/未包含/编辑/晚到版本不继承，不建无限 lineage graph。摘要请求、覆盖摘要后的普通请求及 native replay 请求均带静态最新优先/保留完成结果/报告跳过动作提示；安全 idle 后仅保留一个最新 summary 提示标记，不宣称摘要语义完整。
+
+overflow replay 使用当前压缩窗口、公开 auto/overflow trigger、成功 summary、相邻 native 新 ID、严格内容及 model/agent/system/variant/format/tools 对照，只在真实请求包含完整匹配的 replay 时将原指导版本绑定为 prepared。新真实输入/取消失败/新压缩/首次后续请求关闭窗口；不把任意同文历史当原指导。text/plain 及生成文本保持；image/*、application/pdf 按固定源码转换为 Attached 占位文本，原媒体不在 replay 请求中。status 的 replayedAs/mediaStripped 明确此区别，不重注大附件。
+
+新候选的 info-only/慢保存继续保守保留；已保存输入经公开编辑及当前历史校准为空白/ignored/synthetic 后不阻断或恢复，观察仍保留时改回有效内容重新 gate。取消/失败会话只有明确 idle 且无 running/permit 才清理，active 或未确认边界保留安全容量上限。独立包 exact public plugin dev/peer 仍为 1.3.17，peer optional 表示类型/host API 约束；单文件 runtime 依赖继续内嵌，packaging 使用全新空 npm cache 真实离线安装并检查 peer 未安装。
+
+变更记录：2026-11-04，第三轮六项采纳修复与客观回归；完整正式 verify（含真实 headless/TUI）由宿主执行，旧轮评审/证据不改写。

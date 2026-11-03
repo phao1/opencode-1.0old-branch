@@ -1,0 +1,5 @@
+$ bun build src/index.ts --target=bun --outdir dist --external @opencode-ai/plugin
+Bundled 86 modules in 8ms
+
+  index.js  0.51 MB  (entry point)
+

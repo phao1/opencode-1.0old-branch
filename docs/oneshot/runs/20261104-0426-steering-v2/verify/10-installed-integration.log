@@ -1,0 +1,92 @@
+{
+  "package": "@oneshot/opencode-steering",
+  "version": "0.4.0",
+  "artifact": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/dist/oneshot-opencode-steering-0.4.0.tgz",
+  "sha256": "4a802c68f7ae4301a90e4d1e1842bc2d182dbdf86835e8e1dce5da4d3726ea37",
+  "integrity": "sha512-eZEFvcdREcbqiqHKopIOZI+HWw6DRiXE8vK67i/1KtictOsYi/sYafOq2d7xP+wSV388C9lHEoNZLkSBAig13w==",
+  "fixture": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-m2cSlM",
+  "installedPluginPath": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-m2cSlM/install/node_modules/@oneshot/opencode-steering/dist/index.js",
+  "installedBundleSHA256": "95ea7974c5afc2badb1cfd36f9cc761731966b06238afce09d51477aad3582e1",
+  "files": [
+    "README.md",
+    "dist/index.js",
+    "package.json"
+  ],
+  "offlineInstallation": "passed",
+  "npmCache": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-package-m2cSlM/empty-npm-cache",
+  "offlineCacheWasEmpty": true,
+  "optionalPeerNotInstalled": true,
+  "importedEntry": "passed",
+  "kernelEndToEnd": "not checked by packaging; run verify-steering",
+  "passed": true
+}
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=false (4621.462084ms)
+✔ A2/A4/A5/A10 multiple tools in one assistant; plugin=true (4215.060958ms)
+✔ A3 late-save native-ID double barrier; plugin=false (3982.351667ms)
+✔ A3 late-save native-ID double barrier; plugin=true (4171.647ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=false (3921.287542ms)
+✔ A5 no steering leaves request count and tools unchanged; plugin=true (3899.00975ms)
+✔ A6 native SubtaskPart completes with mixed input; ordinary task is gated (4082.160875ms)
+✔ A6 abort suppresses continuation of saved guidance (3687.10175ms)
+✔ A6 revert before late-save completion preserves undo and supports redo (4007.403041ms)
+✔ A2/A3 slow save after product observation stays blocking and later automatically recovers (5842.949458ms)
+✔ A5/A6 manual summarize permits first ordinary tool and subsequent normal requests (4539.532875ms)
+✔ A4/A6 real overflow compaction replays guidance under new IDs and admits its ordinary tool (4210.563375ms)
+✔ A4 three manual summaries and summary-only continuation carry explicit provider reminders across idle pruning (4655.26375ms)
+✔ all effective parts must save; request reminder leaves original attachments unchanged (14.975834ms)
+✔ ignored, synthetic and empty input are not guidance (0.507916ms)
+✔ one calibration per request; stream deltas and many mapped tools do not scan history (104.053167ms)
+✔ request assistant must be unique; never associate the last historical assistant (0.7395ms)
+✔ multi-session observations do not leak (0.479083ms)
+✔ native part.id path and unknown task query failure never throw; ordinary task still gates (0.383792ms)
+✔ stable native ID ordering, edits and partial/whole deletion keep useful guidance (0.62525ms)
+✔ native system reminder normalization does not turn wrapping into an edit (0.338042ms)
+✔ late save resumes at most once, preserving model/agent/system/variant/format and omitting tools (249.561666ms)
+✔ control permit invalidated before save: cancel (98.011041ms)
+✔ control permit invalidated before save: error (88.063708ms)
+✔ control permit invalidated before save: delete (86.841ms)
+✔ control permit invalidated before save: compact (85.244458ms)
+✔ control permit invalidated before save: revert (81.984291ms)
+✔ control permit invalidated before save: new input (81.067167ms)
+✔ control permit invalidated before save: prepared (82.191375ms)
+✔ dispatch checks revert via SDK even if event absent; no retries after unknown outcome (384.577083ms)
+✔ restart history never becomes eligible, status remains callable offline, compaction transform does not invent preparation (102.994042ms)
+✔ composition preserves both tools and event handlers (0.946958ms)
+✔ SDK calibration cannot confirm a newly observed attachment set while only its text has saved (1.479625ms)
+✔ normal tool missing events receives one coalesced fallback, never another assistants snapshot (4.769541ms)
+✔ missing candidates remain unknown after 1.5s and still confirm a late save (1.467417ms)
+✔ delayed old part events cannot admit a stale assistant after an in-place edit (1.30625ms)
+✔ delayed removal events cannot retire guidance still present in native history (1.681583ms)
+✔ info-only history retains expected parts; later save blocks the original assistant (1.131709ms)
+✔ concurrent bash and ordinary task both wait for shared ownership history (13.058916ms)
+✔ completed compaction clears only summary marker and admits first ordinary tool (0.849625ms)
+✔ successful summary retires only included versions without claiming normal preparation (2.554084ms)
+✔ guidance arriving during summary and failed summaries never inherit retirement (1.715708ms)
+✔ more than 300 ordinary completed turns prune settled evidence and keep bounded caches (328.671916ms)
+✔ standalone and actual aggregate entry both honor autoResume:false without dropping extension tools (505.607959ms)
+✔ three consecutive summaries transfer current coverage, preserve failures and exclude late edits (1.627125ms)
+✔ summary request itself carries priority guidance without duplicating original attachments (0.391042ms)
+✔ overflow native replay binds new part IDs only when the request includes exact replay content; media=false (0.787542ms)
+✔ overflow native replay binds new part IDs only when the request includes exact replay content; media=true (0.567459ms)
+✔ native replay rejects invalid association: no-overflow (0.591791ms)
+✔ native replay rejects invalid association: missing-attachment (0.384334ms)
+✔ native replay rejects invalid association: different-metadata (0.340791ms)
+✔ native replay rejects invalid association: observed-input (0.360333ms)
+✔ native replay rejects invalid association: missing-request (0.304584ms)
+✔ native replay rejects invalid association: ambiguous (0.443209ms)
+✔ saved guidance edited to no effective content stops blocking, then restoration gates old snapshots: whitespace (101.558042ms)
+✔ saved guidance edited to no effective content stops blocking, then restoration gates old snapshots: ignored (102.3395ms)
+✔ saved guidance edited to no effective content stops blocking, then restoration gates old snapshots: synthetic (101.778875ms)
+✔ more than 128 safely idle terminal sessions release global capacity: MessageAbortedError (8.768917ms)
+✔ more than 128 safely idle terminal sessions release global capacity: APIError (8.756542ms)
+✔ terminated sessions with running parts or no idle boundary remain protected from eviction (2.9165ms)
+✔ second compaction cannot replace first covering summary without valid inherited coverage: failed (0.537458ms)
+✔ second compaction cannot replace first covering summary without valid inherited coverage: omits-first-summary (0.396833ms)
+ℹ tests 62
+ℹ suites 0
+ℹ pass 62
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 55946.323167

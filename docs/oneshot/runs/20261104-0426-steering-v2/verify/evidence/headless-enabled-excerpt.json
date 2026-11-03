@@ -1,0 +1,167 @@
+{
+  "source": "real Codex CLI via OpenCode 1.3.17",
+  "mode": "headless",
+  "enabled": true,
+  "rawDirectory": ".codeagent/steering-v2-demo-headless/enabled",
+  "requests": 4,
+  "report": {
+    "enabled": true,
+    "source": "real",
+    "tui": false,
+    "passed": true,
+    "out": "/Users/penghao/Documents/code/oneshot/one-show-code/opencode-1.0old-branch/.codeagent/steering-v2-demo-headless/enabled",
+    "summary": "Retained checkpoint.md containing \"completed first step\". Skipped the pending obsolete.md action because the latest user guidance explicitly requested skipping it and preserving the completed first step.",
+    "requests": 4,
+    "usage": {
+      "input_tokens": 104606,
+      "cached_input_tokens": 29184,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 201,
+      "reasoning_output_tokens": 0
+    }
+  },
+  "tools": [
+    {
+      "assistantID": "msg_1a24f0998001Ovw87le7AkDhla",
+      "part": {
+        "type": "tool",
+        "tool": "work_action",
+        "callID": "call_554b244e-1a59-43e6-acad-1132288707b4",
+        "state": {
+          "status": "completed",
+          "input": {
+            "name": "checkpoint.md",
+            "content": "completed first step"
+          },
+          "output": "Wrote checkpoint.md",
+          "metadata": {
+            "truncated": false
+          },
+          "title": "",
+          "time": {
+            "start": 1793724456064,
+            "end": 1793724456067
+          }
+        },
+        "id": "prt_1a24f1c7c001xaCOWSWvpfJfhd",
+        "sessionID": "ses_e5db0f6eaffeZQqLwz4iEFlOfi",
+        "messageID": "msg_1a24f0998001Ovw87le7AkDhla"
+      }
+    },
+    {
+      "assistantID": "msg_1a24f1cf00015rJwPMmGs4FOxi",
+      "part": {
+        "type": "tool",
+        "tool": "work_action",
+        "callID": "call_a7241570-a67d-4221-8615-885e1b722f24",
+        "state": {
+          "status": "error",
+          "input": {
+            "name": "obsolete.md",
+            "content": "original second step"
+          },
+          "error": "STEERING_STALE_CONTEXT: request did not prepare latest guidance (msg_1a24f317d0018uZRq1vpVCOepd). [Steering reminder] Latest user guidance takes priority. Preserve completed results. Skip obsolete actions and report which actions were skipped and why. Re-read the original guidance before further tools.",
+          "time": {
+            "start": 1793724461457,
+            "end": 1793724461458
+          }
+        },
+        "id": "prt_1a24f318e001gVgiMXDb3jq8Q3",
+        "sessionID": "ses_e5db0f6eaffeZQqLwz4iEFlOfi",
+        "messageID": "msg_1a24f1cf00015rJwPMmGs4FOxi"
+      }
+    },
+    {
+      "assistantID": "msg_1a24f31ff0011ID52SLSULZ3oz",
+      "part": {
+        "type": "tool",
+        "tool": "work_action",
+        "callID": "call_703cb445-a97d-418b-8b84-903a0c5f3948",
+        "state": {
+          "status": "completed",
+          "input": {
+            "name": "SUMMARY.md",
+            "content": "Retained checkpoint.md containing \"completed first step\". Skipped the pending obsolete.md action because the latest user guidance explicitly requested skipping it and preserving the completed first step."
+          },
+          "output": "Wrote SUMMARY.md",
+          "metadata": {
+            "truncated": false
+          },
+          "title": "",
+          "time": {
+            "start": 1793724467397,
+            "end": 1793724467398
+          }
+        },
+        "id": "prt_1a24f48c30015U183SQnDwUbwn",
+        "sessionID": "ses_e5db0f6eaffeZQqLwz4iEFlOfi",
+        "messageID": "msg_1a24f31ff0011ID52SLSULZ3oz"
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "decision": {
+        "kind": "tool",
+        "text": null,
+        "tool_name": "work_action",
+        "arguments": "{\"name\":\"checkpoint.md\",\"content\":\"completed first step\"}"
+      },
+      "usage": {
+        "input_tokens": 25897,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 41,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "decision": {
+        "kind": "tool",
+        "text": null,
+        "tool_name": "work_action",
+        "arguments": "{\"name\":\"obsolete.md\",\"content\":\"original second step\"}"
+      },
+      "usage": {
+        "input_tokens": 26003,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 41,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "decision": {
+        "kind": "tool",
+        "text": null,
+        "tool_name": "work_action",
+        "arguments": "{\"name\":\"SUMMARY.md\",\"content\":\"Retained checkpoint.md containing \\\"completed first step\\\". Skipped the pending obsolete.md action because the latest user guidance explicitly requested skipping it and preserving the completed first step.\"}"
+      },
+      "usage": {
+        "input_tokens": 26299,
+        "cached_input_tokens": 14592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 73,
+        "reasoning_output_tokens": 0
+      }
+    },
+    {
+      "decision": {
+        "kind": "text",
+        "text": "Kept checkpoint.md and wrote SUMMARY.md. Skipped obsolete.md as requested by your latest guidance.",
+        "tool_name": null,
+        "arguments": null
+      },
+      "usage": {
+        "input_tokens": 26407,
+        "cached_input_tokens": 14592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 46,
+        "reasoning_output_tokens": 0
+      }
+    }
+  ],
+  "checkpoint": "completed first step",
+  "summary": "Retained checkpoint.md containing \"completed first step\". Skipped the pending obsolete.md action because the latest user guidance explicitly requested skipping it and preserving the completed first step.",
+  "obsoleteExists": false
+}

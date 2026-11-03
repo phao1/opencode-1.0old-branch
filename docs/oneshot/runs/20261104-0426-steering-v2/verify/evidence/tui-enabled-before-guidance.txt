@@ -1,0 +1,45 @@
+                                                                                               █
+  ┃                                                                                            █    Real steering true
+  ┃  Use work_action to perform these separate steps in order, exactly one artifact per tool   █
+  ┃  call: (1) write checkpoint.md with "completed first step"; (2) write obsolete.md with     █    Context
+  ┃  "original second step"; (3) write SUMMARY.md summarizing what you completed. Then give a  █    25,942 tokens
+  ┃  brief final answer.                                                                       █    20% used
+  ┃                                                                                            █    $0.00 spent
+                                                                                               █
+     ⚙ work_action [name=checkpoint.md, content=completed first step]                          █    LSP
+                                                                                               █    LSPs will activate as files are read
+     ▣  Build · Real Codex CLI                                                                 █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+                                                                                               █
+
+  ┃                                                                                                 /Users/penghao/Documents/code/oneshot/
+  ┃                                                                                                 one-show-code/opencode-1.0old-branch/.
+  ┃                                                                                                 codeagent/steering-v2-demo-tui/
+  ┃  Build  Real Codex CLI real                                                                     enabled:dev1104-oneshot-steering
+  ╹▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+   ⬝⬝⬝⬝⬝⬝⬝⬝  esc interrupt                                          25.9K (20%)  ctrl+p commands    • OpenCode 1.3.17
+

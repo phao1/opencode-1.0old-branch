@@ -1,0 +1,10 @@
+✔ A2/A3 slow save after product observation stays blocking and later automatically recovers (6447.67675ms)
+✔ A5/A6 manual summarize permits first ordinary tool and subsequent normal requests (4415.070458ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10961.159416

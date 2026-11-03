@@ -1,0 +1,38 @@
+[
+  {
+    "case": "overflow-native-replay",
+    "mode": "installed",
+    "source": "deterministic official OpenCode 1.3.17",
+    "evidence": ".codeagent/steering-v2-case-C31Esm/evidence.json",
+    "kernelLog": ".codeagent/steering-v2-kernel-L9BLwQ/kernel.log",
+    "requests": 5,
+    "excerpt": "overflow-native-replay-installed-excerpt.json"
+  },
+  {
+    "case": "overflow-native-replay",
+    "mode": "source",
+    "source": "deterministic official OpenCode 1.3.17",
+    "evidence": ".codeagent/steering-v2-case-Qt3k8W/evidence.json",
+    "kernelLog": ".codeagent/steering-v2-kernel-5Rp59T/kernel.log",
+    "requests": 5,
+    "excerpt": "overflow-native-replay-excerpt.json"
+  },
+  {
+    "case": "three-manual-summaries",
+    "mode": "installed",
+    "source": "deterministic official OpenCode 1.3.17",
+    "evidence": ".codeagent/steering-v2-case-BGzfLn/evidence.json",
+    "kernelLog": ".codeagent/steering-v2-kernel-vrDiMu/kernel.log",
+    "requests": 6,
+    "excerpt": "three-manual-summaries-installed-excerpt.json"
+  },
+  {
+    "case": "three-manual-summaries",
+    "mode": "source",
+    "source": "deterministic official OpenCode 1.3.17",
+    "evidence": ".codeagent/steering-v2-case-XOymhl/evidence.json",
+    "kernelLog": ".codeagent/steering-v2-kernel-bRX8We/kernel.log",
+    "requests": 6,
+    "excerpt": "three-manual-summaries-excerpt.json"
+  }
+]

@@ -1,6 +1,6 @@
 # Steering v2 外置插件设计
 
-版本：v1.1；更新日期：2026-11-04（Pacific/Auckland）
+版本：v1.4；更新日期：2026-11-04（Pacific/Auckland）
 
 ## 目标与范围
 
@@ -61,13 +61,30 @@
 ### v1.1 固定实现契约（独立评审后的裁决）
 
 1. **快照关联**：transform 的 msgs 不含刚创建的当前 assistant，不能取数组末尾 assistant。由历史推导 session、最新 user parent；合并一次 SDK session.messages（或已确认同等新鲜的事件缓存）定位唯一“未完成、parentID 匹配、非 summary、且不在 transform 输入”的当前 assistant。候选不唯一不建快照，普通有 pending 的调用 fail closed。压缩期间不建普通快照，compaction transform 不得覆盖真实 assistant 快照。每个真实请求至多一次校准，不在每个 gate 重新全史扫描。
-2. **输入状态**：chat.message 记录候选及全部有效 part 内容版本；message.updated 仅证明 info 保存，全部预期有效 part 匹配才 saved。指导集合按原生 message ID 排序，与 SDK 原生消息顺序一致；不按异步事件完成顺序。候选不完整时 gate 合并有时限的 message 查询；失败拒绝本次普通调用并报告未知，不能无限永久待定。失败候选在后续完整校准确认缺失后退出，删改按新版本重算。附件生成的 synthetic 文本保留给模型，签名只算有效用户 part，归一化原生 system-reminder。
+2. **输入状态**：chat.message 记录候选及全部有效 part 内容版本；message.updated 仅证明 info 保存，全部预期有效 part 匹配才 saved。指导集合按原生 message ID 排序，与 SDK 原生消息顺序一致；不按异步事件完成顺序。候选不完整时 gate 合并有时限的 message 查询；失败拒绝本次普通调用并报告未知。历史暂缺或空 parts 不证明保存失败（后续 hook 可能仍在阻塞保存），不得按 1.5 秒等任意年龄永久丢弃候选。仅在明确删除/终止等证据下清退；未知结果报告人工检查，必须保留晚保存事件重新确认/拦截的能力。删改按新版本重算。附件生成的 synthetic 文本保留给模型，签名只算有效用户 part，归一化原生 system-reminder。
 3. **恢复 permit**：串行区内预留一次性 permit（session/epoch、指导有序版本、成功终止 assistant），区外 promptAsync，避免重入死锁。控制重新进入 chat.message 时校验 permit 与当前 epoch/版本；取消、新真实输入、已被正常请求准备、删除/压缩/revert 都使旧 permit 失效并拒绝控制保存。超时结果记 unknown，不盲重试。promptAsync 204 不等于控制已保存。dispatch 前已观察取消可保证抑制；idle cancel 没专用事件、最后检查后取消无法保证原子拒绝，文档必须直说。
 4. **恢复约束**：从最新有效指导继承 model、agent、system、variant、format（后者在 SDK v1 声明缺失，做局部窄适配），不发送 tools，沿用当前 session permission 而非重写它。字段无法安全还原时不自动恢复并报告原因。真实/单元测试核对控制与权限保持。
 5. **revert**：session.updated 出现 revert 立即抑制资格；派发前 SDK session.get 复核，任何 revert 都停止本批恢复，等待新真实用户输入。不自动触发 revert cleanup；真内核测试验证撤销范围保留且可 redo。message/part removed 分别调整候选，不能把删除内容复活。
 6. **native subtask**：part.id 匹配特殊 before 路径，callID 匹配普通模型工具；事件缺失时一次 SDK 校准。未知 task 且查询失败采取无异常安全豁免并记诊断（不以任意 task 声称 G1），不能在该未知路径 fail closed 重现 L-09。真内核提交 SubtaskPart 并验证 assistant/tool 最终离开 running；正常模型 task 可确认归属时仍 gate。
 7. **诊断与边界**：steering_status 永远豁免 stale gate，只读不唤醒；活动 noReply 无法辨认，可能被恢复，README 提供 autoResume:false 并明确此不兼容。单一函数导出只防模块内重复调用；独立包与聚合入口二选一安装，禁止将其说成跨配置去重。
 8. **包与 CI**：聚合入口相对 import `../steering/src/index.ts`，由 Bun 聚合构建包含，不增加 workspace 发布依赖；新包独立声明公开 dev/peer 1.3.17。验证聚合构建（根 include 覆盖）与独立打包。CI 文档给出从 npm 精确安装 `opencode-ai@1.3.17` 的命令及 OPENCODE_BINARY 指向其 bin/opencode，运行 --version 必须等于 1.3.17；npm lock integrity/平台子包固定并由 npm 校验，不能使用 @latest 或宿主本机路径。也可使用只读固定源码的明确启动适配，但不得历史 serve/merge。真实模型演示单独执行，不混入离线确定性 CI。
+
+### v1.3 代码评审后的补充契约
+
+- 压缩开始 hook 只标记压缩请求；该 transform 消费后，成功 session.compacted 必须清除标记而非再次置位。记录本次压缩实际包含的指导版本；成功后这些版本可标记 compacted/retired，不谎报为普通请求 prepared，也不再永久阻断包含摘要的正常请求。未被压缩包含的后到指导不能被一并丢掉。压缩失败不得当成功清退。至少真内核验证 manual summarize 后第一次普通工具成功，另测尚未 prepared 的指导经压缩后后续多个请求均能正常 gate。
+- 每个并发 gate 必须等待同会话正在执行的共享历史查询；fallback 标记仅限制再发查询，不能使第二个 task 绕过尚未结束的归属确认。测试并发 bash/task 与事件延迟。
+- 历史只含 user info/空 parts 或超过 1.5 秒仍缺席是保存中间态，不能删除未完成候选。测试后续 hook 延迟超过原 timeout、先保存 info 再保存 parts，确认最终保存的指导仍阻断旧工具并可进入恢复。无法确认保存失败时保守报告未知，不以静默丢失换取成功。
+- 缓存上限限制未完成/仍需归属证据，不能把整个会话第 257 个普通输入变成硬失败。安全 idle/已完成边界淘汰 settled/compacted 旧证据，保持必要活跃 assistant 与 pending/unknown 版本。单测超过 300 次普通串行输入，容量不溢出，保留 pending 的 cap 行为有明确诊断。
+- 聚合 CodeAgentPlugin 接收第二参数并向 SteeringPlugin 转交 options，尤其 autoResume:false；用行为测试证明独立和聚合入口均可关闭恢复。不同组件不共享隐含配置转换。
+
+### v1.4 第二轮评审后的补充契约
+
+- 连续成功压缩必须传递覆盖关系：新摘要输入含旧 summaryID 时，继承旧摘要覆盖且内容版本未变化的指导，成功后绑定新 summaryID。失败不替换、未包含的摘要/晚到新版本不继承；用至少三次连续摘要及失败/编辑反例测试，不建立无限增长的历史图。
+- overflow 时内核会把指导从摘要输入中排除，并重放为新 user/part ID（compaction.ts:167、:288）。以当前压缩窗口、公开消息内容与字段的严格匹配识别 native replay，关联原指导版本与包含重放的请求快照；不能只靠原 ID，也不能把任意历史同文输入当重放。只在真实请求含对应内容时标 prepared。媒体被原生转成占位文本属于内核行为，需按固定版本规则验证/说明，不能静默宣称原附件完整进入模型。匹配不唯一/不完整时保守诊断，不放行未知旧动作。
+- G3 提示覆盖压缩链：摘要请求明确最新指导优先、保留完成结果、记住跳过旧动作；后续仅含覆盖摘要的普通请求仍附静态 steering priority reminder。请求准备/摘要覆盖均不证明摘要语义完整，provider/adopted 保持 unknown，不用重新注入全量附件抵消原生压缩。
+- 已确认保存的指导经公开编辑变成空白/ignored/synthetic 时，应确认为“当前无有效指导”，与尚未完整保存的空 parts 候选分开。后续普通工具不得永久阻断；本进程仍观察期间再改回有效内容必须重新 gate，不能借空版本豁免旧请求。保留未完成候选的保守策略。
+- 取消/失败且确已 idle、无运行中工作/permit 的会话可安全清理 settled 记录或淘汰进程内状态，128 个终止会话不能锁死第 129 个新会话。不得清退 active 或仍有未确认工作边界的状态；重启/淘汰后不主动恢复旧输入。
+- 单文件 bundle 运行时不依赖 public plugin 包（类型 import 被擦除）；保留 1.3.17 精确 dev/peer 声明，可将 peer 标 optional，避免空 npm cache 的离线安装强取类型包。package-steering 的离线安装必须显式使用全新空 npm cache 验证；普通用户安装与公共 host API 版本约束不变。
 
 ### 确定性集成设施
 
@@ -99,8 +116,10 @@
 7. `node scripts/check-kernel.mjs`
 8. `node scripts/steering-v2-demo.mjs --out .codeagent/steering-v2-demo-headless`（真实模型 headless 开/关对照）
 9. `node scripts/steering-v2-demo.mjs --tui --out .codeagent/steering-v2-demo-tui`（真实模型 tmux TUI 开/关对照）
+10. `BUN_BINARY=/Users/penghao/.bun/bin/bun node scripts/verify-steering.mjs`（打包并从干净安装产物运行真实内核集成，独立于源码入口测试）
 
 若演示脚本支持 --check 验证已有证据，仍必须先运行真实完整演示；不能只验一份旧 JSON。实现过程中命令如有必要更改，必须宿主回写设计和 checks，不能静默跳过验收。
+演示要求全新输出目录。宿主每次正式 verify 前将已有 headless/TUI 目录归档为带阶段/轮次后缀的目录，同时更新相应原始证据索引；不得带已有产物重跑，也不删除历史失败/成功证据。
 
 ## 变更记录
 
@@ -108,3 +127,6 @@
 | --- | --- | --- |
 | v1.0 | 2026-11-04 | 原生/四参考实现调研后初版：内存状态、公开 gate、有界 continuation、确定性真内核集成与真实模型/TUI 对照。 |
 | v1.1 | 2026-11-04 | 采纳四 Codex 模型评审：真实 late-save 双屏障、完整 part 保存、快照唯一归属、控制 permit、revert/取消边界、字段继承、native subtask 真内核验收、重复/删改输入、noReply/重复安装与 CI 供给契约。 |
+| v1.2 | 2026-11-04 | 实现检查后补登记安装产物真实集成命令；明确正式 verify 前归档演示目录以保证新鲜输入。无产品行为变更。 |
+| v1.3 | 2026-11-04 | 第一轮对抗评审及宿主复现后补齐压缩生命周期、未准备指导退役、空/慢保存候选保留、并发查询等待、长会话 settled 清理与聚合 options 转交。 |
+| v1.4 | 2026-11-04 | 第二轮评审：连续摘要覆盖、overflow native replay、压缩链 G3 提示、空编辑与未保存区分、取消会话回收、空 npm cache 离线安装。达到两轮上限，修复后逐项宿主复核和完整 verify，不伪造额外独立 approve。 |
