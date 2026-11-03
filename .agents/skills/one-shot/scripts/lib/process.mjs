@@ -10,11 +10,13 @@ export function killGroup(pid) {
   if (!pid) return;
   try { process.kill(-pid, 'SIGKILL'); } catch (error) { if (error.code !== 'ESRCH') throw error; }
 }
-export function installSignals() {
+export function installSignals(onSignal) {
   for (const signal of ['SIGINT', 'SIGTERM']) {
     process.once(signal, () => {
-      for (const pid of active) killGroup(pid);
-      // 原子状态已经落盘；留下的锁由下一进程按死 pid 回收。
+      for (const pid of active) {
+        try { killGroup(pid); } catch (error) { console.error(`kill ${pid}: ${error.message}`); }
+      }
+      try { onSignal?.(signal); } catch (error) { console.error(`中断状态保存失败：${error.message}`); }
       process.exit(signal === 'SIGINT' ? 130 : 143);
     });
   }

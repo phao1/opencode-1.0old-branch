@@ -55,6 +55,36 @@ export function save(dir, state) {
 export function event(state, action, detail) {
   state.timeline.push({ at: now(), action, detail });
 }
+export function taskRecords(state) {
+  return [
+    ...state.impl.attempts.map(a => [`impl round ${a.round}`, a]),
+    ...['improve', 'review'].flatMap(kind => Object.entries(state.rounds[kind]).flatMap(([round, record]) =>
+      Object.entries(record.agents).map(([id, agent]) => [`${kind} round ${round} ${id}`, agent]))),
+    ...(state.verification ? [['verify', state.verification],
+      ...state.verification.results.map((r, i) => [`verify check ${i + 1}`, r])] : []),
+    ...Object.entries(state.nodes).filter(([, n]) => n.cliPid).map(([name, n]) => [`node ${name}`, n])
+  ];
+}
+export function interruptTasks(state, reasonFor) {
+  let changed = false;
+  for (const [label, record] of taskRecords(state)) {
+    if (record.status !== 'running') continue;
+    const reason = reasonFor(record);
+    if (!reason) continue;
+    Object.assign(record, { status: 'interrupted', reason, finishedAt: now() });
+    event(state, 'interrupted', `${label}: ${reason}`);
+    changed = true;
+  }
+  return changed;
+}
+export function reconcile(state) {
+  return interruptTasks(state, record => alive(record.cliPid) ? null
+    : `reconcile: CLI pid ${record.cliPid ?? 'unknown (legacy record)'} is not alive`);
+}
+export function interruptions(state) {
+  return taskRecords(state).filter(([, record]) => record.status === 'interrupted')
+    .map(([task, record]) => ({ task, reason: record.reason, finishedAt: record.finishedAt }));
+}
 export function nextNode(state) {
   return Object.entries(state.nodes).find(([, n]) => !['done', 'skipped'].includes(n.status))?.[0] ?? null;
 }
@@ -87,6 +117,7 @@ export function initRun(root, title, size, slug, requirement, cwd) {
   fs.mkdirSync(dir);
   const state = { version: 2, id, title, size, sizeExplicit: false, baseCommit, createdAt: now(), updatedAt: now(), nodes, checks: [], rounds: { improve: {}, review: {} }, impl: { attempts: [] }, timeline: [] };
   write(path.join(dir, 'REQUIREMENT.md'), `${requirement || title}\n`);
+  write(path.join(dir, '.gitignore'), '.lock\n*.tmp\n');
   event(state, 'init', size);
   save(dir, state);
   return { dir, state };

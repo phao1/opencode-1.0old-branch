@@ -22,6 +22,11 @@ if(args[0]==='exec') {
  let input=''; for await(const chunk of process.stdin) input+=chunk;
  record({args,input,cwd:process.cwd(),pid:process.pid});
  const out=args[args.indexOf('-o')+1];
+ if(fs.existsSync(path.join(root,'generator-sleep')) && out.includes('/impl/')) {
+  const child=spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{stdio:'ignore'});
+  fs.writeFileSync(path.join(root,'generator.child.pid'),String(child.pid));
+  await new Promise(r=>setTimeout(r,60000));
+ }
  if(fs.existsSync(path.join(root,'host-sleep')) && !args.includes('-m')) await new Promise(r=>setTimeout(r,800));
  console.log(JSON.stringify({type:'thread.started',thread_id:'test-thread-123'}));
  fs.mkdirSync(path.dirname(out),{recursive:true});

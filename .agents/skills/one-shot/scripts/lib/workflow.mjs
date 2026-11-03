@@ -31,20 +31,20 @@ export async function fanout(ctx, kind, opts) {
     return agent;
   }) : config.agents;
   const timeout = seconds(opts.timeout ?? config.agentTimeoutSeconds);
+  state.nodes[kind] = { status: 'running', cliPid: process.pid, round, startedAt: now() };
+  save(dir, state);
   const probes = await probeAgents(config, cwd);
   const folder = path.join(dir, kind, `round-${round}`);
   const summary = path.join(dir, kind, `round-${round - 1}`, 'SUMMARY.md');
   fs.mkdirSync(folder, { recursive: true });
   const record = state.rounds[kind][round] ||= { agents: {}, startedAt: now() };
-  state.nodes[kind] = { status: 'running', round, startedAt: now() };
-  save(dir, state);
   await Promise.all(selected.map(async agent => {
     const out = path.join(folder, `${agent.id}.md`);
     const previous = record.agents[agent.id];
     if (previous?.status === 'ok' && nonempty(out)) return;
     const probe = probes.find(p => p.id === agent.id);
     if (!probe?.available) {
-      record.agents[agent.id] = { status: 'unavailable', reason: probe?.reason || 'not probed', durationMs: 0, at: now(), model: agent.model || null };
+      record.agents[agent.id] = { status: 'unavailable', cliPid: process.pid, reason: probe?.reason || 'not probed', durationMs: 0, at: now(), model: agent.model || null };
       save(dir, state);
       return;
     }
@@ -52,10 +52,10 @@ export async function fanout(ctx, kind, opts) {
     write(prompt, template(`${kind}.prompt`, { cwd, run_dir: dir, design: path.join(dir, 'DESIGN.md'), round,
       base: state.baseCommit ?? 'null', requirement: path.join(dir, 'REQUIREMENT.md'),
       brainstorm: path.join(dir, 'BRAINSTORM.md'), summary: fs.existsSync(summary) ? summary : '无（上一轮汇总不存在）' }));
-    record.agents[agent.id] = { status: 'running', at: now(), model: agent.model || null };
+    record.agents[agent.id] = { status: 'running', cliPid: process.pid, at: now(), model: agent.model || null };
     save(dir, state);
     const result = await invokeAgent(agent, { cwd, prompt, out, log: path.join(folder, `${agent.id}.log`), timeout });
-    record.agents[agent.id] = { ...result, at: now(), model: agent.model || null };
+    record.agents[agent.id] = { ...result, cliPid: process.pid, at: now(), finishedAt: now(), model: agent.model || null };
     save(dir, state);
   }));
   record.degraded = !Object.entries(record.agents).some(([id, a]) => a.status === 'ok' && nonempty(path.join(folder, `${id}.md`)));
@@ -67,6 +67,7 @@ export async function fanout(ctx, kind, opts) {
     write(path.join(folder, 'SUMMARY.md'), template('summary', { kind, round, status: record.degraded ? 'DEGRADED' : '待宿主汇总' }));
   }
   event(state, 'fanout', `${kind} round ${round}${record.degraded ? ' DEGRADED' : ''}`);
+  delete state.nodes[kind].cliPid;
   save(dir, state);
   return record;
 }
@@ -77,6 +78,9 @@ export async function implement(ctx, opts) {
   if (opts.inline) {
     if (opts.fix) throw new Error('--inline 不能和 --fix 同用');
     node.status = 'running';
+    delete node.cliPid;
+    delete node.reason;
+    delete node.finishedAt;
     invalidateVerification();
     state.impl.inline = true;
     event(state, 'impl', 'inline: 宿主自己实现；完成后写 impl/round-1/report.md，再 done impl');
@@ -102,11 +106,15 @@ export async function implement(ctx, opts) {
   const resumed = fix ? state.impl.threadId : null;
   const args = resumed ? ['exec', 'resume', resumed, '--dangerously-bypass-approvals-and-sandbox', '-m', config.generator.model, '--json', '-o', out, '-']
     : ['exec', '--dangerously-bypass-approvals-and-sandbox', '-C', cwd, '-m', config.generator.model, '--json', '-o', out, '-'];
-  const attempt = { round, startedAt: now(), fix, resumedFrom: resumed || null, status: 'running', args };
+  const attempt = { round, cliPid: process.pid, startedAt: now(), fix, resumedFrom: resumed || null, status: 'running', args };
   state.impl.attempts.push(attempt);
   state.impl.inline = false;
   invalidateVerification();
   node.status = 'running';
+  node.cliPid = process.pid;
+  node.startedAt = now();
+  delete node.reason;
+  delete node.finishedAt;
   save(dir, state);
   const readEvents = eventReader(id => { state.impl.threadId = id; attempt.threadId = id; save(dir, state); });
   const result = await execute({ bin, args, cwd, input: `读取并执行 ${prompt} 中的指令。\n`,
@@ -115,6 +123,7 @@ export async function implement(ctx, opts) {
   if (result.status === 'ok' && !nonempty(out)) Object.assign(result, { status: 'failed', reason: 'empty output' });
   Object.assign(attempt, result, { finishedAt: now() });
   node.status = result.status === 'ok' ? 'running' : 'failed';
+  delete node.cliPid;
   event(state, 'impl', `round ${round}: ${result.status}${resumed ? ' resumed' : ''}`);
   save(dir, state);
   return attempt;
@@ -122,22 +131,25 @@ export async function implement(ctx, opts) {
 export async function verify(ctx) {
   const { cwd, dir, state, config } = ctx;
   if (!state.checks.length) throw new Error('没有验证命令，请 checks add');
-  state.nodes.verify.status = 'running';
-  save(dir, state);
   const results = [];
+  state.nodes.verify = { status: 'running', cliPid: process.pid, startedAt: now() };
+  state.verification = { status: 'running', cliPid: process.pid, startedAt: now(), results, ok: false };
+  save(dir, state);
   for (const [index, check] of state.checks.entries()) {
     const log = path.join(dir, 'verify', `${index + 1}-${check.name}.log`);
+    const record = { ...check, status: 'running', cliPid: process.pid, log: path.relative(dir, log), startedAt: now() };
+    results.push(record);
+    save(dir, state);
     const result = await execute({ bin: '/bin/sh', args: ['-c', check.command], cwd,
       timeout: seconds(config.checkTimeoutSeconds || 600), log });
     delete result.sample;
-    results.push({ ...check, ...result, log: path.relative(dir, log), at: now() });
-    state.verification = { results, at: now(), ok: false };
+    Object.assign(record, result, { at: now(), finishedAt: now() });
     save(dir, state);
   }
   const ok = results.every(r => r.status === 'ok');
-  state.verification.ok = ok;
+  Object.assign(state.verification, { status: ok ? 'ok' : 'failed', ok, at: now(), finishedAt: now() });
   state.nodes.verify = { status: ok ? 'done' : 'failed', finishedAt: now() };
-  write(path.join(dir, 'verify/RESULT.md'), `# 验证 ${now()}\n\n${ok ? 'PASS' : 'FAIL'}\n\n| 命令 | 结果 | 日志 |\n| --- | --- | --- |\n${results.map(r => `| ${r.command.replaceAll('|', '\\|')} | ${r.status} ${r.reason} | [log](${r.log}) |`).join('\n')}\n`);
+  write(path.join(dir, 'verify/RESULT.md'), `# 验证 ${now()}\n\n${ok ? 'PASS' : 'FAIL'}\n\n| 命令 | 结果 | 日志 |\n| --- | --- | --- |\n${results.map(r => `| ${r.command.replaceAll('|', '\\|')} | ${r.status} ${r.reason} | [log](${path.relative('verify', r.log)}) |`).join('\n')}\n`);
   event(state, 'verify', ok ? 'PASS' : 'FAIL');
   save(dir, state);
   return state.verification;

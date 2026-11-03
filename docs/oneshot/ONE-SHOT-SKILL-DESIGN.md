@@ -1,6 +1,6 @@
 # One-shot Skill v2 设计（Codex 宿主）
 
-版本 v1.1 · 2026-11-04 · Planner：Claude（总规划/验收）· Generator：Codex
+版本 v1.2 · 2026-11-04 · Planner：Claude（总规划/验收）· Generator：Codex
 依据：`/Users/penghao/Documents/code/oneshot/reference/chencheng-oneshot-reference.md`（下称"参考文档"，§ 号指它的章节）
 
 ## 1. 目标与非目标
@@ -50,6 +50,7 @@ docs/oneshot/runs/<run-id>/         # 每次运行的全部留档（随 commit �
 run 目录：
 ```
 state.json                 # 机器可读进度、初始化 baseCommit（原子写：tmp+rename；.lock 防并发宿主）
+.gitignore                 # .lock 与 *.tmp，避免提交锁及原子写临时文件
 REQUIREMENT.md             # 原始需求原文
 BRAINSTORM.md  DESIGN.md   # design 带版本号与变更记录
 improve/round-1/<agent>.prompt.md <agent>.md <agent>.log SUMMARY.md
@@ -79,15 +80,15 @@ review 停止条件：本轮无被采纳的 P0/P1，或达到 `maxReviewRounds`�
 | 命令 | 行为 |
 |---|---|
 | `agents [--refresh]` | 并行探测 config 中的 agent 池：二进制可执行 + 极短 smoke 提示（期望回 `PONG`，超时 90s）。结果缓存 `~/.cache/oneshot/agents.json`（TTL 6h），打印 可用/不可用/原因 |
-| `init --title <t> [--size S\|M\|L] [--req <file\|->] [--slug <s>]` | 建 `docs/oneshot/runs/<YYYYMMDD-HHMM>-<slug>/`，写 REQUIREMENT.md、state.json（按 size 生成节点表） |
-| `status` / `next` | 打印节点状态；`next` 打印下一个未完成节点 + 该节点在 flow.md 中的指令摘要 |
-| `start <node>` / `done <node> [--note]` / `skip <node> --reason` | 宿主标记节点；`done` 会校验产物（如 design 需要 DESIGN.md 且含模板必备章节） |
-| `fanout improve\|review [--round N] [--agents a,b] [--timeout s]` | 按模板生成 prompt 文件，**并发**启动所选/可用 agent（只读模式），每个 agent 独立超时（超时整组进程 kill），结果写 `<agent>.md`；已有成功结果的 agent 在重跑时跳过（恢复语义）；state 记录每个 agent 的 ok/failed/timeout/unavailable、耗时 |
+| `init --title <t> [--size S\|M\|L] [--req <file\|->] [--slug <s>]` | 建 `docs/oneshot/runs/<YYYYMMDD-HHMM>-<slug>/`，写 REQUIREMENT.md、state.json（按 size 生成节点表）和 .gitignore（.lock、*.tmp） |
+| `status` / `next` | 打印节点状态；只读；`next` 打印下一个未完成节点 + flow.md 指令摘要及 interrupted 任务列表 |
+| `start <node>` / `done <node> [--note]` / `skip <node> --reason` | 宿主标记节点；`done` 会校验产物（如 design 需要 DESIGN.md 且含模板必备章节）；已 done 时只更新 note、保留 finishedAt，记 note-update |
+| `fanout improve\|review [--round N] [--agents a,b] [--timeout s]` | 按模板生成 prompt 文件，**并发**启动所选/可用 agent（只读模式），每个 agent 独立超时（超时整组进程 kill），结果写 `<agent>.md`；已有成功结果的 agent 在重跑时跳过（恢复语义）；state 记录每个 agent 的 cliPid、ok/failed/timeout/unavailable/interrupted、耗时 |
 | `impl [--round N] [--fix <findings.md>] [--inline]` | Generator：新开 `codex exec`（可写）执行 impl.prompt + DESIGN.md；`--json` 事件落盘并记录 thread id；`--fix` 时优先 `codex exec resume <thread>` 带上分诊后的问题；`--inline` 只记录"宿主自己实现" |
 | `verify` | 依次执行 state.checks（来自 design 的「验证命令」段，由宿主用 `checks add "<cmd>"` 登记），日志写 verify/，全部通过才算 done |
 | `checks add "<cmd>" [--name n]` / `checks list` | 维护检查命令 |
-| `run "<需求>" [--size] [--bg]` | 一键：`init` 后启动宿主 `codex exec` 执行 `$one-shot`（跑完整流程）；`--bg` 时 detached + nohup，日志写 run 目录，pid 记入 state |
-| `resume [--bg]` | 宿主进程不在则新起宿主会话，提示词 = "继续 run <id>，从 state.json 的下一个节点开始" |
+| `run "<需求>" [--size] [--model <m>] [--bg]` | 一键：`init` 后启动宿主 `codex exec` 执行 `$one-shot`（跑完整流程）；`--bg` 时 detached + nohup，日志写 run 目录，pid 记入 state |
+| `resume [--model <m>] [--bg]` | 宿主进程不在则新起宿主会话，提示词 = "继续 run <id>，从 state.json 的下一个节点开始" |
 | `report` | 生成/刷新 run 目录 README.md |
 
 agent 调用约定（config.json，可在仓库 `oneshot.config.json` 覆盖）：每个 agent 有 `id`、`bin`（可多候选路径，含 `/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex` 这类非 PATH 位置）、`args` 模板（`{prompt_file}`、`{out_file}`、`{cwd}` 占位）、`stdin`（是否走 stdin）、`readonly` 参数。
@@ -116,7 +117,15 @@ impl prompt 同样告知 base。base 为 null 时不执行 `git diff null`，检
 fanout/impl/verify 可能运行 10–60 分钟，宿主调用 shell 工具时应设置足够长的执行超时（例如 ≥3600000 ms）；
 若工具提前返回会话或进程仍在运行，必须持续等待直到退出后再继续。中断后重跑同一命令，fanout 复用成功 agent、
 impl 复用成功报告并为未完成尝试另开轮次，verify 重新运行全部检查。
-CLI 收到 SIGINT/SIGTERM 会 kill 活动子进程组；进行中的 agent 会丢失，属预期，已落盘的成功结果保留。
+长任务（impl attempt、fanout 每个 agent、verify 及检查）保存 cliPid，活动工作流节点也绑定 CLI。
+CLI 收到 SIGINT/SIGTERM 先 kill 活动子进程组，再尽力将本 CLI 的 running 记录保存为 interrupted，补 reason、finishedAt，
+写 interrupted 时间线事件并释放锁，以 130/143 退出。写命令取得锁后重读 state，reconcile 死亡 cliPid 的 running 记录；
+旧版缺少 cliPid 的长任务记录也按失联处理。宿主手动 start 和成功执行后等待 done 的节点不绑定 CLI。
+status/next 保持只读，展示已保存的中断信息。interrupted agent 视为未完成；impl 中断轮次保留证据、不复用。
+需要中止 impl/fanout 时只对 CLI 发 SIGTERM，在 run 目录记录原因，然后新 impl 轮次重跑；fanout 可恢复同一轮。
+verify 的 RESULT.md 日志链接相对该文件（<n>-<name>.log），state.log 仍相对 run 根目录。
+宿主 model 按 run/resume --model、config host.model 的顺序选择，存在时 argv 加 -m，均未设置时用默认模型。
+宿主因模型容量/网络失败退出后，用 resume [--model 其他模型] --bg 从断点继续。
 设计校验允许标题带数字加 `.`/`、` 的编号前缀和括号等后缀，去前缀与空白后以必备章节名开头即可；
 前 10 行出现 `v\d+(\.\d+)*` 即满足版本号要求。
 
@@ -127,7 +136,19 @@ CLI 收到 SIGINT/SIGTERM 会 kill 活动子进程组；进行中的 agent 会�
 - A3 在 Codex 里用 `$one-shot` 真实跑完 steering 需求的 M/L 全流程（含并行 improve 与并行 review），run 目录留档完整并提交。
 - A4 SKILL.md ≤250 行，宿主能只靠它 + flow.md 完成流程；`install.sh` 可把 skill 装到用户级目录。
 
+### v1.2 返工验收标准
+
+- A5 长任务（impl attempt、fanout agent、verify 及进行中的检查）记录 cliPid；真实 CLI 子进程收到 SIGTERM 后，子进程组结束、进行中记录为 interrupted（reason、finishedAt）、状态原子落盘、锁立即释放。SIGINT 同样处理，退出码分别为 143/130。
+- A6 写命令取得锁后 reconcile 死亡 cliPid 的 running 记录并记事件；兼容旧版缺少 cliPid 的长任务记录。status/next 只读并展示中断信息。fanout 复用成功结果、重跑 interrupted agent；impl interrupted 尝试保留历史且使用新轮次。
+- A7 init 写入 run/.gitignore，内容为 .lock 和 *.tmp；重复 done 只更新 note、保留原 finishedAt，时间线记录 note-update。
+- A8 verify/RESULT.md 日志链接相对自身目录，state 的 log 仍相对 run 根目录。
+- A9 host.model 可选，run/resume --model 优先覆盖，实际宿主 argv 精确验证；省略模型时保持 Codex 默认行为。模型容量/网络失败后用 resume [--model 其他模型] --bg 继续。
+- A10 SKILL.md/flow.md 明确向 CLI 发 SIGTERM 中止 impl/fanout、在 run 目录记录原因后恢复；限定范围内修改，不执行 git commit/checkout/stash/reset。执行 node --test test/oneshot-skill/*.test.mjs 并记录结果。
+
+实施：状态收敛放在 scripts/lib/state.mjs，信号清理放在 process.mjs 和 CLI 的锁作用域，工作流记录补充放在 workflow.mjs；仅在指定测试目录补回归，文档同步本设计与验收记录。
+
 ## 8. 变更记录
 
 - v1.0 2026-11-04 初版。
 - v1.1 2026-11-04 返工：记录并传递初始化 diff 基准，补全评审需求与上一轮汇总；明确长命令等待、SIGTERM 清理与恢复；run id 改用本地时间；放宽设计章节/版本号校验；Evaluator 默认超时改为 1500 秒；测试统一使用 glob 并删除入口；验收记录改为 Planner 审查后提交；report 展示模型、耗时及缺省值。
+- v1.2 2026-11-04 真实运行返工：长任务记录 cliPid，SIGINT/SIGTERM 清理后保存 interrupted 并释放锁，写命令 reconcile 失联记录并记事件；init 忽略 .lock/*.tmp；重复 done 只修正 note；修复 RESULT.md 相对日志链接；支持 host.model 与 run/resume --model 覆盖，补充模型容量/网络故障恢复说明及真实 CLI 信号回归。

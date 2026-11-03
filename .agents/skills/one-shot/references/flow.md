@@ -1,14 +1,22 @@
 # 节点输入、输出与完成条件
 
 在目标仓库根执行 CLI；每次显式 `--run <id>`。状态变更受 .lock（pid）保护；只读 status/next 可随时执行。
-状态写临时文件后 rename，死亡 pid 的陈旧锁自动回收。不要手工并发改 state.json。
+状态写临时文件后 rename，死亡 pid 的陈旧锁自动回收。init 写 run/.gitignore（.lock 与 *.tmp）。不要手工并发改 state.json。
+impl attempt、fanout 的每个 agent、verify 及进行中的检查均记录 cliPid（CLI PID，区别于子进程 pid）。
+写命令取得锁并重读 state 后先 reconcile：running 记录的 cliPid 已死亡时改为 interrupted，补 reason、finishedAt
+并记录 interrupted 事件、原子保存；旧版缺少 cliPid 的长任务 running 记录也按失联处理。
+宿主手动 start 的节点及成功执行后等待 done 的节点不绑定已退出的 CLI，不会被误判为中断。
+status/next 只读；status 展示保存的 interrupted 状态，next 的 interrupted 列表展示任务、原因与结束时间。
 
 fanout/impl/verify 可能运行 10–60 分钟，宿主的 shell 工具执行超时需足够长（例如 ≥3600000 ms）。
 工具提前返回会话/进程仍在运行时，持续等待直到命令退出后再继续；提前返回间隔不是执行超时。
-CLI 收到 SIGINT/SIGTERM 时会向所有活动子进程组发送 SIGKILL，分别以 130/143 退出；
-这会丢掉进行中的 agent，属预期清理行为，不会让它们在后台继续运行。
+CLI 收到 SIGINT/SIGTERM 时会向所有活动子进程组发送 SIGKILL；
+随后尽力把本 CLI 进行中的记录标为 interrupted（reason 含信号、finishedAt）、原子保存并立即释放锁，以 130/143 退出。
+需要中止进行中的 impl/fanout 时，对 CLI 进程发 SIGTERM（不要直接 kill Generator），在 run 目录写明中止原因
+（例如 impl/round-N/INTERRUPTED.md），然后用新 impl 轮次重跑；fanout 可恢复同一轮。
+若 CLI 被 SIGKILL 或保存失败，下一条写命令会回收死锁并 reconcile。
 中断后重跑同一命令：fanout 复用成功结果、重跑未完成 agent；impl 复用成功报告、未完成尝试另开轮次；
-verify 重新顺序执行全部检查。状态和已完成证据保留，陈旧锁按死亡 pid 回收。
+verify 重新顺序执行全部检查。interrupted 的 agent 视为未完成；impl 的 interrupted 轮次不复用、不覆盖。状态和已完成证据保留。
 
 ## brainstorm
 输入 REQUIREMENT.md、AGENTS.md、相关源码；start brainstorm。
@@ -41,6 +49,7 @@ S：impl --inline，宿主实施，自己写 impl/round-1/report.md 后 done imp
 ## verify
 输入 state.checks（checks add "命令" --name 名称 登记，checks list 查看）。
 verify 顺序执行所有检查，输出 verify/<n>-<name>.log 和 RESULT.md。
+RESULT.md 的日志链接相对自身目录（<n>-<name>.log），state 的 log 字段仍相对 run 根目录（verify/<n>-<name>.log）。
 全部成功自动 done；失败保留 failed，修复后复验最多 3 次。没有检查命令拒绝通过。
 修复引入新的行为时回写设计；不可将假 agent 测试冒充产品 smoke。
 
@@ -69,8 +78,11 @@ commit message 包含 Design: <path>，不要求 Co-Authored-By。用户禁止�
   初始化记录 git rev-parse HEAD 为 baseCommit；非 Git 仓库或无可用 HEAD 时为 null。
 - status 返回完整状态；next 返回首个未完成节点与本文件对应段落。
 - start/done node [--note text]；skip node --reason text。skip 是宿主的显式裁剪决定，必须记录理由。
+  已 done 的节点再次 done 只更新 note（未传 note 则保留），不重验产物，保留原 finishedAt；timeline 记录 note-update。
 - fanout improve|review [--round N] [--agents a,b] [--timeout 秒]。
-- run "需求" [--bg] 启动新宿主；resume [--bg] 在宿主 PID 不存活时重新启动。
+- run "需求" [--model <m>] [--bg] 启动新宿主；resume [--model <m>] [--bg] 在宿主 PID 不存活时重新启动。
+  可选 config host.model 存在时给宿主 codex exec 加 -m；--model 优先覆盖，均未设置时不传 -m，使用 Codex 默认值。
+  宿主因模型容量/网络失败退出时，用 resume [--model 其他模型] --bg 从断点继续。
   前台等待宿主，后台 detached 且重定向日志。宿主运行时不持有 CLI 锁，允许其执行节点命令。
 - report 可随时刷新索引，阻塞时也可调用。
 - agents [--refresh]：并行 PONG 探测，默认 90s/agent；缓存 ~/.cache/oneshot/agents.json，TTL 6h。

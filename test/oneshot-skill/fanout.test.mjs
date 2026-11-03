@@ -62,7 +62,7 @@ test('退出非零、空输出、全部失败记录 DEGRADED；无可用 agent �
 });
 test('中断 fanout 后复用已成功结果，回收锁，只重跑未完成 agent', async t => {
   const f = fixture(t, [['fast', 'ok', 30], ['slow', 'ok', 1500]]);
-  await ready(f);
+  const dir = await ready(f);
   await f.run(['agents']);
   const child = spawn(process.execPath, [cli, 'fanout', 'improve'], { cwd: f.cwd, env: f.env, stdio: 'ignore' });
   const closed = new Promise(resolve => child.on('close', resolve));
@@ -71,6 +71,17 @@ test('中断 fanout 后复用已成功结果，回收锁，只重跑未完成 ag
   const slowPID = f.calls().find(c => c.id === 'slow').pid;
   child.kill('SIGTERM');
   assert.equal(await closed, 143);
+  const interrupted = f.readState().state;
+  const slow = interrupted.rounds.improve[1].agents.slow;
+  assert.equal(slow.cliPid, child.pid);
+  assert.equal(slow.status, 'interrupted');
+  assert.match(slow.reason, /SIGTERM/);
+  assert.ok(slow.finishedAt);
+  assert.equal(interrupted.rounds.improve[1].agents.fast.status, 'ok');
+  assert.equal(interrupted.nodes.improve.status, 'interrupted');
+  assert.ok(!fs.existsSync(path.join(dir, '.lock')));
+  const next = JSON.parse((await f.run(['next', '--json'])).stdout);
+  assert.ok(next.interrupted.some(r => r.task.includes('slow')));
   await until(() => !alive(slowPID));
   assert.equal((await f.run(['fanout', 'improve'])).code, 0);
   assert.equal(f.calls().filter(c => c.id === 'fast').length, 1);

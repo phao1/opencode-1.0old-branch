@@ -82,7 +82,7 @@ test('report 为每个 Evaluator 展示模型和耗时，缺失值为 -，零耗
   assert.equal((await f.run(['report'])).code, 0);
   const report = fs.readFileSync(path.join(dir, 'README.md'), 'utf8');
   assert.match(report, /named（模型：test-model）: ok.*durationMs: 123ms/);
-  assert.match(report, /running（模型：-）: running.*durationMs: -/);
+  assert.match(report, /running（模型：-）: interrupted.*durationMs: -/);
   assert.match(report, /missing（模型：-）: unavailable.*durationMs: 0ms/);
   assert.match(report, /timed（模型：review-model）: timeout.*durationMs: 1500ms/);
   assert.doesNotMatch(report, /undefined|nullms/);
@@ -103,7 +103,13 @@ test('verify 顺序执行、日志落盘，失败不能 done，修复后可以�
   result = await f.run(['verify', '--json']);
   assert.equal(result.code, 0);
   assert.equal(f.readState().state.nodes.verify.status, 'done');
-  assert.match(fs.readFileSync(path.join(dir, 'verify/RESULT.md'), 'utf8'), /PASS/);
+  const markdown = fs.readFileSync(path.join(dir, 'verify/RESULT.md'), 'utf8');
+  assert.match(markdown, /PASS/);
+  const links = [...markdown.matchAll(/\[log\]\(([^)]+)\)/g)].map(m => m[1]);
+  assert.deepEqual(links, ['1-first.log', '2-second.log']);
+  assert.ok(links.every(link => fs.existsSync(path.resolve(dir, 'verify', link))));
+  assert.deepEqual(f.readState().state.verification.results.map(r => r.log), ['verify/1-first.log', 'verify/2-second.log']);
+  assert.ok(f.readState().state.verification.cliPid > 0);
   await f.run(['report']);
   assert.match(fs.readFileSync(path.join(dir, 'README.md'), 'utf8'), /验证结果/);
 });
@@ -143,4 +149,30 @@ test('install.sh 可安装、幂等，拒绝覆盖别的目录；SKILL 通过行
   const content = fs.readFileSync(path.join(skill, 'SKILL.md'), 'utf8');
   assert.ok(content.split('\n').length <= 250);
   assert.match(content, /^---\nname: one-shot\ndescription: .+\n---/);
+});
+
+test('run/resume 精确宿主 argv：host.model 配置、--model 优先覆盖、后台恢复', async t => {
+  for (const command of ['run', 'resume']) {
+    for (const override of [false, true]) {
+      const f = fixture(t);
+      f.config.host.model = 'configured-host-model';
+      fs.writeFileSync(f.configFile, JSON.stringify(f.config));
+      if (command === 'resume') await ready(f);
+      const args = command === 'run' ? ['run', 'model requirement'] : ['resume'];
+      if (override) args.push('--model', 'replacement-model');
+      const background = command === 'resume' && override;
+      if (background) args.push('--bg');
+      const result = await f.run([...args, '--json']);
+      assert.equal(result.code, 0, result.stderr);
+      const { dir, state } = f.readState();
+      for (let n = 0; n < 100 && alive(state.host.pid); n++) await new Promise(resolve => setTimeout(resolve, 30));
+      assert.ok(!alive(state.host.pid));
+      const expected = ['exec', '--dangerously-bypass-approvals-and-sandbox', '-C', f.cwd,
+        '-m', override ? 'replacement-model' : 'configured-host-model', '--json', '-o', path.join(dir, 'host.last.md'), '-'];
+      assert.deepEqual(f.calls()[0].args, expected);
+      assert.deepEqual(state.host.args, expected);
+      assert.equal(state.host.background, background);
+      assert.equal(f.config.generator.model, 'fake');
+    }
+  }
 });

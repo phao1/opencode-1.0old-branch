@@ -167,3 +167,40 @@ v1.1 为 137 行，frontmatter 的 name/description 明确覆盖一键开发、o
 - 进程组清理面向 macOS/Linux POSIX，未实现 Windows 进程树管理。
 - 设计取舍、轮次停止与复验次数由宿主执行；脚本负责状态、进程、证据和产物门禁，不替代 Planner。
 
+## v1.2 返工
+
+2026-11-04，基于两次真实运行的验收发现完成 6 项定点修复。设计升为 [v1.2](../oneshot/ONE-SHOT-SKILL-DESIGN.md)，本轮不提交。
+
+证据来源：[steering-v2 运行](../oneshot/runs/20261104-0426-steering-v2/README.md)、
+[steering-v21 运行](../oneshot/runs/20261104-0553-steering-v21/README.md)；
+v21 的 [impl 第 1 轮中止说明](../oneshot/runs/20261104-0553-steering-v21/impl/round-1/INTERRUPTED.md)
+与 state.json 对照显示 SIGTERM 后 attempt 仍为 running；host.events.jsonl 包含
+`Selected model is at capacity. Please try a different model.` 的 error / turn.failed 事件。
+历史 run 作为只读证据保留，不修改其状态、日志或产物。
+
+| 验收项 | 修复与验证 |
+| --- | --- |
+| P1 中断与失联状态 | impl attempt、fanout 每个 agent、verify 及检查记录 cliPid；SIGINT/SIGTERM 先清理子进程组，再尽力原子保存 interrupted、reason、finishedAt 与事件，立即释放锁；写命令取得锁后 reconcile 死亡 PID（兼容旧版缺少 cliPid 的长任务）。真实 spawn CLI + sleep 假 Generator 分别发送 SIGTERM/SIGINT，验证退出 143/130、子孙进程结束、锁消失、新轮次恢复；死 PID/陈旧锁用下一条 report 验证修复，成功与存活记录保持原状态。status/next 不写盘，均能展示已保存的中断信息。 |
+| P2 run 目录忽略文件 | init 写 .gitignore，内容为 `.lock` 与 `*.tmp`；断言文件原文，并以临时 Git 仓库的 check-ignore 验证。 |
+| P2 重复 done | 已 done 的 deliver 再次 done 只更新 note，不重验产物，保留原 finishedAt，timeline 写 note-update；覆盖备注更正和完成事件不重复。 |
+| P2 中止操作说明 | SKILL.md/flow.md 明确对 CLI 发 SIGTERM，不直接 kill Generator；在 run 目录写中止原因，impl 用新轮次，fanout 可恢复同一轮并复用成功 agent。 |
+| P2 验证日志链接 | RESULT.md 使用相对自身的 `<n>-<name>.log`，state.log 保留 `verify/<n>-<name>.log`；精确检查两类路径并从 RESULT.md 目录解析链接，确认文件存在。verify 中断保留进行中的检查，恢复后顺序重跑全部检查。 |
+| P2 宿主模型配置 | 支持 host.model，run/resume --model 优先覆盖；精确比较实际假宿主捕获的 argv 与 state.host.args，覆盖两命令、配置值、覆盖值、前台/后台及未指定模型时不传 -m。SKILL.md/flow.md 说明容量/网络失败后使用 resume [--model 其他模型] --bg。 |
+
+最终验证命令：`node --test test/oneshot-skill/*.test.mjs`，退出码 0。
+
+```text
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11227.30425
+```
+
+3 × 2s fanout 并发区间实测 2156ms（要求 <4000ms）。全部自动化在隔离临时目录运行，
+真实启动的是本 CLI，Generator/Evaluator/宿主使用假 Node CLI，未调用真实模型或改写历史运行证据。
+SKILL.md 保持 ≤250 行。`git diff --check` 通过。
+只修改 `.agents/skills/one-shot/`、`test/oneshot-skill/` 和指定的两份文档；未执行 git commit/checkout/stash/reset。

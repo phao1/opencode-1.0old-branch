@@ -132,3 +132,32 @@ test('设计章节允许编号、空白和括号后缀，版本号可在前 10 �
   fs.writeFileSync(path.join(f.cwd, 'DESIGN.md'), content.replace('验收标准', '非验收标准'));
   assert.throws(() => validateDesign(f.cwd), /缺少章节：验收标准/);
 });
+
+test('init 的 run/.gitignore 忽略锁和原子写临时文件', async t => {
+  const f = fixture(t);
+  const dir = await ready(f);
+  assert.equal(fs.readFileSync(path.join(dir, '.gitignore'), 'utf8'), '.lock\n*.tmp\n');
+  execFileSync('git', ['init', '--quiet'], { cwd: f.cwd });
+  const files = ['.lock', 'state.json.123.tmp'].map(name => path.relative(f.cwd, path.join(dir, name)));
+  const ignored = execFileSync('git', ['check-ignore', ...files], { cwd: f.cwd, encoding: 'utf8' }).trim().split('\n');
+  assert.deepEqual(ignored, files);
+});
+
+test('已 done 的 deliver 再次 done 只更新 note，保留 finishedAt 并记录 note-update', async t => {
+  const f = fixture(t);
+  const dir = await ready(f, 'S');
+  const state = f.readState().state;
+  for (const [name, node] of Object.entries(state.nodes)) if (name !== 'deliver') node.status = 'done';
+  atomicJSON(path.join(dir, 'state.json'), state);
+  await f.run(['report']);
+  assert.equal((await f.run(['done', 'deliver', '--note', 'original'])).code, 0);
+  const original = f.readState().state.nodes.deliver;
+  // 备注修正不应重新验证完成条件。
+  fs.rmSync(path.join(dir, 'README.md'));
+  assert.equal((await f.run(['done', 'deliver', '--run', state.id, '--note', 'corrected'])).code, 0);
+  const updated = f.readState().state;
+  assert.deepEqual(updated.nodes.deliver, { ...original, note: 'corrected' });
+  assert.equal(updated.timeline.at(-1).action, 'note-update');
+  assert.equal(updated.timeline.at(-1).detail, 'deliver corrected');
+  assert.equal(updated.timeline.filter(e => e.action === 'done' && e.detail.startsWith('deliver ')).length, 1);
+});

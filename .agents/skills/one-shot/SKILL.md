@@ -23,15 +23,20 @@ description: 一键开发、one-shot、从需求到实现的完整研发流程�
 5. 无人值守时不提问：自行选择合理默认值，将假设、备选、风险记入 BRAINSTORM.md「默认假设」。
    缺少必要能力导致无法实现时记录阻塞和证据，停在未完成节点，不能假报成功。
 
-若用户从 shell 启动整条流程：`run "需求" [--size L] [--bg]`；已有 run 用 `resume [--bg]`。
+若用户从 shell 启动整条流程：`run "需求" [--size L] [--model <m>] [--bg]`；已有 run 用 `resume [--model <m>] [--bg]`。
 两者会启动新的 Codex 宿主并加载本 skill。**已经作为宿主运行时不要递归调用 run/resume**，直接操作节点。
 宿主 PID 和日志保存在 state.json、host.events.jsonl、host.log、host.last.md。
+可用 config `host.model` 指定宿主模型，`run/resume --model <m>` 优先覆盖；均未指定时使用 Codex 默认模型。
+宿主因模型容量/网络失败退出时，用 `resume [--model 其他模型] --bg` 从断点继续。
 
 `fanout`、`impl`、`verify` 可能运行 10–60 分钟。调用时把 shell 工具的执行超时设得足够长
 （例如支持 `timeout_ms` 时设为 ≥3600000 ms）；工具的提前返回/轮询间隔不等于执行超时。
 若工具提前返回会话 ID 或进程仍在运行，必须持续等待到命令退出，再读取结果或进入下一节点。
 若被打断，重跑同一命令恢复：复用已成功的 agent 结果或 Generator 报告，未完成部分重新执行；
-`verify` 会重新顺序运行全部登记检查。CLI 收到 SIGTERM 会终止进行中的子进程组，细节见 flow.md。
+`verify` 会重新顺序运行全部登记检查。
+需要中止进行中的 impl/fanout 时，对 CLI 进程发 SIGTERM（不要直接 kill Generator），在 run 目录写明中止原因
+（例如 impl/round-N/INTERRUPTED.md），然后用新 impl 轮次重跑；fanout 可重跑同一轮、复用成功 agent。
+CLI 收到 SIGINT/SIGTERM 会终止子进程组、尽力保存 interrupted（reason、finishedAt）并释放锁，细节见 flow.md。
 
 ## 尺寸判定与节点
 
@@ -108,7 +113,7 @@ Brainstorm 末尾判定，用户显式 `--size` 优先：
 - 允许提交时提交代码、design、agent 汇总与验证证据；每个 commit message 含
   `Design: docs/oneshot/runs/<id>/DESIGN.md`。S 引用 BRAINSTORM.md。无需 Co-Authored-By。
 - 用户禁止 commit 时说明待提交；本脚本从不替你执行 git commit。
-- `done deliver --note "提交或待审查说明"`，再 `report` 刷新最终时间线。
+- `done deliver --note "提交或待审查说明"`，再 `report` 刷新最终时间线；已 done 时再次 done 仅更新 note，保留原完成时间。
 - 最终向用户给出改动、验证摘要、Design/README 路径和已知限制。不自动 push/merge/release。
 
 ## SUMMARY.md 固定表格与降级

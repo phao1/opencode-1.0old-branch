@@ -4,11 +4,12 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { loadConfig, probeAgents, skillDir } from './lib/agents.mjs';
-import { alive, lock, initRun, selectRun, nextNode, save, event, now, nodeTable, readJSON } from './lib/state.mjs';
+import { alive, lock, initRun, selectRun, nextNode, save, event, now, nodeTable, readJSON, reconcile, interruptTasks, interruptions } from './lib/state.mjs';
 import { installSignals, resolveBin, track, untrack } from './lib/process.mjs';
 import { fanout, implement, verify, validateArtifact, report } from './lib/workflow.mjs';
 
 const booleanOptions = new Set(['json', 'refresh', 'bg', 'inline', 'help']);
+let lockedRun;
 function parse(argv) {
   const opts = {}, args = [];
   for (let i = 0; i < argv.length; i++) {
@@ -39,7 +40,9 @@ function startHost(ctx, opts, resume) {
   if (alive(state.host?.pid)) throw new Error(`宿主仍在运行，pid=${state.host.pid}`);
   const bin = resolveBin(config.host.bin);
   if (!bin) throw new Error('host codex binary not found');
-  const args = ['exec', '--dangerously-bypass-approvals-and-sandbox', '-C', cwd, '--json', '-o', path.join(dir, 'host.last.md'), '-'];
+  const model = opts.model ?? config.host.model;
+  const args = ['exec', '--dangerously-bypass-approvals-and-sandbox', '-C', cwd,
+    ...(model ? ['-m', model] : []), '--json', '-o', path.join(dir, 'host.last.md'), '-'];
   // 后台宿主没有终端依赖；stdio 全部重定向，相当于 nohup，单独进程组可跨 CLI 生命周期。
   const fd = fs.openSync(path.join(dir, 'host.events.jsonl'), 'a');
   const err = fs.openSync(path.join(dir, 'host.log'), 'a');
@@ -79,6 +82,12 @@ function nodeCommand(ctx, command, name, opts) {
     }
     state.nodes[name] = { status: 'running', startedAt: now() };
   } else if (command === 'done') {
+    if (state.nodes[name].status === 'done') {
+      state.nodes[name].note = opts.note ?? state.nodes[name].note ?? '';
+      event(state, 'note-update', `${name} ${state.nodes[name].note}`);
+      save(dir, state);
+      return state.nodes[name];
+    }
     validateArtifact(ctx, name);
     Object.assign(state.nodes[name], { status: 'done', finishedAt: now(), note: opts.note || '' });
   } else {
@@ -94,7 +103,7 @@ async function main() {
   const { args, opts } = parse(process.argv.slice(2));
   const [command, sub, ...rest] = args;
   if (!command || opts.help) {
-    console.log('one-shot: agents [--refresh] | init --title t [--size S|M|L] [--req file|-] [--slug s] | status | next | start/done/skip node | fanout improve|review [--round N] [--agents a,b] [--timeout s] | impl [--fix file] [--inline] | checks add "cmd" [--name n] | checks list | verify | run "需求" [--bg] | resume [--bg] | report\n通用：--run id --config file --json；在目标仓库根执行。');
+    console.log('one-shot: agents [--refresh] | init --title t [--size S|M|L] [--req file|-] [--slug s] | status | next | start/done/skip node | fanout improve|review [--round N] [--agents a,b] [--timeout s] | impl [--fix file] [--inline] | checks add "cmd" [--name n] | checks list | verify | run "需求" [--model m] [--bg] | resume [--model m] [--bg] | report\n通用：--run id --config file --json；在目标仓库根执行。');
     return;
   }
   const cwd = process.cwd();
@@ -119,7 +128,7 @@ async function main() {
     const node = nextNode(run.state);
     const flow = fs.readFileSync(path.join(skillDir, 'references/flow.md'), 'utf8');
     const section = node ? flow.split(`## ${node}\n`)[1]?.split('\n## ')[0].trim() : '全部完成';
-    display(command === 'next' ? { id: run.state.id, next: node, instruction: section } : { ...run.state, next: node }, opts.json);
+    display(command === 'next' ? { id: run.state.id, next: node, instruction: section, interrupted: interruptions(run.state) } : { ...run.state, next: node }, opts.json);
     return;
   }
   const release = lock(run.dir);
@@ -128,6 +137,8 @@ async function main() {
     // 选择 run 后另一个进程可能已更新；取得锁后重新读取，避免用旧快照覆盖。
     ctx.state = readJSON(path.join(run.dir, 'state.json'));
     run.state = ctx.state;
+    lockedRun = { ctx, release };
+    if (reconcile(ctx.state)) save(ctx.dir, ctx.state);
     if (['start', 'done', 'skip'].includes(command)) value = nodeCommand(ctx, command, sub, opts);
     else if (command === 'fanout') value = await fanout(ctx, sub, opts);
     else if (command === 'impl') value = await implement(ctx, opts);
@@ -152,7 +163,7 @@ async function main() {
       host = startHost(ctx, opts, command === 'resume');
       value = { id: run.state.id, dir: run.dir, host: run.state.host };
     } else throw new Error(`未知命令：${command}`);
-  } finally { release(); }
+  } finally { lockedRun = null; release(); }
   display(value, opts.json);
   // 宿主会调用本 CLI 写状态，等待期间必须释放锁。
   if (host && !opts.bg) {
@@ -161,5 +172,11 @@ async function main() {
   }
   if (command === 'verify' && !value.ok || command === 'impl' && value.status && value.status !== 'ok') process.exitCode = 1;
 }
-installSignals();
+installSignals(signal => {
+  if (!lockedRun) return;
+  const { ctx, release } = lockedRun;
+  try {
+    if (interruptTasks(ctx.state, record => record.cliPid === process.pid ? `CLI received ${signal}` : null)) save(ctx.dir, ctx.state);
+  } finally { release(); }
+});
 main().catch(error => { console.error(`one-shot: ${error.message}`); process.exitCode = 1; });
